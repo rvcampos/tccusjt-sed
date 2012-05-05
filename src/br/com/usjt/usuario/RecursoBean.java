@@ -18,7 +18,7 @@ import javax.validation.constraints.NotNull;
 public class RecursoBean {
 
     @Id
-    @SequenceGenerator (name = "SEQ_UNIT", sequenceName = "sq_pk_cad_rbac_resource")
+    @SequenceGenerator (name = "SEQ_UNIT", sequenceName = "sq_pk_recurso")
     @GeneratedValue (strategy = GenerationType.AUTO, generator = "SEQ_UNIT")
     private Long                        recurso_id;
     @Column
@@ -28,15 +28,13 @@ public class RecursoBean {
     // (GET, POST, PUT, DELETE, HEAD)
     private String                         verb;
     
-    @Valid
     @Column
-    @NotNull (message = "Descrição do privilégio não pode estar vazio")
     private String                         nome;
     
     
     @Override
     public String toString() {
-        return "RbacResourceBean [resource_id=" + recurso_id + ", url=" + url + ", verb=" + verb + ", nome="
+        return "RecursoBean [recurso_id=" + recurso_id + ", url=" + url + ", verb=" + verb + ", nome="
                 + nome + "]";
     }
 

@@ -1,11 +1,11 @@
 package br.com.usjt.usuario;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -21,10 +21,12 @@ public class PermissaoBean {
 	@GeneratedValue(strategy = GenerationType.AUTO, generator = "SEQ_UNIT")
 	private Long permissao_id;
 
-	@OneToOne
+	@ManyToOne
+	@JoinColumn(name="privilegio_id")
 	private PrivilegioBean privilegio;
 
-	@Column
+	@ManyToOne
+	@JoinColumn(name="recurso_id")
 	private RecursoBean recurso;
 
 	@Override

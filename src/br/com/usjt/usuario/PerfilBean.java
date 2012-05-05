@@ -21,7 +21,7 @@ import javax.persistence.Table;
 public class PerfilBean {
 
 	@Id
-	@SequenceGenerator(name = "SEQ_UNIT", sequenceName = "sq_pk_rbac_role")
+	@SequenceGenerator(name = "SEQ_UNIT", sequenceName = "sq_pk_perfil")
 	@GeneratedValue(strategy = GenerationType.AUTO, generator = "SEQ_UNIT")
 	private Long perfil_id;
 
@@ -34,7 +34,7 @@ public class PerfilBean {
 
 	@Override
 	public String toString() {
-		return "RbacRoleBean [perfil_id=" + perfil_id + ", nome=" + nome + "]";
+		return "PerfilBean [perfil_id=" + perfil_id + ", nome=" + nome + "]";
 	}
 
 	/**

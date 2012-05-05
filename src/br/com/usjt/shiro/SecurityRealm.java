@@ -1,12 +1,7 @@
 package br.com.usjt.shiro;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
@@ -27,10 +22,7 @@ import org.slf4j.LoggerFactory;
 
 import br.com.usjt.usuario.PerfilBean;
 import br.com.usjt.usuario.PermissaoBean;
-import br.com.usjt.usuario.PrivilegioBean;
-import br.com.usjt.usuario.RecursoBean;
 import br.com.usjt.usuario.UsuarioBean;
-import br.com.usjt.util.EntryWrapper;
 import br.com.usjt.util.HS;
 
 /**
@@ -98,17 +90,11 @@ public class SecurityRealm extends AuthorizingRealm {
 					Criteria crit = ses.createCriteria(UsuarioBean.class);
 					crit.add(Restrictions.eq("usuario_id", id));
 					UsuarioBean usuario = (UsuarioBean) crit.uniqueResult();
-					List<Long> relRoles = new ArrayList<Long>();
-					Set<Entry<Long, Long>> permissions = new HashSet<Map.Entry<Long, Long>>();
 					for (PerfilBean ln : usuario.getPerfis()) {
-						relRoles.add(ln.getPerfil_id());
 						for (PermissaoBean ln3 : ln.getPermissoes()) {
-							permissions.add(new EntryWrapper<Long, Long>(ln3
-									.getRecurso().getRecurso_id(), ln3
-									.getPrivilegio().getPrivilege_id()));
 							String msg = ln3.getRecurso().getVerb() + ":"
 									+ ln3.getRecurso().getUrl() + ":"
-									+ ln3.getPrivilegio().getTp_privilege();
+									+ ln3.getPrivilegio().getTp_privilegio();
 							sinfo.addStringPermission(msg);
 						}
 					}

@@ -3,15 +3,12 @@ package br.com.usjt.util;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
-
-import br.com.usjt.jaxrs.JSPAttr;
 
 /**
  * Hibernate Session

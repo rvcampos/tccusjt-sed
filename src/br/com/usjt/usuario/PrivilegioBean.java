@@ -14,71 +14,67 @@ import javax.validation.constraints.NotNull;
  * Privilégios de usuário
  */
 @Entity
-@Table (name = "rbac_privilege")
+@Table(name = "rbac_privilege")
 public class PrivilegioBean {
 
-    @Id
-    @SequenceGenerator (name = "SEQ_UNIT", sequenceName = "sq_pk_cad_rbac_privilege")
-    @GeneratedValue (strategy = GenerationType.AUTO, generator = "SEQ_UNIT")
-    private Long   privilege_id;
-    @Valid
-    @NotNull (message = "Endereço Host não pode estar vazio")
-    @Column
-    private String tp_privilege;
-    @Valid
-    @NotNull (message = "Descrição do privilégio não pode estar vazio")
-    @Column
-    private String pretty_name;
+	@Id
+	@SequenceGenerator(name = "SEQ_UNIT", sequenceName = "sq_pk_privilege")
+	@GeneratedValue(strategy = GenerationType.AUTO, generator = "SEQ_UNIT")
+	private Long privilegio_id;
+	@Column
+	private String tp_privilegio;
+	@Column
+	private String nome;
 
-    @Override
-    public String toString() {
-        return "RbacPrivilegeBean [privilege_id=" + privilege_id + ", tp_privilege=" + tp_privilege + ", pretty_name="
-                + pretty_name + "]";
-    }
+	@Override
+	public String toString() {
+		return "PrivilegioBean [privilegio_id=" + privilegio_id
+				+ ", tp_privilegio=" + tp_privilegio + ", nome=" + nome + "]";
+	}
 
-    /**
-     * @return the privilege_id
-     */
-    public Long getPrivilege_id() {
-        return this.privilege_id;
-    }
+	/**
+	 * @return the privilegio_id
+	 */
+	public Long getPrivilegio_id() {
+		return privilegio_id;
+	}
 
-    /**
-     * @param privilege_id
-     *            the privilege_id to set
-     */
-    public void setPrivilege_id(Long privilege_id) {
-        this.privilege_id = privilege_id;
-    }
+	/**
+	 * @param privilegio_id
+	 *            the privilegio_id to set
+	 */
+	public void setPrivilegio_id(Long privilegio_id) {
+		this.privilegio_id = privilegio_id;
+	}
 
-    /**
-     * @return the tp_privilege
-     */
-    public String getTp_privilege() {
-        return this.tp_privilege;
-    }
+	/**
+	 * @return the tp_privilegio
+	 */
+	public String getTp_privilegio() {
+		return tp_privilegio;
+	}
 
-    /**
-     * @param tp_privilege
-     *            the tp_privilege to set
-     */
-    public void setTp_privilege(String tp_privilege) {
-        this.tp_privilege = tp_privilege;
-    }
+	/**
+	 * @param tp_privilegio
+	 *            the tp_privilegio to set
+	 */
+	public void setTp_privilegio(String tp_privilegio) {
+		this.tp_privilegio = tp_privilegio;
+	}
 
-    /**
-     * @return the pretty_name
-     */
-    public String getPretty_name() {
-        return this.pretty_name;
-    }
+	/**
+	 * @return the nome
+	 */
+	public String getNome() {
+		return nome;
+	}
 
-    /**
-     * @param pretty_name
-     *            the pretty_name to set
-     */
-    public void setPretty_name(String pretty_name) {
-        this.pretty_name = pretty_name;
-    }
+	/**
+	 * @param nome
+	 *            the nome to set
+	 */
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
 
 }
