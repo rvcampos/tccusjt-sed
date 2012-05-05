@@ -27,7 +27,7 @@ public class ShiroLogin {
      * Exibi login
      */
     @GET
-    @Stylesheet (href = "login/login.jsp", type = MediaTypeMore.APP_JSP)
+    @Stylesheet (href = "login.jsp", type = MediaTypeMore.APP_JSP)
     @Path ("/login")
     @SecurityPublic
     public void getLogin() {}

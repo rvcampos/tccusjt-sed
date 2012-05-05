@@ -10,7 +10,10 @@ import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
+import org.apache.shiro.mgt.DefaultSecurityManager;
+import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.realm.AuthorizingRealm;
+import org.apache.shiro.session.mgt.DefaultSessionManager;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.hibernate.Criteria;
@@ -26,7 +29,7 @@ import br.com.usjt.usuario.UsuarioBean;
 import br.com.usjt.util.HS;
 
 /**
- * Autoriza��o do aplicativo usando shiro
+ * Autorizacao do aplicativo usando shiro
  */
 public class SecurityRealm extends AuthorizingRealm {
 
@@ -34,7 +37,7 @@ public class SecurityRealm extends AuthorizingRealm {
 	 * construtor padrao
 	 */
 	public SecurityRealm() {
-		this.setName(SecurityRealm.class.getName() + "::CorBan");
+		this.setName(SecurityRealm.class.getName() + "::tccusjt-sed");
 	}
 
 	private static Logger LOG = LoggerFactory.getLogger(SecurityRealm.class);
@@ -108,9 +111,11 @@ public class SecurityRealm extends AuthorizingRealm {
 				}
 			}
 		}
+		DefaultSecurityManager m = new DefaultSecurityManager();
 		return sinfo;
 	}
 
+	
 	@Override
 	public void onLogout(PrincipalCollection principals) {
 		super.clearCache(principals);
