@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Para retornos e vari�veis de request {@link HttpServletRequest}
+ * Para retornos e variáveis de request {@link HttpServletRequest}
  */
 public class JSPAttr {
 

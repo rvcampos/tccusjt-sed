@@ -1,7 +1,6 @@
 package br.com.usjt.jaxrs;
 
 import java.lang.reflect.Method;
-
 import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -37,7 +36,7 @@ public class JSPInterceptor implements AcceptedByMethod, PostProcessInterceptor 
     }
 
     /**
-     * Redirecionar para outra p�gina
+     * Redirecionar para outra página
      */
     public static void render(HttpServletRequest r, HttpServletResponse p, String page) {
         JSPInterceptor.LOG.info("Render:" + page);
