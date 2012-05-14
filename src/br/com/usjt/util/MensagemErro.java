@@ -9,7 +9,7 @@ public final class MensagemErro {
     private static Properties p = new Properties();
     static {
         try {
-            MensagemErro.p.load(new FileInputStream("/home/renan.campos/Workspaces/projects/corban.cadastro/error.properties"));
+            MensagemErro.p.load(new FileInputStream("/home/renan.campos/Workspaces/projects/tccusjt-sed/error.properties"));
         }
         catch (Exception e) {}
     }
