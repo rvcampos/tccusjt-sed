@@ -17,10 +17,10 @@
 							<shiro:hasRole name="aluno">
 							<li><a href="${app_context}aluno/cursos">Cursos Disponíveis</a></li>
 							<li><a href="${app_context}aluno/meusCursos">Meus Cursos</a></li>
-							</shiro:hasPermission>
+							</shiro:hasRole>
 							<shiro:hasRole name="professor">
 							<li><a href="${app_context}professor/meusCursos">Listar Meus Cursos</a></li>
-							</shiro:hasPermission>
+							</shiro:hasRole>
 						</td>
 					</tr>
 				</table>

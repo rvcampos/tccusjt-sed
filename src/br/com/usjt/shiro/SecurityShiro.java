@@ -6,8 +6,9 @@ import org.apache.shiro.subject.Subject;
 
 import br.com.usjt.jaxrs.JSPAttr;
 
+
 /**
- * Implementacao de seguranca do JAXRS para o Shiro
+ * Implementacao de seguranca do JAXRS
  */
 public class SecurityShiro implements Security {
 
@@ -30,7 +31,7 @@ public class SecurityShiro implements Security {
             this.currentUser.getSession().touch();
         }
         catch (Exception e) {
-            new JSPAttr("msgsession","Sessao expirada. Favor efetuar o login novamente");
+            new JSPAttr("msgsession","Sessão expirada. Favor efetuar o login novamente");
             this.currentUser.logout();
             return false;
         }
