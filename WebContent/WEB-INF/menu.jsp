@@ -5,7 +5,7 @@
 <div class="navbar navbar-fixed-top">
 <div class="navbar-inner">
 	<div class="container">
-		<a class="brand" href="${app_context}">Sistema de Ensino à distancia</a>
+		<a class="brand" href="${app_context}">S.E.D</a>
 		<ul class="nav">
 		<shiro:authenticated>
 		<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Cursos<b class="caret"></b></a>
