@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<c:set scope="request" var="app_context" value="/corban.cadastro/" />
+<c:set scope="request" var="app_context" value="/tccusjt-sed/" />
 <link rel="stylesheet" href="${app_context}css/bt.css" type="text/css" />
 <script charset="UTF-8" src="${app_context}js/jquery.js"></script>
 <script charset="UTF-8" src="${app_context}js/jquery-ui.js"></script>
