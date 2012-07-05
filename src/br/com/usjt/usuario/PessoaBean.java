@@ -20,7 +20,7 @@ import javax.validation.Valid;
  */
 @Entity
 @Table(name = "tb_usuario")
-public class UsuarioBean {
+public class PessoaBean {
 
 	@Id
 	@SequenceGenerator(name = "SEQ_UNIT", sequenceName = "sq_pk_usuario")

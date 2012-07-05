@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
 
 import br.com.usjt.usuario.PerfilBean;
 import br.com.usjt.usuario.PermissaoBean;
-import br.com.usjt.usuario.UsuarioBean;
+import br.com.usjt.usuario.PessoaBean;
 import br.com.usjt.util.HS;
 
 /**
@@ -53,7 +53,7 @@ public class SecurityRealm extends AuthorizingRealm
             Map<String, String> criterio = new HashMap<String, String>();
             criterio.put("login", token.getUsername());
 
-            UsuarioBean user = HS.searchByValueUnique(UsuarioBean.class, criterio);
+            PessoaBean user = HS.searchByValueUnique(PessoaBean.class, criterio);
             if (user != null) {
                 SimplePrincipalCollection coll = new SimplePrincipalCollection();
                 coll.add(user.getUsuario_id(), this.getName());
@@ -87,9 +87,9 @@ public class SecurityRealm extends AuthorizingRealm
 
                 Session ses = HS.getSession();
                 try {
-                    Criteria crit = ses.createCriteria(UsuarioBean.class);
+                    Criteria crit = ses.createCriteria(PessoaBean.class);
                     crit.add(Restrictions.idEq(id));
-                    UsuarioBean usuario = (UsuarioBean) crit.uniqueResult();
+                    PessoaBean usuario = (PessoaBean) crit.uniqueResult();
                     for (PerfilBean ln : usuario.getPerfis()) {
                         for (PermissaoBean ln3 : ln.getPermissoes()) {
                             if (ln3.getPrivilegio() != null && ln3.getRecurso() != null) {
