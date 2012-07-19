@@ -5,6 +5,7 @@ import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 
 import br.com.usjt.jaxrs.JSPAttr;
+import br.com.usjt.jaxrs.security.SecurityDummy;
 
 
 /**
@@ -19,10 +20,11 @@ public class SecurityShiro implements Security {
     /**
      * Construtor
      */
-    public static SecurityShiro init() {
-        SecurityShiro rt = new SecurityShiro();
-        rt.currentUser = SecurityUtils.getSubject();
-        return rt;
+    public static Security init() {
+        return new SecurityDummy();
+//        SecurityShiro rt = new SecurityShiro();
+//        rt.currentUser = SecurityUtils.getSubject();
+//        return rt;
     }
 
     @Override
