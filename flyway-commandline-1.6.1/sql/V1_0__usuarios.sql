@@ -1,65 +1,78 @@
--- drop table tb_tpusuario
-create table tb_tpusuario
-(
-tpusuario_id bigint PRIMARY KEY,
-nome varchar(20)
+-- Geração de Modelo físico
+-- Sql ANSI 2003 - brModelo.
+
+--Modelo de dados físico gerado para o Sistema de Ensino á Distância
+
+-- drop table ADMINISTRADOR
+CREATE TABLE ADMINISTRADOR (
+id_admin integer PRIMARY KEY,
+senha varchar(20),
+email varchar(20),
+nome varchar(100)
 );
 
--- drop table tb_usuario
-create table tb_usuario
-(
-usuario_id bigint PRIMARY KEY,
-login varchar(30),
-password varchar(100),
-dt_ultimologin timestamp without time zone,
-dt_trocapassword timestamp without time zone,
-tp_usuario bigint references tb_tpusuario (tpusuario_id),
-contato bigint
+-- drop table MATRICULA
+CREATE TABLE MATRICULA (
+id_matricula integer PRIMARY KEY,
+id_modulo integer,
+id_aluno integer
 );
 
--- drop table tb_perfil
-create table tb_perfil
-(
-perfil_id bigint PRIMARY KEY,
-nome varchar(30)
+-- drop table AVALIACAO
+CREATE TABLE AVALIACAO (
+id_avaliacao integer PRIMARY KEY,
+id_modulo integer,
+data_inicio date,
+data_termino date
 );
 
--- drop table tb_perfil
-create table tb_privilegio
-(
-privilegio_id bigint PRIMARY KEY,
-tp_privilegio varchar(30),
-nome varchar(50)
+-- drop table MATERIAL_DIDATICO
+CREATE TABLE MATERIAL DIDATICO (
+endereco_material varchar(60) PRIMARY KEY,
+id_modulo integer,
+tipo_material integer
 );
 
--- drop table tb_recurso
-create table tb_recurso
-(
-recurso_id bigint PRIMARY KEY,
-url varchar(30),
-verb varchar(30),
-nome varchar(50)
+-- drop table DISCIPLINA
+CREATE TABLE DISCIPLINA (
+id_disciplina integer,
+nome_disciplina varchar(100),
+id_professor integer,
+data_inicio date,
+data_termino date,
+PRIMARY KEY(id_disciplina,nome_disciplina)
 );
 
--- drop table tb_permissao
-create table tb_permissao
-(
-permissao_id bigint PRIMARY KEY,
-recurso_id bigint references tb_recurso (recurso_id),
-privilegio_id bigint references tb_privilegio (privilegio_id),
-nome varchar(50)
+-- drop table MODULO
+CREATE TABLE MODULO (
+id_modulo integer PRIMARY KEY,
+id_disciplina integer,
+nivel_modulo integer,
+data_inicio date,
+data_termino date
 );
 
--- drop table tb_rel_perfil_permissao
-create table tb_rel_perfil_permissao
-(
-perfil_id bigint references tb_perfil (perfil_id) on delete cascade,
-permissao_id bigint references tb_permissao (permissao_id) on delete cascade
+-- drop table ALUNO
+CREATE TABLE ALUNO (
+id_aluno integer PRIMARY KEY,
+id_matricula integer,
+id_contato integer,
+senha varchar(20),
+email varchar(30)
 );
 
--- drop table tb_rel_usuario_perfil
-create table tb_rel_usuario_perfil
-(
-usuario_id bigint references tb_usuario (usuario_id) on delete cascade,
-perfil_id bigint references tb_perfil (perfil_id) on delete cascade
+-- drop table PROFESSOR
+CREATE TABLE PROFESSOR (
+id_professor integer PRIMARY KEY,
+id_contato integer,
+email varchar(20),
+senha varchar(20)
 );
+
+-- drop table CONTATO
+CREATE TABLE CONTATO (
+id_contato integer PRIMARY KEY,
+data_nascimento Date,
+nome varchar(100)
+);
+
