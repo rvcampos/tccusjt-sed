@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 
 import br.com.usjt.jaxrs.JSPAttr;
 import br.com.usjt.jaxrs.security.SecurityPrivate.SecType;
+import br.com.usjt.shiro.SecurityShiro;
 
 /**
  * Controlador de seguranca para o site. Padrão é bloquear.
@@ -31,7 +32,7 @@ public class SecurityInterceptor implements PreProcessInterceptor {
     @Override
     public ServerResponse preProcess(HttpRequest r, ResourceMethod m) throws Failure, WebApplicationException {
 //        Security sh = SecurityShiro.init();
-        Security sh = new SecurityDummy();
+        br.com.usjt.shiro.Security sh = SecurityShiro.init();
         if (m.getMethod().isAnnotationPresent(SecurityPublic.class)) {
             SecurityInterceptor.LOG.info("Publico:" + m.getMethod());
         } else {

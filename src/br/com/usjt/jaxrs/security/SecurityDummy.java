@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 /**
  * XXX Classe vazia de autenticacao do JAXRS
  */
-public class SecurityDummy implements Security {
+public class SecurityDummy implements br.com.usjt.shiro.Security {
 
     private static final Logger LOG = LoggerFactory.getLogger(SecurityDummy.class);
 
