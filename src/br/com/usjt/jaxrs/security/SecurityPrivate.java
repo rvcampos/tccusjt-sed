@@ -17,8 +17,10 @@ public @interface SecurityPrivate {
     /**
      * @return privilegios
      */
-    SecType[] permission() default SecType.SELECT;
+    SecType permission() default SecType.LER;
 
+    Entidade entity() default Entidade.DUMMY;
+    
     /**
      * Tipos de autenticacoes
      */
@@ -26,13 +28,27 @@ public @interface SecurityPrivate {
         MATRICULAR,
         /**
          */
-        CRIARCURSO,
+        CRIAR,
         /**
          */
-        ACESSARCURSO,
+        LER,
         /**
          */
-        SELECT,
+        DELETAR,
+        /**
+         */
+        UPDATE,
+        /**
+         */
+        DETALHAR
+    }
+    
+    public static enum Entidade
+    {
+        ALUNO,
+        PROFESSOR,
+        CURSO,
+        DUMMY;
     }
 
 }

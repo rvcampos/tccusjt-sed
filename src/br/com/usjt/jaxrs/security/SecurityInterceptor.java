@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import br.com.usjt.jaxrs.JSPAttr;
+import br.com.usjt.jaxrs.security.SecurityPrivate.Entidade;
 import br.com.usjt.jaxrs.security.SecurityPrivate.SecType;
 import br.com.usjt.shiro.SecurityShiro;
 
@@ -25,37 +26,42 @@ import br.com.usjt.shiro.SecurityShiro;
 @Provider
 @ServerInterceptor
 @SecurityPrecedence
-public class SecurityInterceptor implements PreProcessInterceptor {
+public class SecurityInterceptor implements PreProcessInterceptor
+{
 
     private static Logger LOG = LoggerFactory.getLogger(SecurityInterceptor.class);
 
     @Override
     public ServerResponse preProcess(HttpRequest r, ResourceMethod m) throws Failure, WebApplicationException {
-//        Security sh = SecurityShiro.init();
+        // Security sh = SecurityShiro.init();
         br.com.usjt.shiro.Security sh = SecurityShiro.init();
         if (m.getMethod().isAnnotationPresent(SecurityPublic.class)) {
             SecurityInterceptor.LOG.info("Publico:" + m.getMethod());
-        } else {
+        }
+        else {
             if (!sh.isAuthenticated()) {
                 new JSPAttr("msgsession", "Sem autorização. Favor efetuar o login!");
                 throw new Failure("Sem autorização", HttpServletResponse.SC_UNAUTHORIZED);
-            } else {
+            }
+            else {
                 UriInfo u = r.getUri();
                 String method = r.getHttpMethod().toUpperCase();
                 String path = u.getPath();
-                SecType[] per = null;
+                SecType per = null;
+                Entidade ent = null;
 
                 if (m.getMethod().isAnnotationPresent(SecurityPrivate.class)) {
                     per = m.getMethod().getAnnotation(SecurityPrivate.class).permission();
+                    ent = m.getMethod().getAnnotation(SecurityPrivate.class).entity();
                 }
 
                 SecurityInterceptor.LOG.info("Checando|" + method + ":" + path);
 
                 if (per != null) {
-                    for (SecType ln : per) {
-                        String pp = method + ":" + path + ":" + ln;
-                        SecurityInterceptor.LOG.info("Checando|" + pp);
-                        if (sh.isPermitted(pp)) { return null; }
+                    String pp = method + ":" + ent + ":" + per;
+                    SecurityInterceptor.LOG.info("Checando|" + pp);
+                    if (sh.isPermitted(pp)) {
+                        return null;
                     }
                 }
 
