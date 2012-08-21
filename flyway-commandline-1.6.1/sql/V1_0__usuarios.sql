@@ -23,6 +23,27 @@ data_nascimento Date,
 nome varchar(100),
 rg   varchar(12));
 
+create table TP_TELEFONE
+(
+id_tipo integer PRIMARY KEY,
+nome varchar(40)
+);
+
+insert into tp_telefone values(1,'Fixo');
+insert into tp_telefone values(2,'Celular');
+insert into tp_telefone values(3,'Fax');
+insert into tp_telefone values(4,'Radio');
+
+
+create table TELEFONES
+(
+ id_telefone integer PRIMARY KEY,
+ id_contato integer references contato (id_contato),
+ tipo integer references tp_telefone (id_tipo),
+ ddd integer,
+ telefone numeric(9)
+);
+
 -- drop table ENDERECO
 CREATE TABLE ENDERECO (
 id_endereco integer PRIMARY KEY,
