@@ -8,7 +8,7 @@ CREATE TABLE ADMINISTRADOR (
 id_admin integer PRIMARY KEY,
 senha varchar(20),
 email varchar(20),
-nome varchar(100)
+idcontato integer
 );
 
 -- drop table MATRICULA
@@ -66,7 +66,7 @@ CREATE TABLE PROFESSOR (
 id_professor integer PRIMARY KEY,
 id_contato integer,
 email varchar(20),
-senha varchar(20)
+senha varchar(46)
 );
 
 -- drop table CONTATO
@@ -81,7 +81,6 @@ cpf  numeric(12));
 CREATE TABLE ENDERECO (
 id_endereco integer PRIMARY KEY,
 id_cidade   integer ,
-nome varchar(100),
-rg   varchar(12),
-cpf  numeric(12));
+bairro varchar(100),
+endereco  varchar(120));
 
