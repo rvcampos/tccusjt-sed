@@ -3,84 +3,91 @@
 
 --Modelo de dados físico gerado para o Sistema de Ensino á Distância
 
--- drop table ADMINISTRADOR
-CREATE TABLE ADMINISTRADOR (
-id_admin integer PRIMARY KEY,
-senha varchar(20),
-email varchar(20),
-idcontato integer
-);
 
--- drop table MATRICULA
-CREATE TABLE MATRICULA (
-id_matricula integer PRIMARY KEY,
-id_modulo integer,
-id_aluno integer
-);
+-- drop table ESTADO_UF
+CREATE TABLE ESTADO_UF (
+id_estado integer PRIMARY KEY,
+nome varchar(100));
 
--- drop table AVALIACAO
-CREATE TABLE AVALIACAO (
-id_avaliacao integer PRIMARY KEY,
-id_modulo integer,
-data_inicio date,
-data_termino date
-);
+-- drop table CIDADE
+CREATE TABLE CIDADE (
+id_cidade integer PRIMARY KEY,
+nome varchar(100),
+id_estado  integer references ESTADO_UF(id_estado));
 
--- drop table MATERIAL_DIDATICO
-CREATE TABLE MATERIAL DIDATICO (
-endereco_material varchar(60) PRIMARY KEY,
-id_modulo integer,
-tipo_material integer
-);
-
--- drop table DISCIPLINA
-CREATE TABLE DISCIPLINA (
-id_disciplina integer,
-nome_disciplina varchar(100),
-id_professor integer,
-data_inicio date,
-data_termino date,
-PRIMARY KEY(id_disciplina,nome_disciplina)
-);
-
--- drop table MODULO
-CREATE TABLE MODULO (
-id_modulo integer PRIMARY KEY,
-id_disciplina integer,
-nivel_modulo integer,
-data_inicio date,
-data_termino date
-);
-
--- drop table ALUNO
-CREATE TABLE ALUNO (
-id_aluno integer PRIMARY KEY,
-id_matricula integer,
-id_contato integer,
-senha varchar(20),
-email varchar(30)
-);
-
--- drop table PROFESSOR
-CREATE TABLE PROFESSOR (
-id_professor integer PRIMARY KEY,
-id_contato integer,
-email varchar(20),
-senha varchar(46)
-);
 
 -- drop table CONTATO
 CREATE TABLE CONTATO (
 id_contato integer PRIMARY KEY,
 data_nascimento Date,
 nome varchar(100),
-rg   varchar(12),
-cpf  numeric(12));
+rg   varchar(12));
 
--- drop table CONTATO
+-- drop table ENDERECO
 CREATE TABLE ENDERECO (
 id_endereco integer PRIMARY KEY,
-id_cidade   integer ,
+id_cidade   integer,
 bairro varchar(100),
-endereco  varchar(120));
+logradouro  varchar(120),
+cep    integer);
+
+CREATE TABLE PROFESSOR (
+id_professor integer PRIMARY KEY,
+id_contato integer REFERENCES CONTATO(id_contato),
+id_endereco integer references ENDERECO(id_endereco),
+email varchar(30),
+senha varchar(20),
+cpf  numeric(12) not null);
+
+CREATE TABLE ADMINISTRADOR (
+id_admin integer PRIMARY KEY,
+senha varchar(20),
+email varchar(20),
+nome varchar(100)
+);
+
+CREATE TABLE DISCIPLINA (
+id_disciplina integer,
+nome_disciplina varchar(100),
+id_professor integer references PROFESSOR(id_professor),
+data_inicio date,
+data_termino date,
+PRIMARY KEY(id_disciplina)
+);
+
+CREATE TABLE MODULO (
+id_modulo integer PRIMARY KEY,
+id_disciplina integer references DISCIPLINA(id_disciplina),
+nivel_modulo integer,
+data_inicio date,
+data_termino date
+);
+CREATE TABLE AVALIACAO (
+id_avaliacao integer PRIMARY KEY,
+id_modulo integer REFERENCES MODULO(id_modulo),
+data_inicio date,
+data_termino date
+);
+
+CREATE TABLE MATERIAL_DIDATICO (
+endereco_material varchar(60) PRIMARY KEY,
+id_modulo integer REFERENCES MODULO(id_modulo),
+tipo_material integer
+);
+
+CREATE TABLE ALUNO (
+id_aluno integer PRIMARY KEY,
+id_contato integer REFERENCES contato(id_contato),
+id_endereco integer references ENDERECO(id_endereco),
+senha varchar(20),
+email varchar(30),
+cpf  numeric(12)
+);
+
+CREATE TABLE MATRICULA (
+id_matricula integer PRIMARY KEY,
+id_modulo integer REFERENCES MODULO(id_modulo),
+id_aluno integer REFERENCES ALUNO(id_aluno)
+);
+
 
