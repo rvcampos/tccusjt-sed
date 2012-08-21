@@ -1,5 +1,6 @@
 package br.com.usjt.ead.aluno;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -23,8 +24,11 @@ public class AlunoBean
     @JoinColumn(name = "id_endereco")
     private EnderecoBean endereco; // integer// references
                                    // ENDERECO(id_endereco),
+    @Column
     private String       senha;   // varchar(20),
+    @Column
     private String       email;   // varchar(30),
+    @Column
     private Long         cpf;     // numeric(12)
 
     @Override
