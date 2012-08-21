@@ -73,6 +73,15 @@ senha varchar(20)
 CREATE TABLE CONTATO (
 id_contato integer PRIMARY KEY,
 data_nascimento Date,
-nome varchar(100)
-);
+nome varchar(100),
+rg   varchar(12),
+cpf  numeric(12));
+
+-- drop table CONTATO
+CREATE TABLE ENDERECO (
+id_endereco integer PRIMARY KEY,
+id_cidade   integer ,
+nome varchar(100),
+rg   varchar(12),
+cpf  numeric(12));
 

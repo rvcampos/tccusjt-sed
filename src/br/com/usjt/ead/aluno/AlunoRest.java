@@ -17,7 +17,7 @@ public class AlunoRest implements ICrud
 {
 
     @Override
-    @Path("cadastrar")
+    @Path("")
     @POST
     @GET
     @Stylesheet(href = "pag.jsp", type = MediaTypeMore.APP_JSP)

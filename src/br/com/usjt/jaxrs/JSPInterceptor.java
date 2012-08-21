@@ -29,8 +29,9 @@ public class JSPInterceptor implements AcceptedByMethod, PostProcessInterceptor 
     @Override
     public void postProcess(ServerResponse r) {
         JSPInterceptor.LOG.info("JSP:" + r.getResourceMethod());
-        String page = "/WEB-INF/" + r.getResourceMethod().getAnnotation(Stylesheet.class).href();
+        String page = "/WEB-INF/main.jsp";
         HttpServletRequest request = ResteasyProviderFactory.getContextData(HttpServletRequest.class);
+        request.setAttribute("pagina", "/WEB-INF/" + r.getResourceMethod().getAnnotation(Stylesheet.class).href());
         HttpServletResponse response = ResteasyProviderFactory.getContextData(HttpServletResponse.class);
         JSPInterceptor.render(request, response, page);
     }

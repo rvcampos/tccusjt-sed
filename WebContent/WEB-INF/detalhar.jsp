@@ -4,15 +4,9 @@
 www.w3.org/TR/html4/loose.dtd">
 
 <head>
-
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Cadastro de Aluno</title>
-<jsp:include page="header.jsp" />
 </head>
-
-<body>
-	<jsp:include page="menu.jsp" />
-	<div class="container" style="padding-top: 60px;">
 		<fieldset style="width: 14cm;">
 			<legend>
 				<b>Cadastro de Aluno </b>
@@ -128,7 +122,3 @@ documentos\USJT\TCC\next.png"></a>
 				Cancelar</button>
 		</center>
 		</form>
-	</div>
-</body>
-
-</html>
