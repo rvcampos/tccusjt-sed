@@ -11,7 +11,8 @@ import br.com.usjt.util.CryptoXFacade;
 /**
  * Shiro Blowfish Credential Matcher with Blowfish Cryptox
  */
-public class BlowfishCM implements CredentialsMatcher {
+public class BlowfishCM implements CredentialsMatcher
+{
 
     private static final Logger LOG = LoggerFactory.getLogger(BlowfishCM.class);
 
@@ -19,7 +20,7 @@ public class BlowfishCM implements CredentialsMatcher {
     public boolean doCredentialsMatch(AuthenticationToken token, AuthenticationInfo info) {
         try {
             String pass = String.copyValueOf((char[]) token.getCredentials());
-            return CryptoXFacade.cryptox.checaSenha(pass, info.getCredentials().toString());
+            return CryptoXFacade.checaSenha(pass, info.getCredentials().toString());
         }
         catch (Exception e) {
             BlowfishCM.LOG.error("Credenciais: " + token + "::" + info, e);

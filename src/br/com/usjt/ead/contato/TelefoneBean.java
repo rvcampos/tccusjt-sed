@@ -2,9 +2,12 @@ package br.com.usjt.ead.contato;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -13,6 +16,8 @@ import javax.validation.constraints.NotNull;
 public class TelefoneBean
 {
     @Id
+    @SequenceGenerator(name="gen", initialValue=1, sequenceName="seq_telefone")
+    @GeneratedValue(generator="gen", strategy=GenerationType.AUTO)
     private Long             id_telefone; // integer PRIMARY KEY,
     @ManyToOne
     @JoinColumn(name = "id_contato")

@@ -67,7 +67,7 @@ public class AlunoRest implements ICrud
         JSPAttr j = new JSPAttr();
         AlunoBean b = new AlunoBean();
         b.setEmail(j.getParameter("txtEmail"));
-        b.setSenha(CryptoXFacade.cryptox.crypt(j.getParameter("txtSenha")));
+        b.setSenha(CryptoXFacade.crypt(j.getParameter("txtSenha")));
         b.setCpf(Long.parseLong(j.getParameter("txtCPF").replaceAll("[^0-9]", "")));
         EnderecoBean end = new EnderecoBean();
         end.setCep(Integer.parseInt(j.getParameter("txtCEP").replaceAll("[^0-9]", "")));

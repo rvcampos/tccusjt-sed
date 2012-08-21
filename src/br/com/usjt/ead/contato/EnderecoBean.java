@@ -1,25 +1,27 @@
 package br.com.usjt.ead.contato;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-
-import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
 @Table(name = "ENDERECO")
 public class EnderecoBean
 {
+    @Id
+    @SequenceGenerator(name="gen", initialValue=1, sequenceName="seq_endereco")
+    @GeneratedValue(generator="gen", strategy=GenerationType.AUTO)
     private Integer id_endereco; // integer PRIMARY KEY,
     private Integer id_cidade;   // integer,
+    @Column
     private String  bairro;      // varchar(100),
+    @Column
     private String  logradouro;  // varchar(120),
+    @Column
     private Integer cep;         // integer);
 
     @Override

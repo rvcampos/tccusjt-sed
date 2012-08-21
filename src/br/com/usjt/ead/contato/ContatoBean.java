@@ -6,8 +6,11 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.hibernate.validator.constraints.NotEmpty;
@@ -17,9 +20,9 @@ import org.hibernate.validator.constraints.NotEmpty;
 public class ContatoBean
 {
     @Id
+    @SequenceGenerator(name="gen", initialValue=1, sequenceName="seq_contato")
+    @GeneratedValue(generator="gen", strategy=GenerationType.AUTO)
     private Long              id_contato;                             // integer
-                                                                       // PRIMARY
-                                                                       // KEY,
     @Column
     private Date              data_nascimento;                        // Date,
     @Column

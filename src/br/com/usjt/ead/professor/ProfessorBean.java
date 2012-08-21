@@ -1,4 +1,4 @@
-package br.com.usjt.ead.aluno;
+package br.com.usjt.ead.professor;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,40 +14,41 @@ import br.com.usjt.ead.contato.ContatoBean;
 import br.com.usjt.ead.contato.EnderecoBean;
 
 @Entity
-@Table(name = "ALUNO")
-public class AlunoBean
+@Table(name = "PROFESSOR")
+public class ProfessorBean
 {
 
     @Id
-    @SequenceGenerator(name="gen", initialValue=1, sequenceName="seq_aluno")
+    @SequenceGenerator(name="gen", initialValue=1, sequenceName="seq_professor")
     @GeneratedValue(generator="gen", strategy=GenerationType.AUTO)
-    private Integer      id_aluno; // integer PRIMARY KEY,
+    private Integer      id_professor; // integer PRIMARY KEY,
     @OneToOne
     @JoinColumn(name = "id_contato")
-    private ContatoBean  contato; // integer// REFERENCES contato(id_contato),
+    private ContatoBean  contato;     // integer// REFERENCES
+                                       // contato(id_contato),
     @OneToOne
     @JoinColumn(name = "id_endereco")
-    private EnderecoBean endereco; // integer// references
-                                   // ENDERECO(id_endereco),
+    private EnderecoBean endereco;    // integer// references
+                                       // ENDERECO(id_endereco),
     @Column
-    private String       senha;   // varchar(20),
+    private String       senha;       // varchar(20),
     @Column
-    private String       email;   // varchar(30),
+    private String       email;       // varchar(30),
     @Column
-    private Long         cpf;     // numeric(12)
+    private Long         cpf;         // numeric(12)
 
     @Override
     public String toString() {
-        return "AlunoBean [id_aluno=" + id_aluno + ", contato=" + contato + ", endereco=" + endereco + ", senha=" + senha
-                + ", email=" + email + ", cpf=" + cpf + "]";
+        return "ProfessorBean [id_professor=" + id_professor + ", contato=" + contato + ", endereco=" + endereco + ", senha="
+                + senha + ", email=" + email + ", cpf=" + cpf + "]";
     }
 
-    public Integer getId_aluno() {
-        return id_aluno;
+    public Integer getId_professor() {
+        return id_professor;
     }
 
-    public void setId_aluno(Integer id_aluno) {
-        this.id_aluno = id_aluno;
+    public void setId_professor(Integer id_professor) {
+        this.id_professor = id_professor;
     }
 
     public ContatoBean getContato() {
@@ -89,4 +90,5 @@ public class AlunoBean
     public void setCpf(Long cpf) {
         this.cpf = cpf;
     }
+
 }
