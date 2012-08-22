@@ -2,16 +2,37 @@
 	pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://
 www.w3.org/TR/html4/loose.dtd">
-
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Cadastro de Aluno</title>
 </head>
-		<fieldset style="width: 14cm;">
+<script>
+
+function validaSenhaForm()
+{
+	if($('#txtSenha').val() != $('#txtCsenha').val())
+	{
+		alert('Confirmacao de senha invalida');
+		return false;
+	}
+	return true;
+}
+</script>
+		<form action="create" method="post" id="formAluno">
 			<legend>
 				<b>Cadastro de Aluno </b>
 			</legend>
-			<form action="create" method="post">
+		<table>
+		<tr>
+		<td>
+			<div class="tabbable">
+			<ul class="nav nav-tabs"> 
+			<li class="active"><a href="#1" data-toggle="tab">Dados cadastrais</a></li>  
+			<li class=""><a href="#2" data-toggle="tab">Endereco</a></li>  
+			<li class=""><a href="#3" data-toggle="tab">Usuario</a></li> 
+			</ul>
+			<div class="tab-content">  
+			<div class="tab-pane active" id="1">  
 			<table class="table">
 				<tr>
 					<td><label>Nome Completo </label></td>
@@ -37,25 +58,26 @@ www.w3.org/TR/html4/loose.dtd">
 
 				<tr>
 					<td><label>Foto</label></td>
-					<td><input id="txtFoto" size="25">
-						<button id="cmdFoto" style="width: 120px;" type="submit">Escolher
-							Arquivo</button></td>
+					<td><input type="file" id="foto"></td>
 				</tr>
 
 				<tr>
 					<td><label> Data de Nascimento </label></td>
-					<td><input id="txtNascimento" maxlength="10" size="12"></td>
+					<td><input id="txtNascimento" type='text' maxlength="10" size="12" alt="39/19/2999"></td>
 				</tr>
-
+				</table>
+				</div>
+				<div class="tab-pane" id="2">  
+				<table  class="table">
 				<tr>
 					<td><label>Endereço</label></td>
-					<td><input id="txtEndereco" maxlength="50" size="50"></td>
+					<td><input type='text' id="txtEndereco" maxlength="50" size="50"></td>
 				</tr>
 
 				<tr>
 
 					<td><label>Bairro</label></td>
-					<td><input id="txtBairro" maxlength="50" size="50"></td>
+					<td><input type='text' id="txtBairro" maxlength="50" size="50"></td>
 				</tr>
 
 				<tr>
@@ -69,28 +91,31 @@ www.w3.org/TR/html4/loose.dtd">
 
 				<tr>
 					<td><label>Cep</label></td>
-					<td><input id="txtCep" maxlength="8" size="8"></td>
+					<td><input type='text' id="txtCep" alt='cep' maxlength="8" size="8"></td>
 					</td>
 				</tr>
-
+				</table>
+				</div>
+				<div class="tab-pane" id="3">  
+				<table class="table">
 				<tr>
 					<td><label>Telefone</label></td>
-					<td><input id="txtTelefone" maxlength="11" size="12"></td>
+					<td><input type="text" id="txtTelefoneDDD" maxlength="2" size="2" style="width:15px;" alt="99"> <input type="text" id="txtTelefone" maxlength="9" alt="9999-9999"></td>
 				</tr>
 
 				<tr>
 					<td><label>Celular</label></td>
-					<td><input id="txtCelular" maxlength="11" size="12"></td>
+					<td><input type="text" id="txtCelularDDD" maxlength="2" size="2" style="width:15px;" alt="99"> <input type="text" id="txtCelular" maxlength="9" alt="9999-9999"></td>
 				</tr>
 
 				<tr>
 					<td><label>Email</label></td>
-					<td><input id="txtEmail" maxlength="50" size="50"></td>
+					<td><input type="text" id="txtEmail" maxlength="50" size="50"></td>
 				</tr>
 
 				<tr>
 					<td><label>Usuário</label></td>
-					<td><input id="txtUsuario" maxlength="20" size="20"></td>
+					<td><input type="text" id="txtUsuario" maxlength="20" size="20"></td>
 				</tr>
 
 				<tr>
@@ -104,21 +129,20 @@ www.w3.org/TR/html4/loose.dtd">
 						size="8"></td>
 				</tr>
 			</table>
-		</fieldset>
-		<br>
+			</div>
+			</div>
+			</div>
+		</td>
+		</tr>
+		<tr>
+		<td>
 		<center>
-			<a href=" CadastroAluno.jsp"> <img
-				style="bottom: 20px; border-color: #D6EBFF" alt="Anterior"
-				src="C:\Documents and Settings\maiksv\Meus
-documentos\USJT\TCC\previus.png"></a>
-			<a href="links.jsp"><img
-				style="bottom: 20px; border-color: #D6EBFF" alt="Proxima"
-				src="C:\Documents and Settings\maiksv\Meus
-documentos\USJT\TCC\next.png"></a>
-			<br> <br>
-			<button id="cmdIncluir" type="submit" style="width: 70px;">
+			<button id="cmdIncluir" type="button" onclick="if(validaSenhaForm()){$('#formAluno').submit();}" style="width: 70px;">
 				Incluir</button>
 			<button id="cmdCancelar" type="button" style="width: 70px;">
 				Cancelar</button>
 		</center>
+		</td>
+		</tr>
+		</table>
 		</form>

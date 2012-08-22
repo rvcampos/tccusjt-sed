@@ -16,8 +16,8 @@
 <link rel="stylesheet" href="${app_context}css/style.css" type="text/css" />
 
 <script type="text/javascript">
-$('input[type=text]').setMask(this.alt);
 $(document).ready(function() {
 $('.datepicker').datepicker();
+$('input[type="text"]').setMask();
 });
 </script>
