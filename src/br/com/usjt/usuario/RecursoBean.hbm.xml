@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 05/05/2012 00:48:34 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="br.com.usjt.usuario.RecursoBean" table="RECURSOBEAN">
+        <id name="recurso_id" type="java.lang.Long">
+            <column name="RECURSO_ID" />
+            <generator class="assigned" />
+        </id>
+        <property name="url" type="java.lang.String">
+            <column name="URL" />
+        </property>
+        <property name="verb" type="java.lang.String">
+            <column name="VERB" />
+        </property>
+        <property name="nome" type="java.lang.String">
+            <column name="NOME" />
+        </property>
+    </class>
+</hibernate-mapping>

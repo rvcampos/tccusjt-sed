@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 05/05/2012 00:48:34 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="br.com.usjt.usuario.PermissaoBean" table="PERMISSAOBEAN">
+        <id name="permissao_id" type="java.lang.Long">
+            <column name="PERMISSAO_ID" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="privilegio" class="br.com.usjt.usuario.PrivilegioBean" fetch="join">
+            <column name="PRIVILEGIO" />
+        </many-to-one>
+        <many-to-one name="recurso" class="br.com.usjt.usuario.RecursoBean" fetch="join">
+            <column name="RECURSO" />
+        </many-to-one>
+    </class>
+</hibernate-mapping>
