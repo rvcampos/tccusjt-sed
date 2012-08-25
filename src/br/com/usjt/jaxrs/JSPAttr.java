@@ -19,6 +19,7 @@ public class JSPAttr {
      */
     public JSPAttr () {
         this.request = ResteasyProviderFactory.getContextData(HttpServletRequest.class);
+        
     }
 
     /**

@@ -58,12 +58,12 @@ function validaSenhaForm()
 
 				<tr>
 					<td><label>Foto</label></td>
-					<td><input type="file" id="foto"></td>
+					<td><input type="file" id="foto" name="foto"></td>
 				</tr>
 
 				<tr>
 					<td><label> Data de Nascimento </label></td>
-					<td><input id="txtNascimento" type='text' maxlength="10" size="12" alt="39/19/2999"></td>
+					<td><input name="txtNascimento" id="txtNascimento" type='text' maxlength="10" size="12" alt="39/19/2999"></td>
 				</tr>
 				</table>
 				</div>
@@ -71,27 +71,27 @@ function validaSenhaForm()
 				<table  class="table">
 				<tr>
 					<td><label>Endereço</label></td>
-					<td><input type='text' id="txtEndereco" maxlength="50" size="50"></td>
+					<td><input type='text' id="txtEndereco" name="txtEndereco" maxlength="50" size="50"></td>
 				</tr>
 
 				<tr>
 
 					<td><label>Bairro</label></td>
-					<td><input type='text' id="txtBairro" maxlength="50" size="50"></td>
+					<td><input type='text' id="txtBairro" name="txtBairro" maxlength="50" size="50"></td>
 				</tr>
 
 				<tr>
 					<td><label>UF</label></td>
-					<td><select style="width: 40px;" id="CboUF"></select></td>
+					<td><select style="width: 40px;" id="CboUF" name="CboUF"></select></td>
 				</tr>
 				<tr>
 					<td><label>Cidade</label></td>
-					<td><input id="txtCidade" maxlength="20" size="20">
+					<td><input id="txtCidade" name="txtCidade" maxlength="20" size="20">
 				</tr>
 
 				<tr>
 					<td><label>Cep</label></td>
-					<td><input type='text' id="txtCep" alt='cep' maxlength="8" size="8"></td>
+					<td><input type='text' id="txtCep" name="txtCep" alt='cep' maxlength="8" size="8"></td>
 					</td>
 				</tr>
 				</table>
@@ -100,32 +100,32 @@ function validaSenhaForm()
 				<table class="table">
 				<tr>
 					<td><label>Telefone</label></td>
-					<td><input type="text" id="txtTelefoneDDD" maxlength="2" size="2" style="width:15px;" alt="99"> <input type="text" id="txtTelefone" maxlength="9" alt="9999-9999"></td>
+					<td><input type="text" id="txtTelefoneDDD" name="txtTelefoneDDD" maxlength="2" size="2" style="width:15px;" alt="99"> <input type="text" id="txtTelefone" name="txtTelefone" maxlength="9" alt="9999-9999"></td>
 				</tr>
 
 				<tr>
 					<td><label>Celular</label></td>
-					<td><input type="text" id="txtCelularDDD" maxlength="2" size="2" style="width:15px;" alt="99"> <input type="text" id="txtCelular" maxlength="9" alt="9999-9999"></td>
+					<td><input type="text" id="txtCelularDDD" name="txtCelularDDD" maxlength="2" size="2" style="width:15px;" alt="99"> <input type="text" id="txtCelular" name="txtCelular" maxlength="9" alt="9999-9999"></td>
 				</tr>
 
 				<tr>
 					<td><label>Email</label></td>
-					<td><input type="text" id="txtEmail" maxlength="50" size="50"></td>
+					<td><input type="text" id="txtEmail" name="txtEmail" maxlength="50" size="50"></td>
 				</tr>
 
 				<tr>
 					<td><label>Usuário</label></td>
-					<td><input type="text" id="txtUsuario" maxlength="20" size="20"></td>
+					<td><input type="text" id="txtUsuario" name="txtUsuario" maxlength="20" size="20"></td>
 				</tr>
 
 				<tr>
 					<td><label>Senha</label></td>
-					<td><input id="txtSenha" type="password" maxlength="8"
+					<td><input id="txtSenha" name="txtSenha" type="password" maxlength="8"
 						size="8"></td>
 				</tr>
 				<tr>
 					<td><label>Confirma Senha</label></td>
-					<td><input id="txtCsenha" type="password" maxlength="8"
+					<td><input id="txtCsenha" name="txtCsenha" type="password" maxlength="8"
 						size="8"></td>
 				</tr>
 			</table>

@@ -8,24 +8,11 @@ import br.com.blowfishcryptox.BlowfishCryptox;
 public class CryptoXFacade
 {
 
-    // HARDCODE
-    private static String               passPhrase = "tccusjt";
+    private static final String               passPhrase = "tccusjt";
     /**
      * Criptografia
      */
-    private static final BlowfishCryptox cryptox    = BlowfishCryptox.getInstance(passPhrase, 30);
-
-    /**
-     * Senha
-     */
-    public static void main(String[] args) {
-        try {
-            System.out.println(cryptox.crypt(args[0]));
-        }
-        catch (Exception e) {
-            System.out.println(cryptox.crypt("admin"));
-        }
-    }
+    private static final BlowfishCryptox cryptox    = BlowfishCryptox.getInstance(passPhrase, 5);
 
     public static String crypt(String pass) {
         return cryptox.crypt(pass);
