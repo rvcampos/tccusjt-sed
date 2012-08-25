@@ -7,7 +7,7 @@
 -- drop table ESTADO_UF
 CREATE TABLE ESTADO_UF (
 id_estado integer PRIMARY KEY,
-nome varchar(100));
+uf varchar(100));
 
 -- drop table CIDADE
 CREATE TABLE CIDADE (
@@ -111,4 +111,30 @@ id_modulo integer REFERENCES MODULO(id_modulo),
 id_aluno integer REFERENCES ALUNO(id_aluno)
 );
 
+CREATE SEQUENCE seq_aluno
+  INCREMENT 1
+  MINVALUE 0
+  MAXVALUE 99999999
+  START 1
+  CACHE 1;
+  
+  CREATE SEQUENCE seq_contato
+  INCREMENT 1
+  MINVALUE 0
+  MAXVALUE 99999999
+  START 1
+  CACHE 1;
 
+  CREATE SEQUENCE seq_endereco
+  INCREMENT 1
+  MINVALUE 0
+  MAXVALUE 99999999
+  START 1
+  CACHE 1;
+  
+  CREATE SEQUENCE seq_telefone
+  INCREMENT 1
+  MINVALUE 0
+  MAXVALUE 99999999
+  START 1
+  CACHE 1;

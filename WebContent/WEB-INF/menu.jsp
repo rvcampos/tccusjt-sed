@@ -8,20 +8,16 @@
 		<a class="brand" href="${app_context}">S.E.D</a>
 		<ul class="nav">
 		<shiro:authenticated>
-		<shiro:hasRole name="">
-		<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Aluno<b class="caret"></b></a>
+		<shiro:hasRole name="admin">
+		<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Cadastrar<b class="caret"></b></a>
 			<ul class="dropdown-menu">
 				<table cellpadding="0" cellspacing="0" border="0">
 					<tr>
 						<td valign="top">
-							<li class="nav-header">Cursos</li>
-							<shiro:hasRole name="aluno">
-							<li><a href="${app_context}aluno/cursos">Cursos Disponíveis</a></li>
-							<li><a href="${app_context}aluno/meusCursos">Meus Cursos</a></li>
-							</shiro:hasRole>
-							<shiro:hasRole name="professor">
-							<li><a href="${app_context}professor/meusCursos">Listar Meus Cursos</a></li>
-							</shiro:hasRole>
+							<li class="nav-header">Aluno</li>
+							<li><a href="${app_context}aluno/cadastrar">Cadastrar Aluno</a></li>
+							<li class="nav-header">Professor</li>
+							<li><a href="${app_context}professor/cadastrar">Cadastrar Professor</a></li>
 						</td>
 					</tr>
 				</table>
