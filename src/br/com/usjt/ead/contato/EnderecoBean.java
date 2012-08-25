@@ -16,6 +16,7 @@ public class EnderecoBean
     @SequenceGenerator(name="gen", initialValue=1, sequenceName="seq_endereco")
     @GeneratedValue(generator="gen", strategy=GenerationType.AUTO)
     private Integer id_endereco; // integer PRIMARY KEY,
+    @Column
     private Integer id_cidade;   // integer,
     @Column
     private String  bairro;      // varchar(100),

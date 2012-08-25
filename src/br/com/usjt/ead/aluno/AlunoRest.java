@@ -4,6 +4,8 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
 import org.jboss.resteasy.annotations.providers.jaxb.Stylesheet;
 
 import br.com.usjt.ICrud;
@@ -16,6 +18,7 @@ import br.com.usjt.jaxrs.security.SecurityPrivate;
 import br.com.usjt.jaxrs.security.SecurityPrivate.Entidade;
 import br.com.usjt.jaxrs.security.SecurityPrivate.SecType;
 import br.com.usjt.util.CryptoXFacade;
+import br.com.usjt.util.HS;
 
 @Path("/aluno")
 public class AlunoRest implements ICrud
@@ -26,7 +29,7 @@ public class AlunoRest implements ICrud
     @POST
     @GET
     @Stylesheet(href = "pag.jsp", type = MediaTypeMore.APP_JSP)
-    @SecurityPrivate(permission = SecType.LER, entity = Entidade.DUMMY)
+    @SecurityPrivate(permission = SecType.LER, entity = Entidade.ALUNO)
     public void read() {
     }
 
@@ -41,7 +44,7 @@ public class AlunoRest implements ICrud
     @Override
     @Path("cadastrar")
     @GET
-    @Stylesheet(href = "/detalhar.jsp", type = MediaTypeMore.APP_JSP)
+    @Stylesheet(href = "aluno/cadastrar.jsp", type = MediaTypeMore.APP_JSP)
     @SecurityPrivate(permission = SecType.CRIAR, entity = Entidade.DUMMY)
     public void edit_insert() {
         // TODO Auto-generated method stub
@@ -66,24 +69,29 @@ public class AlunoRest implements ICrud
     public void create() {
         JSPAttr j = new JSPAttr();
         AlunoBean b = new AlunoBean();
-        try
-        {
-        b.setEmail(j.getParameter("txtEmail"));
-        b.setSenha(CryptoXFacade.crypt(j.getParameter("txtSenha")));
-        b.setCpf(Long.parseLong(j.getParameter("txtCPF").replaceAll("[^0-9]", "")));
-        EnderecoBean end = new EnderecoBean();
-        end.setCep(Integer.parseInt(j.getParameter("txtCEP").replaceAll("[^0-9]", "")));
-        end.setLogradouro(j.getParameter("txtEndereco"));
-        end.setBairro(j.getParameter("txtBairro"));
-        b.setEndereco(end);
-        ContatoBean contato = new ContatoBean();
-        TelefoneBean phone = new TelefoneBean();
-        phone.setDdd(Integer.parseInt(j.getParameter("txtDDD")));
-        phone.setTelefone(Long.parseLong(j.getParameter("txtTelefone")));
-        contato.getTelefones().add(phone);
-        }catch(Exception e)
-        {
+        Session session = HS.getSession();
+        try {
+            b.setEmail(j.getParameter("txtEmail"));
+            b.setSenha(CryptoXFacade.crypt(j.getParameter("txtSenha")));
+            b.setCpf(Long.parseLong(j.getParameter("txtCPF").replaceAll("[^0-9]", "")));
+            EnderecoBean end = new EnderecoBean();
+            end.setCep(Integer.parseInt(j.getParameter("txtCEP").replaceAll("[^0-9]", "")));
+            end.setLogradouro(j.getParameter("txtEndereco"));
+            end.setBairro(j.getParameter("txtBairro"));
+            b.setEndereco(end);
+            ContatoBean contato = new ContatoBean();
+            TelefoneBean phone = new TelefoneBean();
+            phone.setDdd(Integer.parseInt(j.getParameter("txtDDD")));
+            phone.setTelefone(Long.parseLong(j.getParameter("txtTelefone")));
+            contato.getTelefones().add(phone);
+            b.setContato(contato);
+            session.save(b);
+        }
+        catch (Exception e) {
             j.set("txtSenha", "txtSenha");
+        }
+        finally {
+            session.close();
         }
     }
 

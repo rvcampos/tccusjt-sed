@@ -1,5 +1,6 @@
 package br.com.usjt.ead.aluno;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,18 +18,16 @@ import br.com.usjt.ead.contato.EnderecoBean;
 @Table(name = "ALUNO")
 public class AlunoBean
 {
-
     @Id
-    @SequenceGenerator(name="gen", initialValue=1, sequenceName="seq_aluno")
-    @GeneratedValue(generator="gen", strategy=GenerationType.AUTO)
+    @SequenceGenerator(name = "gen", initialValue = 1, sequenceName = "seq_aluno")
+    @GeneratedValue(generator = "gen", strategy = GenerationType.AUTO)
     private Integer      id_aluno; // integer PRIMARY KEY,
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "id_contato")
     private ContatoBean  contato; // integer// REFERENCES contato(id_contato),
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_endereco")
     private EnderecoBean endereco; // integer// references
-                                   // ENDERECO(id_endereco),
     @Column
     private String       senha;   // varchar(20),
     @Column

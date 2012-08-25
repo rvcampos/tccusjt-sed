@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -20,8 +21,8 @@ import org.hibernate.validator.constraints.NotEmpty;
 public class ContatoBean
 {
     @Id
-    @SequenceGenerator(name="gen", initialValue=1, sequenceName="seq_contato")
-    @GeneratedValue(generator="gen", strategy=GenerationType.AUTO)
+    @SequenceGenerator(name = "gen", initialValue = 1, sequenceName = "seq_contato")
+    @GeneratedValue(generator = "gen", strategy = GenerationType.AUTO)
     private Long              id_contato;                             // integer
     @Column
     private Date              data_nascimento;                        // Date,
@@ -29,7 +30,7 @@ public class ContatoBean
     private String            nome;                                   // varchar(100),
     @Column
     private String            rg;                                     // varchar(12));
-    @OneToMany(mappedBy = "contato")
+    @OneToMany(mappedBy = "contato", cascade = CascadeType.ALL, orphanRemoval = true)
     @NotEmpty(message = "Por favor, preencha ao menos um telefone")
     private Set<TelefoneBean> telefones = new HashSet<TelefoneBean>();
 
