@@ -13,7 +13,8 @@ uf varchar(100));
 CREATE TABLE CIDADE (
 id_cidade integer PRIMARY KEY,
 nome varchar(100),
-id_estado  integer references ESTADO_UF(id_estado));
+id_estado  integer references ESTADO_UF(id_estado),
+capital integer);
 
 
 -- drop table CONTATO
