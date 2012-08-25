@@ -12,6 +12,7 @@
 <body>
 <jsp:include page="menu.jsp" />
 <div class="container" style="padding-top: 60px;">
+<a href="/jchatbox/applet/jchatboxclient.html">CHAT</a>
 <jsp:include page="${pagina}"></jsp:include>
 </div>
 
