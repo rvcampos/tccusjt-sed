@@ -38,13 +38,14 @@ public class ProfessorRest implements ICrud
     }
 
     @Override
-    @Path("adicionar")
+    @Path("cadastrar")
     @GET
-    @Stylesheet(href = "/detalhar.jsp", type = MediaTypeMore.APP_JSP)
+    @Stylesheet(href = "professor/cadastrar.jsp", type = MediaTypeMore.APP_JSP)
     @SecurityPrivate(permission = SecType.CRIAR, entity = Entidade.DUMMY)
     public void edit_insert() {
-        // TODO Auto-generated method stub
-
+        @SuppressWarnings("unused")
+        String a = "";
+        a = "";
     }
 
     @Override
