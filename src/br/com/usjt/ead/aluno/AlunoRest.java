@@ -6,6 +6,7 @@ import javax.ws.rs.Path;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.jboss.resteasy.annotations.providers.jaxb.Stylesheet;
 
 import br.com.usjt.ICrud;
@@ -71,6 +72,7 @@ public class AlunoRest implements ICrud
         JSPAttr j = new JSPAttr();
         AlunoBean b = new AlunoBean();
         Session session = HS.getSession();
+        Transaction tx = session.beginTransaction();
         try {
             b.setEmail(j.getParameter("txtEmail"));
             b.setSenha(CryptoXFacade.crypt(j.getParameter("txtSenha")));
@@ -93,8 +95,10 @@ public class AlunoRest implements ICrud
             contato.getTelefones().add(celular);
             b.setContato(contato);
             session.save(b);
+            tx.commit();
         }
         catch (Exception e) {
+            tx.rollback();
             j.set("txtSenha", "txtSenha");
         }
         finally {
