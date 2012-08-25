@@ -1,4 +1,4 @@
-package br.com.usjt.ead.curso;
+package br.com.usjt.ead.material;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,6 +9,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+
+import br.com.usjt.ead.curso.ModuloBean;
 
 @Entity
 @Table(name = "MATERIAL_DIDATICO")
