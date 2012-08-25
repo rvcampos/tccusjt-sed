@@ -4,12 +4,15 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 
-import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.jboss.resteasy.annotations.providers.jaxb.Stylesheet;
 
 import br.com.usjt.ICrud;
+import br.com.usjt.ead.cidadestado.CidadeBean;
+import br.com.usjt.ead.cidadestado.EstadoUFBean;
 import br.com.usjt.ead.contato.ContatoBean;
 import br.com.usjt.ead.contato.EnderecoBean;
 import br.com.usjt.ead.contato.TelefoneBean;
@@ -49,6 +52,19 @@ public class AlunoRest implements ICrud
     @Stylesheet(href = "aluno/cadastrar.jsp", type = MediaTypeMore.APP_JSP)
     @SecurityPrivate(permission = SecType.CRIAR, entity = Entidade.DUMMY)
     public void edit_insert() {
+        JSPAttr j = new JSPAttr();
+        Session session = HS.getSession();
+        try {
+            j.set("lista_uf", session.createCriteria(EstadoUFBean.class).addOrder(Order.asc("id_estado")).list());
+            j.set("uf_id", 25);
+            j.set("list_city", session.createCriteria(CidadeBean.class).add(Restrictions.eq("estado.id_estado", 25)).list());
+        }
+        catch (Exception e) {
+            // TODO: handle exception
+        }
+        finally {
+            session.close();
+        }
     }
 
     @Override
