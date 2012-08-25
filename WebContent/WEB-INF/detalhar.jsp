@@ -2,6 +2,7 @@
 	pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://
 www.w3.org/TR/html4/loose.dtd">
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Cadastro de Aluno</title>
@@ -36,18 +37,18 @@ function validaSenhaForm()
 			<table class="table">
 				<tr>
 					<td><label>Nome Completo </label></td>
-					<td><input type="text" id="txtNome" maxlength="50" size="50"></td>
+					<td><input type="text" id="txtNome" name="txtNome" maxlength="50" size="50"></td>
 				</tr>
 
 				<tr>
 
 					<td><label>RG</label></td>
-					<td><input id="txtRG" maxlength="10" size="12"></td>
+					<td><input name="txtRG" id="txtRG" maxlength="10" size="12"></td>
 				</tr>
 
 				<tr>
 					<td><label>CPF</label></td>
-					<td><input id="txtCPF" type="text" alt="cpf" maxlength="11" size="12"></td>
+					<td><input id="txtCPF" name="txtCPF" type="text" alt="cpf" maxlength="11" size="12"></td>
 				</tr>
 
 				<tr>
@@ -115,13 +116,13 @@ function validaSenhaForm()
 
 				<tr>
 					<td><label>Usuário</label></td>
-					<td><input type="text" id="txtUsuario" name="txtUsuario" maxlength="20" size="20"></td>
+					<td><input type="text" id="txtUsuario" name="txtUsuario" maxlength="20" size="20" value="${txtUsuario}"></td>
 				</tr>
 
 				<tr>
 					<td><label>Senha</label></td>
 					<td><input id="txtSenha" name="txtSenha" type="password" maxlength="8"
-						size="8"></td>
+						size="8" value="${txtSenha}"></td>
 				</tr>
 				<tr>
 					<td><label>Confirma Senha</label></td>

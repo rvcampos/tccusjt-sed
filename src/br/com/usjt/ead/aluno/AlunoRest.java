@@ -61,11 +61,13 @@ public class AlunoRest implements ICrud
     @Override
     @Path("create")
     @POST
-    @Stylesheet(href = "/read.jsp", type = MediaTypeMore.APP_JSP)
+    @Stylesheet(href = "/detalhar.jsp", type = MediaTypeMore.APP_JSP)
     @SecurityPrivate(permission = SecType.CRIAR, entity = Entidade.DUMMY)
     public void create() {
         JSPAttr j = new JSPAttr();
         AlunoBean b = new AlunoBean();
+        try
+        {
         b.setEmail(j.getParameter("txtEmail"));
         b.setSenha(CryptoXFacade.crypt(j.getParameter("txtSenha")));
         b.setCpf(Long.parseLong(j.getParameter("txtCPF").replaceAll("[^0-9]", "")));
@@ -79,6 +81,10 @@ public class AlunoRest implements ICrud
         phone.setDdd(Integer.parseInt(j.getParameter("txtDDD")));
         phone.setTelefone(Long.parseLong(j.getParameter("txtTelefone")));
         contato.getTelefones().add(phone);
+        }catch(Exception e)
+        {
+            j.set("txtSenha", "txtSenha");
+        }
     }
 
     @Override
