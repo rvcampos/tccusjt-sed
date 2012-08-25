@@ -7,7 +7,6 @@
 		<property name="hibernate.connection.password">ead</property>
 		<property name="hibernate.connection.url">jdbc:postgresql://localhost:5432/ead</property>
 		<property name="hibernate.connection.username">ead</property>
-		<property name="hibernate.default_schema">ead</property>
 		<property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
 		<property name="hibernate.hbm2ddl.auto">createtrue</property>
 

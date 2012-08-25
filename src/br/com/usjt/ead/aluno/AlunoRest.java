@@ -12,6 +12,7 @@ import br.com.usjt.ICrud;
 import br.com.usjt.ead.contato.ContatoBean;
 import br.com.usjt.ead.contato.EnderecoBean;
 import br.com.usjt.ead.contato.TelefoneBean;
+import br.com.usjt.ead.contato.TipoTelefoneBean;
 import br.com.usjt.jaxrs.JSPAttr;
 import br.com.usjt.jaxrs.MediaTypeMore;
 import br.com.usjt.jaxrs.security.SecurityPrivate;
@@ -64,7 +65,7 @@ public class AlunoRest implements ICrud
     @Override
     @Path("create")
     @POST
-    @Stylesheet(href = "/detalhar.jsp", type = MediaTypeMore.APP_JSP)
+    @Stylesheet(href = "aluno/cadastrar.jsp", type = MediaTypeMore.APP_JSP)
     @SecurityPrivate(permission = SecType.CRIAR, entity = Entidade.DUMMY)
     public void create() {
         JSPAttr j = new JSPAttr();
@@ -75,15 +76,21 @@ public class AlunoRest implements ICrud
             b.setSenha(CryptoXFacade.crypt(j.getParameter("txtSenha")));
             b.setCpf(Long.parseLong(j.getParameter("txtCPF").replaceAll("[^0-9]", "")));
             EnderecoBean end = new EnderecoBean();
-            end.setCep(Integer.parseInt(j.getParameter("txtCEP").replaceAll("[^0-9]", "")));
+            end.setCep(Integer.parseInt(j.getParameter("txtCep").replaceAll("[^0-9]", "")));
             end.setLogradouro(j.getParameter("txtEndereco"));
             end.setBairro(j.getParameter("txtBairro"));
             b.setEndereco(end);
             ContatoBean contato = new ContatoBean();
             TelefoneBean phone = new TelefoneBean();
-            phone.setDdd(Integer.parseInt(j.getParameter("txtDDD")));
-            phone.setTelefone(Long.parseLong(j.getParameter("txtTelefone")));
+            phone.setDdd(Integer.parseInt(j.getParameter("txtTelefoneDDD")));
+            phone.setTelefone(Long.parseLong(j.getParameter("txtTelefone").replaceAll("[^0-9]", "")));
+            phone.setTipo((TipoTelefoneBean) session.load(TipoTelefoneBean.class, 1));
             contato.getTelefones().add(phone);
+            TelefoneBean celular = new TelefoneBean();
+            celular.setDdd(Integer.parseInt(j.getParameter("txtCelularDDD")));
+            celular.setTelefone(Long.parseLong(j.getParameter("txtCelular").replaceAll("[^0-9]", "")));
+            celular.setTipo((TipoTelefoneBean) session.load(TipoTelefoneBean.class, 2));
+            contato.getTelefones().add(celular);
             b.setContato(contato);
             session.save(b);
         }

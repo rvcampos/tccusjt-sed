@@ -43,7 +43,7 @@ function validaSenhaForm()
 				<tr>
 
 					<td><label>RG</label></td>
-					<td><input name="txtRG" id="txtRG" maxlength="10" size="12"></td>
+					<td><input name="txtRG" id="txtRG" name="txtRG" maxlength="10" size="12"></td>
 				</tr>
 
 				<tr>
@@ -53,8 +53,8 @@ function validaSenhaForm()
 
 				<tr>
 					<td><label> Sexo </label></td>
-					<td><input type="radio" name="sexo" value="Masculino">Masculino
-						<input type="radio" name="sexo" value="Feminino">Feminino</td>
+					<td><input type="radio" name="sexo" value="0" checked="checked">Masculino
+						<input type="radio" name="sexo" value="1">Feminino</td>
 				</tr>
 
 				<tr>
