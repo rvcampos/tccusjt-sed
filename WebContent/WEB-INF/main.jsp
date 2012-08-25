@@ -11,7 +11,7 @@
 </head>
 <body>
 <jsp:include page="menu.jsp" />
-<div class="container">
+<div class="container" style="padding-top: 60px;">
 <jsp:include page="${pagina}"></jsp:include>
 </div>
 

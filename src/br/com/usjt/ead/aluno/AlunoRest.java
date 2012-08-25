@@ -49,8 +49,6 @@ public class AlunoRest implements ICrud
     @Stylesheet(href = "aluno/cadastrar.jsp", type = MediaTypeMore.APP_JSP)
     @SecurityPrivate(permission = SecType.CRIAR, entity = Entidade.DUMMY)
     public void edit_insert() {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
