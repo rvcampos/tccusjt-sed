@@ -138,7 +138,7 @@ function validaSenhaForm()
 		<tr>
 		<td>
 		<center>
-			<button id="cmdIncluir" type="button" onclick="if(validaSenhaForm()){$('#formAluno').submit();}" style="width: 70px;">
+			<button id="cmdIncluir" type="button" onclick="if(validaSenhaForm()){$('#formProfessor').submit();}" style="width: 70px;">
 				Incluir</button>
 			<button id="cmdCancelar" type="button" style="width: 70px;">
 				Cancelar</button>
