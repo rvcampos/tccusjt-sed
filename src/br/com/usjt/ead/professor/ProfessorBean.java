@@ -1,5 +1,6 @@
 package br.com.usjt.ead.professor;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -19,14 +20,14 @@ public class ProfessorBean
 {
 
     @Id
-    @SequenceGenerator(name="gen", initialValue=1, sequenceName="seq_professor")
-    @GeneratedValue(generator="gen", strategy=GenerationType.AUTO)
+    @SequenceGenerator(name = "gen", initialValue = 1, sequenceName = "seq_professor")
+    @GeneratedValue(generator = "gen", strategy = GenerationType.AUTO)
     private Integer      id_professor; // integer PRIMARY KEY,
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "id_contato")
     private ContatoBean  contato;     // integer// REFERENCES
                                        // contato(id_contato),
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "id_endereco")
     private EnderecoBean endereco;    // integer// references
                                        // ENDERECO(id_endereco),

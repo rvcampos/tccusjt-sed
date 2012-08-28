@@ -5,9 +5,9 @@
 	<session-factory name="EnsinoDistanciaFac">
 		<property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
 		<property name="hibernate.connection.password">ead</property>
+		<property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
 		<property name="hibernate.connection.url">jdbc:postgresql://localhost:5432/ead</property>
 		<property name="hibernate.connection.username">ead</property>
-		<property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
 		<property name="hibernate.connection.autocommit">false</property>
 
 		<mapping class="br.com.usjt.ead.aluno.AlunoBean" />
@@ -19,10 +19,11 @@
 
 		<mapping class="br.com.usjt.ead.curso.AvaliacaoBean" />
 		<mapping class="br.com.usjt.ead.curso.DisciplinaBean" />
-		<mapping class="br.com.usjt.ead.curso.MaterialDidaticoBean" />
 		<mapping class="br.com.usjt.ead.curso.ModuloBean" />
 
 		<mapping class="br.com.usjt.ead.professor.ProfessorBean" />
+		
+		<mapping class="br.com.usjt.ead.material.MaterialDidaticoBean" />
 
 	</session-factory>
 </hibernate-configuration>

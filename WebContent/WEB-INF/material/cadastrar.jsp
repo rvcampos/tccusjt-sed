@@ -20,9 +20,8 @@ www.w3.org/TR/html4/loose.dtd">
 		<td>
 			<div class="tabbable">
 			<ul class="nav nav-tabs"> 
-			<li class="active"><a href="#1" data-toggle="tab">Dados cadastrais</a></li>  
-			<li class=""><a href="#2" data-toggle="tab">Endereco</a></li>  
-			<li class=""><a href="#3" data-toggle="tab">Usuario</a></li> 
+			<li class="active"><a href="#1" data-toggle="tab">Cadastrar</a></li>  
+			
 			</ul>
 			<div class="tab-content">  
 			<div class="tab-pane active" id="1">  
@@ -50,8 +49,11 @@ www.w3.org/TR/html4/loose.dtd">
 		</td>
 		<td>
 		<input id="txtDiretorio"  size="40" >	
-		<button id="cmdDiretorio" style="width: 110px;" type="submit">Escolher Arquivo</button>		
 			
+			
+		</td>
+		<td>
+		<button id="cmdDiretorio" style="width: 110px;" type="file">Escolher Arquivo</button>	
 		</td>
     </tr>
    
