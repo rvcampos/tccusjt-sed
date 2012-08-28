@@ -83,11 +83,57 @@ function validaSenhaForm()
 
 				<tr>
 					<td><label>UF</label></td>
-					<td><select style="width: 40px;" id="CboUF" name="CboUF"></select></td>
+					<td>
+						<script>
+							function changeUF(state) {
+								return changeUF(state, null);
+							}
+							function changeUF(state, callback) {
+								$.ajax({
+									url : "${app_context}cidade/carrega_uf",
+									type : "POST",
+									cache : false,
+									data : {
+										"estado_id" : state
+									},
+									dataType : "text",
+									success : function(msg) {
+										$("#ufcidade").html(msg);
+										$("#combobox_city").combobox();
+										$("#ufcidade").append('<span class="label label-important">Obrigatório</span>');
+										if (callback) {
+											callback();
+										}
+									}
+								});
+							}
+						</script>
+						<select style="width: 40px;" id="CboUF" name="CboUF" onchange="changeUF($(this).val());">
+							<option></option>
+							<c:forEach var="estado" items="${lista_uf}">
+								<option id="${estado.id_estado}" <c:if test="${estado.id_estado eq uf_id}">selected="selected"</c:if>>${estado.uf}</option>							
+							</c:forEach>					
+						</select>
+					</td>
 				</tr>
 				<tr>
 					<td><label>Cidade</label></td>
-					<td><input id="txtCidade" name="txtCidade" maxlength="20" size="20">
+					<td id="ufcidade">
+					<div class="ui-widget" id="widget_combobox_city"
+							style="float: left; margin-right: 10px">
+							<select name="cidade" id="combobox_city">
+							   <option></option>
+								<c:forEach var="cities" items="${list_city}">
+									<c:set var="selected" value="" />
+									<c:if test="${cidade_id eq cities.id_cidade}">
+										<c:set var="selected" value="selected=\"selected\"" />
+									</c:if>
+									<option value="${cities.id_cidade}" id="${cities.id_cidade}"
+										${selected}>${cities.nome}</option>
+								</c:forEach>
+							</select>
+						</div>
+					</td>
 				</tr>
 
 				<tr>
