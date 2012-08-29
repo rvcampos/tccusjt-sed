@@ -1,5 +1,7 @@
 package br.com.usjt.ead.aluno;
 
+import java.text.SimpleDateFormat;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -14,6 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import br.com.usjt.ICrud;
 import br.com.usjt.ead.cidadestado.CidadeBean;
+import br.com.usjt.ead.cidadestado.CidadeEstadoRest;
 import br.com.usjt.ead.cidadestado.EstadoUFBean;
 import br.com.usjt.ead.contato.ContatoBean;
 import br.com.usjt.ead.contato.EnderecoBean;
@@ -33,7 +36,7 @@ public class AlunoRest implements ICrud
 {
 
     private static final Logger LOG = LoggerFactory.getLogger(AlunoRest.class);
-    
+
     @Override
     @Path("")
     @POST
@@ -65,7 +68,7 @@ public class AlunoRest implements ICrud
             j.set("list_city", session.createCriteria(CidadeBean.class).add(Restrictions.eq("estado.id_estado", 26)).list());
         }
         catch (Exception e) {
-            LOG.error("Falha ao carregar",e);
+            LOG.error("Falha ao carregar", e);
         }
         finally {
             session.close();
@@ -93,76 +96,61 @@ public class AlunoRest implements ICrud
         Transaction tx = session.beginTransaction();
         try {
             AlunoBean b = popula(j, session);
-            if(Utils.isValid(b))
-            {
-            session.save(b);
-            tx.commit();
+            if (Utils.isValid(b)) {
+                session.save(b);
+                tx.commit();
             }
-            else
-            {
-                repopular(j);
+            else {
+                j.set("lista_uf", session.createCriteria(EstadoUFBean.class).addOrder(Order.asc("id_estado")).list());
+                CidadeEstadoRest.carregaUf();
+                j.repopular();
             }
         }
         catch (Exception e) {
             tx.rollback();
-            repopular(j);
+            j.repopular();
+            j.set("lista_uf", session.createCriteria(EstadoUFBean.class).addOrder(Order.asc("id_estado")).list());
+            CidadeEstadoRest.carregaUf();
         }
         finally {
             session.close();
         }
     }
-    
-    private AlunoBean popula(JSPAttr j, Session session)
-    {
+
+    private AlunoBean popula(JSPAttr j, Session session) {
         AlunoBean b = new AlunoBean();
-        try
-        {
-        b.setEmail(j.getParameter("txtEmail"));
-        b.setSenha(CryptoXFacade.crypt(j.getParameter("txtSenha")));
-        b.setCpf(Long.parseLong(j.getParameter("txtCPF").replaceAll("[^0-9]", "")));
-        EnderecoBean end = new EnderecoBean();
-        end.setCep(Integer.parseInt(j.getParameter("txtCep").replaceAll("[^0-9]", "")));
-        end.setLogradouro(j.getParameter("txtEndereco"));
-        end.setBairro(j.getParameter("txtBairro"));
-        end.setCidade((CidadeBean) session.load(CidadeBean.class, Integer.parseInt(j.getParameter("cidade"))));
-        b.setEndereco(end);
-        ContatoBean contato = new ContatoBean();
-        TelefoneBean phone = new TelefoneBean();
-        phone.setDdd(Integer.parseInt(j.getParameter("txtTelefoneDDD")));
-        phone.setTelefone(Long.parseLong(j.getParameter("txtTelefone").replaceAll("[^0-9]", "")));
-        phone.setTipo((TipoTelefoneBean) session.load(TipoTelefoneBean.class, 1));
-        contato.getTelefones().add(phone);
-        TelefoneBean celular = new TelefoneBean();
-        celular.setDdd(Integer.parseInt(j.getParameter("txtCelularDDD")));
-        celular.setTelefone(Long.parseLong(j.getParameter("txtCelular").replaceAll("[^0-9]", "")));
-        celular.setTipo((TipoTelefoneBean) session.load(TipoTelefoneBean.class, 2));
-        contato.getTelefones().add(celular);
-        b.setContato(contato);
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        try {
+            b.setEmail(j.getParameter("txtEmail"));
+            b.setSenha(CryptoXFacade.crypt(j.getParameter("txtSenha")));
+            b.setCpf(Long.parseLong(j.getParameter("txtCPF").replaceAll("[^0-9]", "")));
+            EnderecoBean end = new EnderecoBean();
+            end.setCep(Integer.parseInt(j.getParameter("txtCep").replaceAll("[^0-9]", "")));
+            end.setLogradouro(j.getParameter("txtEndereco"));
+            end.setBairro(j.getParameter("txtBairro"));
+            end.setCidade((CidadeBean) session.load(CidadeBean.class, Integer.parseInt(j.getParameter("cidade"))));
+            b.setEndereco(end);
+            ContatoBean contato = new ContatoBean();
+            contato.setData_nascimento(sdf.parse(j.getParameter("txtNascimento")));
+            contato.setRg(j.getParameter("txtRG"));
+            contato.setNome(j.getParameter("txtNome"));
+            TelefoneBean phone = new TelefoneBean();
+            phone.setDdd(Integer.parseInt(j.getParameter("txtTelefoneDDD")));
+            phone.setTelefone(Long.parseLong(j.getParameter("txtTelefone").replaceAll("[^0-9]", "")));
+            phone.setTipo((TipoTelefoneBean) session.load(TipoTelefoneBean.class, 1));
+            contato.getTelefones().add(phone);
+            TelefoneBean celular = new TelefoneBean();
+            celular.setDdd(Integer.parseInt(j.getParameter("txtCelularDDD")));
+            celular.setTelefone(Long.parseLong(j.getParameter("txtCelular").replaceAll("[^0-9]", "")));
+            celular.setTipo((TipoTelefoneBean) session.load(TipoTelefoneBean.class, 2));
+            contato.getTelefones().add(celular);
+            b.setContato(contato);
         }
-        catch (Exception e)
-        {
-            
+        catch (Exception e) {
+
         }
-        
+
         return b;
-    }
-    
-    private void repopular(JSPAttr j)
-    {
-        j.repopular("txtNome");
-        j.repopular("txtRG");
-        j.repopular("txtCPF");
-        j.repopular("txtNascimento");
-        j.repopular("txtTelefoneDDD");
-        j.repopular("txtTelefone");
-        j.repopular("txtCelularDDD");
-        j.repopular("txtCelular");
-        j.repopular("txtEmail");
-        j.repopular("txtUsuario");
-        j.repopular("txtSenha");
-        j.repopular("txtEndereco");
-        j.repopular("uf_id");
-        j.repopular("txtCep");
     }
 
     @Override

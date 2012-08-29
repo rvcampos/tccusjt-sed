@@ -51,16 +51,17 @@ public class SecurityShiro implements Security {
     }
 
     @Override
-    public boolean login(String username, String password) {
-        return this.login(new UsernamePasswordToken(username, password));
+    public boolean login(String username, String password, int entidade) {
+        return this.login(new UsernamePasswordToken(username, password),entidade);
     }
 
-    private boolean login(UsernamePasswordToken newlogin) {
+    private boolean login(UsernamePasswordToken newlogin, int entidade) {
         if (newlogin == null) {
             this.currentUser.logout();
             return false;
         }
         try {
+            currentUser.getSession().setAttribute("ent", entidade);
             this.currentUser.login(newlogin);
         }
         catch (Exception e) {

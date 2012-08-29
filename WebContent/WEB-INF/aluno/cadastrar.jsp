@@ -113,12 +113,6 @@ function changeUF(state, callback) {
 					<td><label>Email</label></td>
 					<td><input type="text" id="txtEmail" name="txtEmail" value="${txtEmail}" maxlength="50" size="50"></td>
 				</tr>
-
-				<tr>
-					<td><label>Usuário</label></td>
-					<td><input type="text" id="txtUsuario" name="txtUsuario" value="${txtUsuario}" maxlength="20" size="20" value="${txtUsuario}"></td>
-				</tr>
-
 				<tr>
 					<td><label>Senha</label></td>
 					<td><input id="txtSenha" name="txtSenha" type="password" maxlength="8"

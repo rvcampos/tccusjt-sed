@@ -6,7 +6,7 @@ public interface Security {
 	
 	void logout();
 	
-	boolean login(String username, String password);
+	boolean login(String username, String password, int entidade);
 
 	boolean isPermitted(String permission);
 }

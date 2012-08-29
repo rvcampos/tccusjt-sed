@@ -5,6 +5,7 @@ import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 
 import org.jboss.resteasy.annotations.providers.jaxb.Stylesheet;
 import org.jboss.resteasy.spi.Failure;
@@ -28,9 +29,9 @@ public class ShiroLogin {
      */
     @GET
     @Stylesheet (href = "login/login.jsp", type = MediaTypeMore.APP_JSP)
-    @Path ("/login")
+    @Path ("{entidade}/login")
     @SecurityPublic
-    public void getLogin() {}
+    public void getLogin(@PathParam("entidade") String entidade) {}
 
     private static final String MSG = "SHIRO JAXRS LOGIN";
 
@@ -41,14 +42,19 @@ public class ShiroLogin {
      * @param password
      */
     @POST
-    @Path ("/login")
+    @Path ("{entidade}/login")
     @Stylesheet (href = "login/login.jsp", type = MediaTypeMore.APP_JSP)
     @SecurityPublic
-    public void doLogin(@FormParam ("username") String username, @FormParam ("password") String password) {
+    public void doLogin(@PathParam("entidade") String entidade , @FormParam ("username") String username, @FormParam ("password") String password) {
         String rt = ShiroLogin.MSG;
         try {
             Security sh = SecurityShiro.init();
-            if (!sh.login(username, password)) { throw new Failure(HttpServletResponse.SC_UNAUTHORIZED); }
+            int ent = 2;
+            if(entidade.equals("professor"))
+            {
+                ent = 1;
+            }
+            if (!sh.login(username, password,ent)) { throw new Failure(HttpServletResponse.SC_UNAUTHORIZED); }
             rt = "Logado";
         }
         catch (Failure e) {

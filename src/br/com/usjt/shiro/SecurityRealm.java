@@ -3,6 +3,7 @@ package br.com.usjt.shiro;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -20,6 +21,8 @@ import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import br.com.usjt.ead.aluno.AlunoBean;
+import br.com.usjt.ead.professor.ProfessorBean;
 import br.com.usjt.usuario.PerfilBean;
 import br.com.usjt.usuario.PermissaoBean;
 import br.com.usjt.usuario.PessoaBean;
@@ -52,13 +55,36 @@ public class SecurityRealm extends AuthorizingRealm
 
             Map<String, String> criterio = new HashMap<String, String>();
             criterio.put("login", token.getUsername());
-
-            PessoaBean user = HS.searchByValueUnique(PessoaBean.class, criterio);
-            if (user != null) {
+            Integer usuario_id = null;
+            Object ent = SecurityUtils.getSubject().getSession().getAttribute("entidade");
+            String pass = "";
+            if(ent != null)
+            {
+                switch ((Integer) ent)
+                {
+                case 0:
+                    
+                    break;
+                    
+                case 1:
+                    ProfessorBean b = HS.searchByValue(ProfessorBean.class, criterio).get(0);
+                    usuario_id = b.getId_professor();
+                    pass = b.getSenha();
+                    break;
+                    
+                case 2:
+                    AlunoBean b2 = HS.searchByValue(AlunoBean.class, criterio).get(0);
+                    usuario_id = b2.getId_aluno();
+                    pass = b2.getSenha();
+                    break;
+                }
+            }
+            if (usuario_id != null) {
                 SimplePrincipalCollection coll = new SimplePrincipalCollection();
-                coll.add(user.getUsuario_id(), this.getName());
-                coll.add(user.getLogin(), this.getName());
-                SimpleAuthenticationInfo sai = new SimpleAuthenticationInfo(coll, user.getPassword(), this.getName());
+                coll.add(usuario_id, this.getName());
+                coll.add(token.getUsername(), this.getName());
+                coll.add(ent, this.getName());
+                SimpleAuthenticationInfo sai = new SimpleAuthenticationInfo(coll, pass, this.getName());
                 return sai;
             }
             else {
