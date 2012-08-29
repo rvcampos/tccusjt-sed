@@ -75,10 +75,8 @@
 								<li><a href="${app_context}aluno/cadastrar">Esqueci
 										Minha senha</a></li>
 							</td>
-						</tr>
-						<tr>
-							<td>
-						    	<li class="divider-vertical"></li>
+							<td class="td-divider"/>
+							<td valign="top">
 								<li class="nav-header">Professor</li>
 								<li><a href="${app_context}professor/login">Login
 										Professor</a></li>
