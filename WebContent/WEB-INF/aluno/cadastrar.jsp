@@ -111,7 +111,7 @@ function validaSenhaForm()
 						<select style="width: 40px;" id="CboUF" name="CboUF" onchange="changeUF($(this).val());">
 							<option></option>
 							<c:forEach var="estado" items="${lista_uf}">
-								<option id="${estado.id_estado}" <c:if test="${estado.id_estado eq uf_id}">selected="selected"</c:if>>${estado.uf}</option>							
+								<option id="${estado.id_estado}" value="${estado.id_estado}" <c:if test="${estado.id_estado eq uf_id}">selected="selected"</c:if>>${estado.uf}</option>							
 							</c:forEach>					
 						</select>
 					</td>
