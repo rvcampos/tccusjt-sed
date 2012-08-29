@@ -43,7 +43,7 @@ public class AlunoBean
     @Column
     private Long         cpf;     // numeric(12)
     @Column
-    private boolean      ativo;
+    private Boolean      ativo;
 
     @Override
     public String toString() {
@@ -102,14 +102,14 @@ public class AlunoBean
     /**
      * @return the ativo
      */
-    public boolean isAtivo() {
+    public Boolean isAtivo() {
         return ativo;
     }
 
     /**
      * @param ativo the ativo to set
      */
-    public void setAtivo(boolean ativo) {
+    public void setAtivo(Boolean ativo) {
         this.ativo = ativo;
     }
 }

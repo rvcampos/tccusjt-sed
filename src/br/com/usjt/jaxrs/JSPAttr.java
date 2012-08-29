@@ -84,15 +84,19 @@ public class JSPAttr
     }
 
     public void errorMsg(String error) {
-        set("errormsg", error);
+        set("msgerro", error);
     }
 
     public void errorMsg() {
         errorMsg("Falha na operação");
     }
-    
+
     public void sucessMsg() {
-        set("msgOk","Sucesso!");
+        sucessMsg("Sucesso!");
+    }
+
+    public void sucessMsg(String msg) {
+        set("msgOk", msg);
     }
 
 }

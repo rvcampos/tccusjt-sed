@@ -20,7 +20,7 @@ function validaEmailForm()
 }
 
 </script>
-		<form action="reenviaAtivacao/confirma" method="post" id="formAluno">
+		<form action="${app_context}aluno/reenviaAtivacao/confirma" method="post" id="formAluno">
 			<legend>
 				<b>Reenvio de ativação </b>
 			</legend>

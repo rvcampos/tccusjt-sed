@@ -31,7 +31,7 @@ public class JSPInterceptor implements AcceptedByMethod, PostProcessInterceptor 
         JSPInterceptor.LOG.info("JSP:" + r.getResourceMethod());
         String page = "/WEB-INF/main.jsp";
         HttpServletRequest request = ResteasyProviderFactory.getContextData(HttpServletRequest.class);
-        if(r.getResourceMethod().getAnnotation(Stylesheet.class).href().contains("ufcidade"))
+        if(r.getResourceMethod().getAnnotation(Stylesheet.class).href().contains("ufcidade") || r.getResourceMethod().getAnnotation(Stylesheet.class).href().contains("label"))
         {
             page = "/WEB-INF/" + r.getResourceMethod().getAnnotation(Stylesheet.class).href();
         }
