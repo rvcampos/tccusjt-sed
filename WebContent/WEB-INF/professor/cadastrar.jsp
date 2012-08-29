@@ -140,7 +140,7 @@ function validaSenhaForm()
 		<center>
 			<button id="cmdIncluir" class=".btn btn-primary" type="button" onclick="if(validaSenhaForm()){$('#formProfessor').submit();}" style="width: 70px;">
 				Incluir</button>
-			<button id="cmdCancelar" type="button" class=".btn" style="width: 70px;">
+			<button id="cmdCancelar" type="button" class=".btn " style="width: 70px;">
 				Cancelar</button>
 		</center>
 		</td>

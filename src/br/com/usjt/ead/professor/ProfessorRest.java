@@ -100,11 +100,23 @@ public class ProfessorRest implements ICrud
     @Override
     @Path("delete")
     @POST
-    @Stylesheet(href = "/read.jsp", type = MediaTypeMore.APP_JSP)
+    @Stylesheet(href = "professor/cadastrar.jsp", type = MediaTypeMore.APP_JSP)
     @SecurityPrivate(permission = SecType.DELETAR, entity = Entidade.DUMMY)
     public void delete() {
-        // TODO Auto-generated method stub
-
+        JSPAttr j = new JSPAttr("metodo","delete");
+        Session session = HS.getSession();
+        Transaction tx = session.beginTransaction();
+        try {
+            ProfessorBean bean = (ProfessorBean) session.get(ProfessorBean.class, Integer.parseInt(j.getParameter("id_prof")));
+            session.save(bean);
+            tx.commit();
+        }
+        catch (Exception e) {
+            tx.rollback();
+        }
+        finally {
+            session.close();
+        }
     }
 
     @Override
