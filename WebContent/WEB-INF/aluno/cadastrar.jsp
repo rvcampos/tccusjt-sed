@@ -46,6 +46,21 @@ function changeUF(state, callback) {
 		}
 	});
 }
+
+function validaEmail() {
+	$.ajax({
+		url : "${app_context}aluno/checaEmail",
+		type : "POST",
+		cache : false,
+		data : {
+			"email" : $('#txtEmail').val()
+		},
+		dataType : "text",
+		success : function(msg) {
+			$("#infoEmail").html(msg);
+		}
+	});
+}
 </script>
 		<form action="create" method="post" id="formAluno">
 			<legend>
@@ -106,7 +121,7 @@ function changeUF(state, callback) {
 
 				<tr>
 					<td><label>Email</label></td>
-					<td><input type="text" id="txtEmail" name="txtEmail" value="${txtEmail}" maxlength="50" size="50"></td>
+					<td><input type="text" id="txtEmail" name="txtEmail" value="${txtEmail}" maxlength="50" onchange="validaEmail();"><span id="infoEmail"></span></td>
 				</tr>
 				<tr>
 					<td><label>Senha</label></td>

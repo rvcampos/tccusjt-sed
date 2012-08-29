@@ -6,10 +6,13 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 
+import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.validator.EmailValidator;
+import org.hibernate.validator.engine.ValidatorFactoryImpl;
 import org.jboss.resteasy.annotations.providers.jaxb.Stylesheet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -183,6 +186,7 @@ public class AlunoRest implements ICrud
             aluno.setAtivo(true);
             session.save(aluno);
             tx.commit();
+            j.sucessMsg("Cadastro ativado com sucesso");
 
         }
         catch (Exception e) {
@@ -217,11 +221,16 @@ public class AlunoRest implements ICrud
             AlunoBean aluno = (AlunoBean) session.createCriteria(AlunoBean.class).add(Restrictions.eq("email", email))
                     .uniqueResult();
             if (aluno == null) {
+                j.errorMsg("Nenhum cadastro encontrado para o e-mail: " + email);
                 throw new Exception();
             }
 
             if (!aluno.isAtivo()) {
                 Utils.sendMail(aluno.getEmail(), aluno.getContato().getNome());
+                j.sucessMsg("Email enviado com sucesso para o e-mail: " + email);
+            }
+            else {
+                j.errorMsg("O cadastro para o e-mail: " + email + " já está ativo");
             }
         }
         catch (Exception e) {
@@ -234,6 +243,45 @@ public class AlunoRest implements ICrud
                 session.close();
             }
         }
+    }
+    
+    /**
+     * Carrega Cidade
+     */
+    @POST
+    @Path ("checaEmail")
+    @Stylesheet (href = "aluno/label.jsp", type = MediaTypeMore.APP_JSP)
+    @SecurityPublic
+    public void validaEmail() {
+        Session session = HS.getSession();
+        JSPAttr j = new JSPAttr();
+        String email = null;
+        try {
+            email = j.getParameter("email");
+            if (Utils.isValidMail(email)) {
+                j.set("labelemail", "E-mail válido");
+                j.set("label", "label label-success");
+
+                Criteria c = session.createCriteria(AlunoBean.class);
+                c.add(Restrictions.eq("email", email));
+
+                if (c.list().size() > 0) {
+                        j.set("labelemail", "E-mail já cadastrado");
+                        j.set("label", "label label-info");
+                }
+            } else {
+                j.set("labelemail", "E-mail Inválido");
+                j.set("label", "label label-info");
+            }
+        }
+        catch (Exception e) {
+            LOG.error("",e);
+        }
+        finally {
+            session.clear();
+            session.close();
+        }
+
     }
 
 }

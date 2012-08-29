@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.mail.MessagingException;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
@@ -146,6 +148,18 @@ public final class Utils
         catch (MessagingException e) {
             LOG.error("Falha ao enviar e-mail de ativação", e);
         }
+    }
+    
+    public static boolean isValidMail(String email)
+    {
+        try {
+            InternetAddress add = new InternetAddress(email);
+            add.validate();
+        }
+        catch (AddressException e) {
+            return false;
+        }
+        return true;
     }
 
 }
