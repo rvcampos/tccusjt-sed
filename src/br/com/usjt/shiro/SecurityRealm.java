@@ -58,6 +58,7 @@ public class SecurityRealm extends AuthorizingRealm
             Integer usuario_id = null;
             Object ent = SecurityUtils.getSubject().getSession().getAttribute("entidade");
             String pass = "";
+            boolean ok = true;
             if(ent != null)
             {
                 switch ((Integer) ent)
@@ -76,10 +77,15 @@ public class SecurityRealm extends AuthorizingRealm
                     AlunoBean b2 = HS.searchByValue(AlunoBean.class, criterio).get(0);
                     usuario_id = b2.getId_aluno();
                     pass = b2.getSenha();
+                    ok = b2.isAtivo();
                     break;
                 }
             }
             if (usuario_id != null) {
+                if(!ok)
+                {
+                    throw new Exception("Usuario não ativo");
+                }
                 SimplePrincipalCollection coll = new SimplePrincipalCollection();
                 coll.add(usuario_id, this.getName());
                 coll.add(token.getUsername(), this.getName());

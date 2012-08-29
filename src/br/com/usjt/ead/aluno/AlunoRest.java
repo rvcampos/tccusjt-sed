@@ -27,6 +27,7 @@ import br.com.usjt.jaxrs.MediaTypeMore;
 import br.com.usjt.jaxrs.security.SecurityPrivate;
 import br.com.usjt.jaxrs.security.SecurityPrivate.Entidade;
 import br.com.usjt.jaxrs.security.SecurityPrivate.SecType;
+import br.com.usjt.jaxrs.security.SecurityPublic;
 import br.com.usjt.util.CryptoXFacade;
 import br.com.usjt.util.HS;
 import br.com.usjt.util.Utils;
@@ -99,6 +100,7 @@ public class AlunoRest implements ICrud
             if (Utils.isValid(b)) {
                 session.save(b);
                 tx.commit();
+                Utils.sendMail(b.getEmail(), b.getContato().getNome());
             }
             else {
                 j.set("lista_uf", session.createCriteria(EstadoUFBean.class).addOrder(Order.asc("id_estado")).list());
@@ -161,6 +163,77 @@ public class AlunoRest implements ICrud
     public void update() {
         // TODO Auto-generated method stub
 
+    }
+
+    @Path("ativar")
+    @GET
+    @Stylesheet(href = "welcome.jsp", type = MediaTypeMore.APP_JSP)
+    @SecurityPublic
+    public void ativar() {
+        JSPAttr j = new JSPAttr();
+        Session session = HS.getSession();
+        Transaction tx = session.beginTransaction();
+        try {
+            String email = j.getParameter("key").replaceAll(" ", "+");
+            AlunoBean aluno = (AlunoBean) session.createCriteria(AlunoBean.class)
+                    .add(Restrictions.eq("email", CryptoXFacade.decrypt(email))).uniqueResult();
+            if (aluno == null) {
+                throw new Exception();
+            }
+            aluno.setAtivo(true);
+            session.save(aluno);
+            tx.commit();
+
+        }
+        catch (Exception e) {
+            tx.rollback();
+            LOG.error("Falha na operação", e);
+        }
+        finally {
+            if (session.isOpen()) {
+                session.clear();
+                session.close();
+            }
+        }
+    }
+
+    @Path("reenviaAtivacao")
+    @GET
+    @Stylesheet(href = "aluno/reenviarativacao.jsp", type = MediaTypeMore.APP_JSP)
+    @SecurityPublic
+    public void reenviarAtivacao() {
+    }
+
+    @Path("reenviaAtivacao/confirma")
+    @POST
+    @Stylesheet(href = "aluno/reenviarativacao.jsp", type = MediaTypeMore.APP_JSP)
+    @SecurityPublic
+    public void reenviarAtivacaoConfirma() {
+        JSPAttr j = new JSPAttr();
+        Session session = HS.getSession();
+        Transaction tx = session.beginTransaction();
+        try {
+            String email = j.getParameter("txtEmail");
+            AlunoBean aluno = (AlunoBean) session.createCriteria(AlunoBean.class).add(Restrictions.eq("email", email))
+                    .uniqueResult();
+            if (aluno == null) {
+                throw new Exception();
+            }
+
+            if (!aluno.isAtivo()) {
+                Utils.sendMail(aluno.getEmail(), aluno.getContato().getNome());
+            }
+        }
+        catch (Exception e) {
+            tx.rollback();
+            LOG.error("Falha na operação", e);
+        }
+        finally {
+            if (session.isOpen()) {
+                session.clear();
+                session.close();
+            }
+        }
     }
 
 }

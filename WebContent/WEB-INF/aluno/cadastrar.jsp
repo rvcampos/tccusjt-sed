@@ -66,18 +66,18 @@ function changeUF(state, callback) {
 			<table class="table">
 				<tr>
 					<td><label>Nome Completo </label></td>
-					<td><input type="text" id="txtNome" name="txtNome" value="${txtNome}" maxlength="50" size="50"></td>
+					<td><input type="text" id="txtNome" name="txtNome" value="${txtNome}" maxlength="50"></td>
 				</tr>
 
 				<tr>
 
 					<td><label>RG</label></td>
-					<td><input name="txtRG" id="txtRG" name="txtRG" value="${txtRG}" maxlength="10" size="12"></td>
+					<td><input name="txtRG" id="txtRG" name="txtRG" value="${txtRG}" maxlength="10"></td>
 				</tr>
 
 				<tr>
 					<td><label>CPF</label></td>
-					<td><input id="txtCPF" name="txtCPF" type="text" alt="cpf" value="${txtCPF}" maxlength="11" size="12"></td>
+					<td><input id="txtCPF" name="txtCPF" type="text" alt="cpf" value="${txtCPF}" maxlength="11"></td>
 				</tr>
 
 				<tr>
@@ -87,13 +87,8 @@ function changeUF(state, callback) {
 				</tr>
 
 				<tr>
-					<td><label>Foto</label></td>
-					<td><input type="file" id="foto" name="foto"></td>
-				</tr>
-
-				<tr>
 					<td><label> Data de Nascimento </label></td>
-					<td><input name="txtNascimento" id="txtNascimento" value="${txtNascimento}" type='text' maxlength="10" size="12" alt="39/19/2999"></td>
+					<td><input name="txtNascimento" id="txtNascimento" value="${txtNascimento}" type='text' maxlength="10" alt="39/19/2999"></td>
 				</tr>
 				</table>
 				</div>
@@ -101,12 +96,12 @@ function changeUF(state, callback) {
 				<table class="table">
 				<tr>
 					<td><label>Telefone</label></td>
-					<td><input type="text" id="txtTelefoneDDD" name="txtTelefoneDDD" value="${txtTelefoneDDD}" maxlength="2" size="2" style="width:15px;" alt="99" > <input type="text" id="txtTelefone" name="txtTelefone" value="${txtTelefone}" maxlength="9" alt="9999-9999"></td>
+					<td><input type="text" id="txtTelefoneDDD" name="txtTelefoneDDD" value="${txtTelefoneDDD}" maxlength="2" style="width:15px;" alt="99" > <input type="text" id="txtTelefone" name="txtTelefone" value="${txtTelefone}" maxlength="9" alt="9999-9999"></td>
 				</tr>
 
 				<tr>
 					<td><label>Celular</label></td>
-					<td><input type="text" id="txtCelularDDD" name="txtCelularDDD" value="${txtCelularDDD}" maxlength="2" size="2" style="width:15px;" alt="99"> <input type="text" id="txtCelular" name="txtCelular" maxlength="9" alt="9999-9999" value="${txtCelular}"></td>
+					<td><input type="text" id="txtCelularDDD" name="txtCelularDDD" value="${txtCelularDDD}" maxlength="2" style="width:15px;" alt="99"> <input type="text" id="txtCelular" name="txtCelular" maxlength="9" alt="9999-9999" value="${txtCelular}"></td>
 				</tr>
 
 				<tr>
@@ -115,27 +110,26 @@ function changeUF(state, callback) {
 				</tr>
 				<tr>
 					<td><label>Senha</label></td>
-					<td><input id="txtSenha" name="txtSenha" type="password" maxlength="8"
-						size="8" value="${txtSenha}"></td>
+					<td><input id="txtSenha" name="txtSenha" type="password" maxlength="8" value="${txtSenha}"></td>
 				</tr>
 				<tr>
 					<td><label>Confirma Senha</label></td>
-					<td><input id="txtCsenha" name="txtCsenha" type="password" maxlength="8"
-						size="8"></td>
+					<td><input id="txtCsenha" name="txtCsenha" type="password" maxlength="8"></td>
 				</tr>
+				<tr></tr>
 			</table>
 			</div>
 			<div class="tab-pane" id="3">  
 				<table  class="table">
 				<tr>
 					<td><label>Endereço</label></td>
-					<td><input type='text' id="txtEndereco" name="txtEndereco" value="${txtEndereco}" maxlength="50" size="50"></td>
+					<td><input type='text' id="txtEndereco" name="txtEndereco" value="${txtEndereco}" maxlength="50"></td>
 				</tr>
 
 				<tr>
 
 					<td><label>Bairro</label></td>
-					<td><input type='text' id="txtBairro" name="txtBairro" value="${txtBairro}" maxlength="50" size="50"></td>
+					<td><input type='text' id="txtBairro" name="txtBairro" value="${txtBairro}" maxlength="50"></td>
 				</tr>
 
 				<tr>
@@ -169,7 +163,6 @@ function changeUF(state, callback) {
 						</div>
 					</td>
 				</tr>
-
 				<tr>
 					<td><label>Cep</label></td>
 					<td><input type='text' id="txtCep" name="txtCep" alt='cep' value="${txtCep}" maxlength="8" size="8"></td>
@@ -180,15 +173,16 @@ function changeUF(state, callback) {
 			</div>
 		</td>
 		</tr>
-		<tr>
-		<td>
-		<center>
-			<button id="cmdIncluir" type="button" onclick="if(validaSenhaForm()){$('#formAluno').submit();}" style="width: 70px;">
-				Incluir</button>
-			<button id="cmdCancelar" type="button" style="width: 70px;">
-				Cancelar</button>
-		</center>
-		</td>
-		</tr>
 		</table>
+		<div class="row-fluid">
+
+				<div class="span2">
+					<input class="btn btn-primary" value="Salvar" type="button" name="btnSalvar" onclick="if(validaSenhaForm()){$('#formAluno').submit();}"/>
+				</div>
+
+				<div class="span2">
+					<a href="./read" class="btn">Cancelar</a>
+				</div>
+
+			</div>
 		</form>

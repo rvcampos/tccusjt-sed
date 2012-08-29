@@ -11,7 +11,8 @@ import org.slf4j.LoggerFactory;
 /**
  * Para retornos e variáveis de request {@link HttpServletRequest}
  */
-public class JSPAttr {
+public class JSPAttr
+{
 
     private static Logger      LOG = LoggerFactory.getLogger(JSPAttr.class);
     private HttpServletRequest request;
@@ -19,15 +20,17 @@ public class JSPAttr {
     /**
      * Construtor padrao
      */
-    public JSPAttr () {
+    public JSPAttr()
+    {
         this.request = ResteasyProviderFactory.getContextData(HttpServletRequest.class);
-        
+
     }
 
     /**
      * Construtor. Adiciona parameter
      */
-    public JSPAttr (String key, Object value) {
+    public JSPAttr(String key, Object value)
+    {
         this();
         this.set(key, value);
     }
@@ -71,15 +74,25 @@ public class JSPAttr {
     public String[] getParameterValues(String key) {
         return this.request.getParameterValues(key);
     }
-    
-    public void repopular()
-    {
+
+    public void repopular() {
         Enumeration<String> en = request.getParameterNames();
-        while(en.hasMoreElements())
-        {
+        while (en.hasMoreElements()) {
             String x = en.nextElement();
             set(x, getParameter(x));
         }
+    }
+
+    public void errorMsg(String error) {
+        set("errormsg", error);
+    }
+
+    public void errorMsg() {
+        errorMsg("Falha na operação");
+    }
+    
+    public void sucessMsg() {
+        set("msgOk","Sucesso!");
     }
 
 }

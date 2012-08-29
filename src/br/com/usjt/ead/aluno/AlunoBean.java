@@ -28,25 +28,27 @@ public class AlunoBean
     private Integer      id_aluno; // integer PRIMARY KEY,
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "id_contato")
-    @NotNull(message="Preencha os dados de contato")
+    @NotNull(message = "Preencha os dados de contato")
     @Valid
     private ContatoBean  contato; // integer// REFERENCES contato(id_contato),
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_endereco")
     private EnderecoBean endereco; // integer// references
     @Column
-    @NotNull(message="Preencha a senha")
+    @NotNull(message = "Preencha a senha")
     private String       senha;   // varchar(20),
     @Column
-    @Email(message="E-mail inválido")
+    @Email(message = "E-mail inválido")
     private String       email;   // varchar(30),
     @Column
     private Long         cpf;     // numeric(12)
+    @Column
+    private boolean      ativo;
 
     @Override
     public String toString() {
         return "AlunoBean [id_aluno=" + id_aluno + ", contato=" + contato + ", endereco=" + endereco + ", senha=" + senha
-                + ", email=" + email + ", cpf=" + cpf + "]";
+                + ", email=" + email + ", cpf=" + cpf + ", ativo=" + ativo+ "]";
     }
 
     public Integer getId_aluno() {
@@ -95,5 +97,19 @@ public class AlunoBean
 
     public void setCpf(Long cpf) {
         this.cpf = cpf;
+    }
+
+    /**
+     * @return the ativo
+     */
+    public boolean isAtivo() {
+        return ativo;
+    }
+
+    /**
+     * @param ativo the ativo to set
+     */
+    public void setAtivo(boolean ativo) {
+        this.ativo = ativo;
     }
 }

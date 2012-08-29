@@ -74,6 +74,7 @@
 								<li><a href="${app_context}aluno/cadastrar">Cadastrar</a></li>
 								<li><a href="${app_context}aluno/cadastrar">Esqueci
 										Minha senha</a></li>
+								<li><a href="${app_context}aluno/reenviaAtivacao">Re-enviar ativação</a></li>
 							</td>
 							<td class="td-divider"/>
 							<td valign="top">
