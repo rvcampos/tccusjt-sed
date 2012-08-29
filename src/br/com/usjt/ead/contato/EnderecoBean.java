@@ -5,8 +5,12 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+
+import br.com.usjt.ead.cidadestado.CidadeBean;
 
 @Entity
 @Table(name = "ENDERECO")
@@ -16,8 +20,9 @@ public class EnderecoBean
     @SequenceGenerator(name="gen", initialValue=1, sequenceName="seq_endereco")
     @GeneratedValue(generator="gen", strategy=GenerationType.AUTO)
     private Integer id_endereco; // integer PRIMARY KEY,
-    @Column
-    private Integer id_cidade;   // integer,
+    @ManyToOne
+    @JoinColumn(name="id_cidade")
+    private CidadeBean cidade;   // integer,
     @Column
     private String  bairro;      // varchar(100),
     @Column
@@ -27,7 +32,7 @@ public class EnderecoBean
 
     @Override
     public String toString() {
-        return "EnderecoBean [id_endereco=" + id_endereco + ", id_cidade=" + id_cidade + ", bairro=" + bairro + ", logradouro="
+        return "EnderecoBean [id_endereco=" + id_endereco + ", cidade=" + cidade + ", bairro=" + bairro + ", logradouro="
                 + logradouro + ", cep=" + cep + "]";
     }
 
@@ -37,14 +42,6 @@ public class EnderecoBean
 
     public void setId_endereco(Integer id_endereco) {
         this.id_endereco = id_endereco;
-    }
-
-    public Integer getId_cidade() {
-        return id_cidade;
-    }
-
-    public void setId_cidade(Integer id_cidade) {
-        this.id_cidade = id_cidade;
     }
 
     public String getBairro() {
@@ -69,5 +66,13 @@ public class EnderecoBean
 
     public void setCep(Integer cep) {
         this.cep = cep;
+    }
+
+    public CidadeBean getCidade() {
+        return cidade;
+    }
+
+    public void setCidade(CidadeBean cidade) {
+        this.cidade = cidade;
     }
 }

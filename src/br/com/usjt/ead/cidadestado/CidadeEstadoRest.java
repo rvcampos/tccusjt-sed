@@ -30,7 +30,7 @@ public class CidadeEstadoRest
         JSPAttr j = new JSPAttr();
         int id = 25;
         try {
-            id = Integer.parseInt(j.getParameter("id_estado"));
+            id = Integer.parseInt(j.getParameter("estado_id"));
         }
         catch (Exception e) {}
         j.set("list_city", carregaCidades(id));
@@ -45,7 +45,7 @@ public class CidadeEstadoRest
         Session session = HS.getSession();
         try {
             Criteria crit = session.createCriteria(CidadeBean.class);
-            crit.add(Restrictions.eq("state.id_estado", state_id)).addOrder(Order.asc("id_cidade"));
+            crit.add(Restrictions.eq("estado.id_estado", state_id)).addOrder(Order.asc("id_cidade"));
             listaCity = crit.list();
             return listaCity;
         }
