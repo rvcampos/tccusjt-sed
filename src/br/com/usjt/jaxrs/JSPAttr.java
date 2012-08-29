@@ -72,7 +72,7 @@ public class JSPAttr {
         return this.request.getParameterValues(key);
     }
     
-    public void repopular(String nome)
+    public void repopular()
     {
         Enumeration<String> en = request.getParameterNames();
         while(en.hasMoreElements())

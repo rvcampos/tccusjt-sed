@@ -27,7 +27,7 @@ public class SecurityDummy implements br.com.usjt.shiro.Security {
     }
 
     @Override
-    public boolean login(String username, String password) {
+    public boolean login(String username, String password, int ent) {
         return true;
     }
     

@@ -62,8 +62,31 @@
 		</li>
 		</shiro:authenticated>
 		<shiro:notAuthenticated>
-		<li class="divider-vertical"></li>
-		<li><a href="${app_context}login">Login</a></li>
+		<li class="divider-vertical" />
+		<li class="dropdown">
+			<a href="#" class="dropdown-toggle" data-toggle="dropdown" href="#">Acesso <b class="caret"></b></a>
+				<ul class="dropdown-menu">
+					<table cellpadding="0" cellspacing="0" border="0">
+						<tr>
+							<td valign="top">
+						    	<li class="nav-header">Aluno</li>
+								<li><a href="${app_context}aluno/login">Login Aluno</a></li>
+								<li><a href="${app_context}aluno/cadastrar">Cadastrar</a></li>
+								<li><a href="${app_context}aluno/cadastrar">Esqueci
+										Minha senha</a></li>
+							</td>
+						</tr>
+						<tr>
+							<td>
+						    	<li class="divider-vertical"></li>
+								<li class="nav-header">Professor</li>
+								<li><a href="${app_context}professor/login">Login
+										Professor</a></li>
+							</td>
+						</tr>
+					</table>
+				</ul>
+		</li>
 		<li class="divider-vertical"></li>
 		</shiro:notAuthenticated>
 		<shiro:authenticated>
