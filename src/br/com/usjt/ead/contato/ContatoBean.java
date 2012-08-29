@@ -13,6 +13,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -25,13 +27,17 @@ public class ContatoBean
     @GeneratedValue(generator = "gen", strategy = GenerationType.AUTO)
     private Long              id_contato;                             // integer
     @Column
+    @NotNull(message="Preencha a data de nascimento")
     private Date              data_nascimento;                        // Date,
     @Column
+    @NotNull(message="Preencha o Nome Completo")
     private String            nome;                                   // varchar(100),
     @Column
+    @NotNull(message="Preencha o RG")
     private String            rg;                                     // varchar(12));
     @OneToMany(mappedBy = "contato", cascade = CascadeType.ALL, orphanRemoval = true)
     @NotEmpty(message = "Por favor, preencha ao menos um telefone")
+    @Valid
     private Set<TelefoneBean> telefones = new HashSet<TelefoneBean>();
 
     @Override

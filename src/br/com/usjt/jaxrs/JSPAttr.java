@@ -1,5 +1,7 @@
 package br.com.usjt.jaxrs;
 
+import java.util.Enumeration;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.jboss.resteasy.spi.ResteasyProviderFactory;
@@ -68,6 +70,16 @@ public class JSPAttr {
      */
     public String[] getParameterValues(String key) {
         return this.request.getParameterValues(key);
+    }
+    
+    public void repopular(String nome)
+    {
+        Enumeration<String> en = request.getParameterNames();
+        while(en.hasMoreElements())
+        {
+            String x = en.nextElement();
+            set(x, getParameter(x));
+        }
     }
 
 }

@@ -11,12 +11,40 @@ www.w3.org/TR/html4/loose.dtd">
 
 function validaSenhaForm()
 {
+	if($('#txtSenha').val() == '' || $('#txtCsenha').val() == '')
+	{
+		alert('Preencha a senha e a validação');
+		return false;
+	}
 	if($('#txtSenha').val() != $('#txtCsenha').val())
 	{
 		alert('Confirmacao de senha invalida');
 		return false;
 	}
 	return true;
+}
+
+function changeUF(state) {
+	return changeUF(state, null);
+}
+function changeUF(state, callback) {
+	$.ajax({
+		url : "${app_context}cidade/carrega_uf",
+		type : "POST",
+		cache : false,
+		data : {
+			"estado_id" : state
+		},
+		dataType : "text",
+		success : function(msg) {
+			$("#ufcidade").html(msg);
+			$("#combobox_city").combobox();
+			$("#ufcidade").append('<span class="label label-important">Obrigatório</span>');
+			if (callback) {
+				callback();
+			}
+		}
+	});
 }
 </script>
 		<form action="create" method="post" id="formAluno">
@@ -27,28 +55,29 @@ function validaSenhaForm()
 		<tr>
 		<td>
 			<div class="tabbable">
-			<ul class="nav nav-tabs"> 
-			<li class="active"><a href="#1" data-toggle="tab">Dados cadastrais</a></li>  
-			<li class=""><a href="#2" data-toggle="tab">Endereco</a></li>  
-			<li class=""><a href="#3" data-toggle="tab">Usuario</a></li> 
-			</ul>
-			<div class="tab-content">  
+					<ul class="nav nav-tabs">
+						<li class="active"><a href="#1" data-toggle="tab">Dados
+								cadastrais</a></li>
+						<li class=""><a href="#2" data-toggle="tab">Usuario</a></li>
+						<li class=""><a href="#3" data-toggle="tab">Endereco</a></li>
+					</ul>
+					<div class="tab-content">  
 			<div class="tab-pane active" id="1">  
 			<table class="table">
 				<tr>
 					<td><label>Nome Completo </label></td>
-					<td><input type="text" id="txtNome" name="txtNome" maxlength="50" size="50"></td>
+					<td><input type="text" id="txtNome" name="txtNome" value="${txtNome}" maxlength="50" size="50"></td>
 				</tr>
 
 				<tr>
 
 					<td><label>RG</label></td>
-					<td><input name="txtRG" id="txtRG" name="txtRG" maxlength="10" size="12"></td>
+					<td><input name="txtRG" id="txtRG" name="txtRG" value="${txtRG}" maxlength="10" size="12"></td>
 				</tr>
 
 				<tr>
 					<td><label>CPF</label></td>
-					<td><input id="txtCPF" name="txtCPF" type="text" alt="cpf" maxlength="11" size="12"></td>
+					<td><input id="txtCPF" name="txtCPF" type="text" alt="cpf" value="${txtCPF}" maxlength="11" size="12"></td>
 				</tr>
 
 				<tr>
@@ -64,51 +93,61 @@ function validaSenhaForm()
 
 				<tr>
 					<td><label> Data de Nascimento </label></td>
-					<td><input name="txtNascimento" id="txtNascimento" type='text' maxlength="10" size="12" alt="39/19/2999"></td>
+					<td><input name="txtNascimento" id="txtNascimento" value="${txtNascimento}" type='text' maxlength="10" size="12" alt="39/19/2999"></td>
 				</tr>
 				</table>
 				</div>
 				<div class="tab-pane" id="2">  
+				<table class="table">
+				<tr>
+					<td><label>Telefone</label></td>
+					<td><input type="text" id="txtTelefoneDDD" name="txtTelefoneDDD" value="${txtTelefoneDDD}" maxlength="2" size="2" style="width:15px;" alt="99" > <input type="text" id="txtTelefone" name="txtTelefone" value="${txtTelefone}" maxlength="9" alt="9999-9999"></td>
+				</tr>
+
+				<tr>
+					<td><label>Celular</label></td>
+					<td><input type="text" id="txtCelularDDD" name="txtCelularDDD" value="${txtCelularDDD}" maxlength="2" size="2" style="width:15px;" alt="99"> <input type="text" id="txtCelular" name="txtCelular" maxlength="9" alt="9999-9999" value="${txtCelular}"></td>
+				</tr>
+
+				<tr>
+					<td><label>Email</label></td>
+					<td><input type="text" id="txtEmail" name="txtEmail" value="${txtEmail}" maxlength="50" size="50"></td>
+				</tr>
+
+				<tr>
+					<td><label>Usuário</label></td>
+					<td><input type="text" id="txtUsuario" name="txtUsuario" value="${txtUsuario}" maxlength="20" size="20" value="${txtUsuario}"></td>
+				</tr>
+
+				<tr>
+					<td><label>Senha</label></td>
+					<td><input id="txtSenha" name="txtSenha" type="password" maxlength="8"
+						size="8" value="${txtSenha}"></td>
+				</tr>
+				<tr>
+					<td><label>Confirma Senha</label></td>
+					<td><input id="txtCsenha" name="txtCsenha" type="password" maxlength="8"
+						size="8"></td>
+				</tr>
+			</table>
+			</div>
+			<div class="tab-pane" id="3">  
 				<table  class="table">
 				<tr>
 					<td><label>Endereço</label></td>
-					<td><input type='text' id="txtEndereco" name="txtEndereco" maxlength="50" size="50"></td>
+					<td><input type='text' id="txtEndereco" name="txtEndereco" value="${txtEndereco}" maxlength="50" size="50"></td>
 				</tr>
 
 				<tr>
 
 					<td><label>Bairro</label></td>
-					<td><input type='text' id="txtBairro" name="txtBairro" maxlength="50" size="50"></td>
+					<td><input type='text' id="txtBairro" name="txtBairro" value="${txtBairro}" maxlength="50" size="50"></td>
 				</tr>
 
 				<tr>
 					<td><label>UF</label></td>
 					<td>
-						<script>
-							function changeUF(state) {
-								return changeUF(state, null);
-							}
-							function changeUF(state, callback) {
-								$.ajax({
-									url : "${app_context}cidade/carrega_uf",
-									type : "POST",
-									cache : false,
-									data : {
-										"estado_id" : state
-									},
-									dataType : "text",
-									success : function(msg) {
-										$("#ufcidade").html(msg);
-										$("#combobox_city").combobox();
-										$("#ufcidade").append('<span class="label label-important">Obrigatório</span>');
-										if (callback) {
-											callback();
-										}
-									}
-								});
-							}
-						</script>
-						<select style="width: 40px;" id="CboUF" name="CboUF" onchange="changeUF($(this).val());">
+						<select style="width: 60px;" id="CboUF" name="CboUF" onchange="changeUF($(this).val());">
 							<option></option>
 							<c:forEach var="estado" items="${lista_uf}">
 								<option id="${estado.id_estado}" value="${estado.id_estado}" <c:if test="${estado.id_estado eq uf_id}">selected="selected"</c:if>>${estado.uf}</option>							
@@ -125,11 +164,12 @@ function validaSenhaForm()
 							   <option></option>
 								<c:forEach var="cities" items="${list_city}">
 									<c:set var="selected" value="" />
-									<c:if test="${cidade_id eq cities.id_cidade}">
+									<c:if test="${cidade eq cities.id_cidade}">
 										<c:set var="selected" value="selected=\"selected\"" />
 									</c:if>
 									<option value="${cities.id_cidade}" id="${cities.id_cidade}"
-										${selected}>${cities.nome}</option>
+										${selected}>${cities.nome}
+									</option>
 								</c:forEach>
 							</select>
 						</div>
@@ -138,45 +178,10 @@ function validaSenhaForm()
 
 				<tr>
 					<td><label>Cep</label></td>
-					<td><input type='text' id="txtCep" name="txtCep" alt='cep' maxlength="8" size="8"></td>
-					</td>
+					<td><input type='text' id="txtCep" name="txtCep" alt='cep' value="${txtCep}" maxlength="8" size="8"></td>
 				</tr>
 				</table>
 				</div>
-				<div class="tab-pane" id="3">  
-				<table class="table">
-				<tr>
-					<td><label>Telefone</label></td>
-					<td><input type="text" id="txtTelefoneDDD" name="txtTelefoneDDD" maxlength="2" size="2" style="width:15px;" alt="99"> <input type="text" id="txtTelefone" name="txtTelefone" maxlength="9" alt="9999-9999"></td>
-				</tr>
-
-				<tr>
-					<td><label>Celular</label></td>
-					<td><input type="text" id="txtCelularDDD" name="txtCelularDDD" maxlength="2" size="2" style="width:15px;" alt="99"> <input type="text" id="txtCelular" name="txtCelular" maxlength="9" alt="9999-9999"></td>
-				</tr>
-
-				<tr>
-					<td><label>Email</label></td>
-					<td><input type="text" id="txtEmail" name="txtEmail" maxlength="50" size="50"></td>
-				</tr>
-
-				<tr>
-					<td><label>Usuário</label></td>
-					<td><input type="text" id="txtUsuario" name="txtUsuario" maxlength="20" size="20" value="${txtUsuario}"></td>
-				</tr>
-
-				<tr>
-					<td><label>Senha</label></td>
-					<td><input id="txtSenha" name="txtSenha" type="password" maxlength="8"
-						size="8" value="${txtSenha}"></td>
-				</tr>
-				<tr>
-					<td><label>Confirma Senha</label></td>
-					<td><input id="txtCsenha" name="txtCsenha" type="password" maxlength="8"
-						size="8"></td>
-				</tr>
-			</table>
-			</div>
 			</div>
 			</div>
 		</td>
