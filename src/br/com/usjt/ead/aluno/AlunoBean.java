@@ -10,6 +10,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.Email;
 
 import br.com.usjt.ead.contato.ContatoBean;
 import br.com.usjt.ead.contato.EnderecoBean;
@@ -24,13 +28,17 @@ public class AlunoBean
     private Integer      id_aluno; // integer PRIMARY KEY,
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "id_contato")
+    @NotNull(message="Preencha os dados de contato")
+    @Valid
     private ContatoBean  contato; // integer// REFERENCES contato(id_contato),
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_endereco")
     private EnderecoBean endereco; // integer// references
     @Column
+    @NotNull(message="Preencha a senha")
     private String       senha;   // varchar(20),
     @Column
+    @Email(message="E-mail inválido")
     private String       email;   // varchar(30),
     @Column
     private Long         cpf;     // numeric(12)
