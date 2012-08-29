@@ -6,7 +6,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "TELEFONES")
+@Table(name = "tp_telefone")
 public class TipoTelefoneBean
 {
     @Id

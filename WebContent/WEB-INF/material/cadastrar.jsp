@@ -12,15 +12,13 @@ www.w3.org/TR/html4/loose.dtd">
 
 </script>
 		<form action="create" method="post" id="formMaterial">
-			<legend>
-				<b>Cadastro de Material </b>
-			</legend>
+			
 		<table>
 		<tr>
 		<td>
 			<div class="tabbable">
 			<ul class="nav nav-tabs"> 
-			<li class="active"><a href="#1" data-toggle="tab">Cadastrar</a></li>  
+			<li class="active"><a href="#1" data-toggle="tab">Cadastrar Material</a></li>  
 			
 			</ul>
 			<div class="tab-content">  
@@ -42,20 +40,12 @@ www.w3.org/TR/html4/loose.dtd">
 		
         </td>
     </tr>  
-         
+    
     <tr>
-        <td align="right">
-        <label >Arquivo</label>		
-		</td>
-		<td>
-		<input id="txtDiretorio"  size="40" >	
-			
-			
-		</td>
-		<td>
-		<button id="cmdDiretorio" style="width: 110px;" type="file">Escolher Arquivo</button>	
-		</td>
-    </tr>
+		<td><label>Arquivo</label></td>
+		<td><input type="file" id="Arquivo" name="Arquivo"></td>
+	</tr>
+         
    
 </table>
 

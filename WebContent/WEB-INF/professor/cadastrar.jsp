@@ -19,7 +19,7 @@ function validaSenhaForm()
 	return true;
 }
 </script>
-		<form action="create" method="post" id="formProfessor">
+		<form action="${metodo}" method="post" id="formProfessor">
 			<legend>
 				<b>Cadastro de Professor</b>
 			</legend>
@@ -37,18 +37,18 @@ function validaSenhaForm()
 			<table class="table">
 				<tr>
 					<td><label>Nome Completo </label></td>
-					<td><input type="text" id="txtNome" name="txtNome" maxlength="50" size="50"></td>
+					<td><input type="text" id="txtNome" name="txtNome" value="${txtNome}" maxlength="50" size="50"></td>
 				</tr>
 
 				<tr>
 
 					<td><label>RG</label></td>
-					<td><input name="txtRG" id="txtRG" name="txtRG" maxlength="10" size="12"></td>
+					<td><input name="txtRG" id="txtRG" name="txtRG" value="${txtRG}" maxlength="10" size="12"></td>
 				</tr>
 
 				<tr>
 					<td><label>CPF</label></td>
-					<td><input id="txtCPF" name="txtCPF" type="text" alt="cpf" maxlength="11" size="12"></td>
+					<td><input id="txtCPF" name="txtCPF" type="text" alt="cpf" maxlength="11" value="${txtCPF}" size="12"></td>
 				</tr>
 
 				<tr>
@@ -72,13 +72,13 @@ function validaSenhaForm()
 				<table  class="table">
 				<tr>
 					<td><label>Endereço</label></td>
-					<td><input type='text' id="txtEndereco" name="txtEndereco" maxlength="50" size="50"></td>
+					<td><input type='text' id="txtEndereco" name="txtEndereco" maxlength="50" size="50" value="${txtEndereco}"></td>
 				</tr>
 
 				<tr>
 
 					<td><label>Bairro</label></td>
-					<td><input type='text' id="txtBairro" name="txtBairro" maxlength="50" size="50"></td>
+					<td><input type='text' id="txtBairro" name="txtBairro" value="${txtBairro}" maxlength="50" size="50"></td>
 				</tr>
 
 				<tr>
@@ -111,7 +111,7 @@ function validaSenhaForm()
 
 				<tr>
 					<td><label>Email</label></td>
-					<td><input type="text" id="txtEmail" name="txtEmail" maxlength="50" size="50"></td>
+					<td><input type="text" id="txtEmail" value="${txtEmail}" name="txtEmail" maxlength="50" size="50"></td>
 				</tr>
 
 				<tr>
@@ -138,9 +138,9 @@ function validaSenhaForm()
 		<tr>
 		<td>
 		<center>
-			<button id="cmdIncluir" type="button" onclick="if(validaSenhaForm()){$('#formProfessor').submit();}" style="width: 70px;">
+			<button id="cmdIncluir" class=".btn btn-primary" type="button" onclick="if(validaSenhaForm()){$('#formProfessor').submit();}" style="width: 70px;">
 				Incluir</button>
-			<button id="cmdCancelar" type="button" style="width: 70px;">
+			<button id="cmdCancelar" type="button" class=".btn" style="width: 70px;">
 				Cancelar</button>
 		</center>
 		</td>
