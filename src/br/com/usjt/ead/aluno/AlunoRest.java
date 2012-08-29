@@ -9,6 +9,8 @@ import org.hibernate.Transaction;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.jboss.resteasy.annotations.providers.jaxb.Stylesheet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import br.com.usjt.ICrud;
 import br.com.usjt.ead.cidadestado.CidadeBean;
@@ -29,6 +31,8 @@ import br.com.usjt.util.HS;
 public class AlunoRest implements ICrud
 {
 
+    private static final Logger LOG = LoggerFactory.getLogger(AlunoRest.class);
+    
     @Override
     @Path("")
     @POST
@@ -56,11 +60,11 @@ public class AlunoRest implements ICrud
         Session session = HS.getSession();
         try {
             j.set("lista_uf", session.createCriteria(EstadoUFBean.class).addOrder(Order.asc("id_estado")).list());
-            j.set("uf_id", 25);
-            j.set("list_city", session.createCriteria(CidadeBean.class).add(Restrictions.eq("estado.id_estado", 25)).list());
+            j.set("uf_id", 26);
+            j.set("list_city", session.createCriteria(CidadeBean.class).add(Restrictions.eq("estado.id_estado", 26)).list());
         }
         catch (Exception e) {
-            // TODO: handle exception
+            LOG.error("Falha ao carregar",e);
         }
         finally {
             session.close();
@@ -95,6 +99,7 @@ public class AlunoRest implements ICrud
             end.setCep(Integer.parseInt(j.getParameter("txtCep").replaceAll("[^0-9]", "")));
             end.setLogradouro(j.getParameter("txtEndereco"));
             end.setBairro(j.getParameter("txtBairro"));
+            end.setCidade((CidadeBean) session.load(CidadeBean.class, Integer.parseInt(j.getParameter("cidade"))));
             b.setEndereco(end);
             ContatoBean contato = new ContatoBean();
             TelefoneBean phone = new TelefoneBean();
