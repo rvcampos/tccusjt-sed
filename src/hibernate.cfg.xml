@@ -27,6 +27,8 @@
 		
 		<mapping class="br.com.usjt.ead.cidadestado.CidadeBean" />
 		<mapping class="br.com.usjt.ead.cidadestado.EstadoUFBean" />
+		
+		<mapping class="br.com.usjt.ead.PropertiesBean" />
 
 	</session-factory>
 </hibernate-configuration>

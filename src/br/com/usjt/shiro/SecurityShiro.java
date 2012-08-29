@@ -1,30 +1,31 @@
 package br.com.usjt.shiro;
 
-import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 
 import br.com.usjt.jaxrs.JSPAttr;
 import br.com.usjt.jaxrs.security.SecurityDummy;
 
-
 /**
  * Implementacao de seguranca do JAXRS
  */
-public class SecurityShiro implements Security {
+public class SecurityShiro implements Security
+{
 
     private Subject currentUser;
 
-    private SecurityShiro () {}
+    private SecurityShiro()
+    {
+    }
 
     /**
      * Construtor
      */
     public static Security init() {
         return new SecurityDummy();
-//        SecurityShiro rt = new SecurityShiro();
-//        rt.currentUser = SecurityUtils.getSubject();
-//        return rt;
+        // SecurityShiro rt = new SecurityShiro();
+        // rt.currentUser = SecurityUtils.getSubject();
+        // return rt;
     }
 
     @Override
@@ -33,7 +34,7 @@ public class SecurityShiro implements Security {
             this.currentUser.getSession().touch();
         }
         catch (Exception e) {
-            new JSPAttr("msgsession","Sessão expirada. Favor efetuar o login novamente");
+            new JSPAttr("msgsession", "Sessão expirada. Favor efetuar o login novamente");
             this.currentUser.logout();
             return false;
         }
@@ -52,7 +53,7 @@ public class SecurityShiro implements Security {
 
     @Override
     public boolean login(String username, String password, int entidade) {
-        return this.login(new UsernamePasswordToken(username, password),entidade);
+        return this.login(new UsernamePasswordToken(username, password), entidade);
     }
 
     private boolean login(UsernamePasswordToken newlogin, int entidade) {
@@ -65,9 +66,12 @@ public class SecurityShiro implements Security {
             this.currentUser.login(newlogin);
         }
         catch (Exception e) {
+            new JSPAttr().errorMsg(e.getMessage());
             return false;
         }
-        if (this.currentUser.isAuthenticated()) { return true; }
+        if (this.currentUser.isAuthenticated()) {
+            return true;
+        }
         return false;
     }
 
