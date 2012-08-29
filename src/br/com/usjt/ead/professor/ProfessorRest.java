@@ -9,6 +9,8 @@ import org.hibernate.Transaction;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.jboss.resteasy.annotations.providers.jaxb.Stylesheet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import br.com.usjt.ICrud;
 import br.com.usjt.ead.aluno.AlunoBean;
@@ -29,26 +31,48 @@ import br.com.usjt.util.HS;
 @Path("/professor")
 public class ProfessorRest implements ICrud
 {
-
+    private static final Logger LOG = LoggerFactory.getLogger(ProfessorRest.class);
     @Override
-    @Path("read")
+    @Path("listar")
     @POST
     @GET
-    @Stylesheet(href = "/read.jsp", type = MediaTypeMore.APP_JSP)
+    @Stylesheet(href = "professor/listar.jsp", type = MediaTypeMore.APP_JSP)
     @SecurityPrivate(permission = SecType.LER, entity = Entidade.DUMMY)
     public void read() {
-        // TODO Auto-generated method stub
-
+        JSPAttr j = new JSPAttr();
+        Session session = HS.getSession();
+        try {
+            j.set("profs",session.createCriteria(ProfessorBean.class).list());
+        }
+        catch (Exception e) {
+            LOG.error("Erro ao listar professores",e);
+        }
+        finally{
+            session.close();
+        }
     }
 
     @Override
     @Path("detalha")
     @POST
-    @Stylesheet(href = "/detalhar.jsp", type = MediaTypeMore.APP_JSP)
+    @Stylesheet(href = "professor/cadastrar.jsp", type = MediaTypeMore.APP_JSP)
     @SecurityPrivate(permission = SecType.DETALHAR, entity = Entidade.DUMMY)
     public void edit_update() {
-        // TODO Auto-generated method stub
-
+        Session session = HS.getSession();
+        JSPAttr j = new JSPAttr("metodo","update");
+        try {
+            ProfessorBean bean = (ProfessorBean) session.get(ProfessorBean.class, Integer.parseInt(j.getParameter("id_prof")));
+            j.set("prof", bean);
+            j.set("txtEmail", bean.getEmail());
+            j.set("txtNome", bean.getContato().getNome());
+        }
+        catch (Exception e) {
+            LOG.error("Falha ao detalhar professor",e);
+        }
+        finally
+        {
+            session.close();
+        }
     }
 
     @Override
@@ -57,7 +81,7 @@ public class ProfessorRest implements ICrud
     @Stylesheet(href = "professor/cadastrar.jsp", type = MediaTypeMore.APP_JSP)
     @SecurityPrivate(permission = SecType.CRIAR, entity = Entidade.DUMMY)
     public void edit_insert() {
-        JSPAttr j = new JSPAttr();
+        JSPAttr j = new JSPAttr("metodo","create");
         Session session = HS.getSession();
         try {
             j.set("lista_uf", session.createCriteria(EstadoUFBean.class).addOrder(Order.asc("id_estado")).list());
@@ -89,8 +113,7 @@ public class ProfessorRest implements ICrud
     @Stylesheet(href = "professor/cadastrar.jsp", type = MediaTypeMore.APP_JSP)
     @SecurityPrivate(permission = SecType.CRIAR, entity = Entidade.DUMMY)
     public void create() {
-        // TODO Auto-generated method stub
-        JSPAttr j = new JSPAttr();
+        JSPAttr j = new JSPAttr("metodo","create");
         ProfessorBean b = new ProfessorBean();
         Session session = HS.getSession();
         Transaction tx = session.beginTransaction();

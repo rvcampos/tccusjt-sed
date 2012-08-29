@@ -24,6 +24,9 @@
 		<mapping class="br.com.usjt.ead.professor.ProfessorBean" />
 		
 		<mapping class="br.com.usjt.ead.material.MaterialDidaticoBean" />
+		
+		<mapping class="br.com.usjt.ead.cidadestado.CidadeBean" />
+		<mapping class="br.com.usjt.ead.cidadestado.EstadoUFBean" />
 
 	</session-factory>
 </hibernate-configuration>
