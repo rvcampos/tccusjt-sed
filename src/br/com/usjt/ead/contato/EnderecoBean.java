@@ -9,6 +9,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import br.com.usjt.ead.cidadestado.CidadeBean;
 
@@ -22,12 +23,16 @@ public class EnderecoBean
     private Integer id_endereco; // integer PRIMARY KEY,
     @ManyToOne
     @JoinColumn(name="id_cidade")
+    @NotNull(message="Favor informar a cidade")
     private CidadeBean cidade;   // integer,
     @Column
+    @NotNull(message="Favor informar o bairro")
     private String  bairro;      // varchar(100),
     @Column
+    @NotNull(message="Favor informar o Endereço")
     private String  logradouro;  // varchar(120),
     @Column
+    @NotNull(message="Favor informar o cep")
     private Integer cep;         // integer);
 
     @Override

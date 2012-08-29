@@ -26,10 +26,10 @@ public class TelefoneBean
     @JoinColumn(name = "tipo", referencedColumnName = "id_tipo")
     private TipoTelefoneBean tipo;
     @Column
-    @NotNull
+    @NotNull(message="Favor informar o DDD")
     private Integer          ddd;        // integer,
     @Column
-    @NotNull
+    @NotNull(message="Favor informar o Telefone")
     private Long             telefone;   // numeric(9)
 
     @Override
