@@ -39,8 +39,7 @@ function changeUF(state, callback) {
 		success : function(msg) {
 			$("#ufcidade").html(msg);
 			$("#combobox_city").combobox();
-			$("#ufcidade").append('<span class="label label-important">Obrigatório</span>');
-			if (callback) {
+				if (callback) {
 				callback();
 			}
 		}
@@ -176,6 +175,7 @@ function validaEmail() {
 								</c:forEach>
 							</select>
 						</div>
+						<script>$('#combobox_city').combobox();</script>
 					</td>
 				</tr>
 				<tr>

@@ -62,7 +62,7 @@ public class AlunoRest implements ICrud
     @Path("cadastrar")
     @GET
     @Stylesheet(href = "aluno/cadastrar.jsp", type = MediaTypeMore.APP_JSP)
-    @SecurityPrivate(permission = SecType.CRIAR, entity = Entidade.DUMMY)
+    @SecurityPublic
     public void edit_insert() {
         JSPAttr j = new JSPAttr();
         Session session = HS.getSession();
@@ -93,7 +93,7 @@ public class AlunoRest implements ICrud
     @Path("create")
     @POST
     @Stylesheet(href = "aluno/cadastrar.jsp", type = MediaTypeMore.APP_JSP)
-    @SecurityPrivate(permission = SecType.CRIAR, entity = Entidade.DUMMY)
+    @SecurityPublic
     public void create() {
         JSPAttr j = new JSPAttr();
         Session session = HS.getSession();
@@ -101,6 +101,7 @@ public class AlunoRest implements ICrud
         try {
             AlunoBean b = popula(j, session);
             if (Utils.isValid(b)) {
+                b.setAtivo(false);
                 session.save(b);
                 tx.commit();
                 Utils.sendMail(b.getEmail(), b.getContato().getNome());
