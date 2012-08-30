@@ -9,8 +9,6 @@ www.w3.org/TR/html4/loose.dtd">
 </head>
 <script>
 
-var canPost = false;
-
 function validaSenhaForm()
 {
 	if($('#txtSenha').val() == '' || $('#txtCsenha').val() == '')
@@ -128,7 +126,7 @@ function validaEmail() {
 
 				<tr>
 					<td><label>Email</label></td>
-					<td><input type="text" id="txtEmail" name="txtEmail" value="${txtEmail}" maxlength="50" onchange="validaEmail();"><span id="infoEmail"></span></td>
+					<td><input type="text" id="txtEmail" name="txtEmail" value="${txtEmail}" maxlength="50" onchange="validaEmail();"><span id="infoEmail"><input type="hidden" id="canPost" value="false" /></span></td>
 				</tr>
 				<tr>
 					<td><label>Senha</label></td>
