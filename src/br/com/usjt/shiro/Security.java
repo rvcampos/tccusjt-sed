@@ -14,4 +14,18 @@ public interface Security {
 	
 	boolean hasAnyRole(String... roles);
     
+    /**
+     * @return UserId
+     */
+	Integer getUserId();
+    
+    /**
+     * @return Como o "Principals" do Shiro retorne algum identificador único do usuário ou o Username
+     */
+    String getPrincipals();
+    
+    /**
+     * @return Tipo de Usuário (ADMIN = 0, Professor = 1, Aluno = 2)
+     */
+    Integer getTipo();
 }

@@ -59,7 +59,7 @@ public class SecurityInterceptor implements PreProcessInterceptor
                     for (SecType sec : per) {
                         String pp = sec.toString();
                         SecurityInterceptor.LOG.info("Checando|" + pp);
-                        if (sh.hasRole(pp)) {
+                        if (sh.hasRole(pp.toLowerCase())) {
                             return null;
                         }
                     }
