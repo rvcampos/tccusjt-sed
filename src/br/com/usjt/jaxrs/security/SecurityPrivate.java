@@ -17,30 +17,19 @@ public @interface SecurityPrivate {
     /**
      * @return privilegios
      */
-    SecType permission() default SecType.LER;
+    SecType[] role() default SecType.ALUNO;
 
-    Entidade entity() default Entidade.DUMMY;
-    
     /**
      * Tipos de autenticacoes
      */
     public static enum SecType {
-        MATRICULAR,
+        ADMIN,
         /**
          */
-        CRIAR,
+        PROFESSOR,
         /**
          */
-        LER,
-        /**
-         */
-        DELETAR,
-        /**
-         */
-        UPDATE,
-        /**
-         */
-        DETALHAR
+        ALUNO
     }
     
     public static enum Entidade

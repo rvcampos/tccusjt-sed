@@ -30,5 +30,15 @@ public class SecurityDummy implements br.com.usjt.shiro.Security {
     public boolean login(String username, String password, int ent) {
         return true;
     }
+
+    @Override
+    public boolean hasRole(String role) {
+        return true;
+    }
+
+    @Override
+    public boolean hasAnyRole(String... roles) {
+        return true;
+    }
     
 }

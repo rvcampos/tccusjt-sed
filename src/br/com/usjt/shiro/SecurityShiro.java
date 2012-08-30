@@ -1,5 +1,6 @@
 package br.com.usjt.shiro;
 
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 
@@ -22,7 +23,7 @@ public class SecurityShiro implements Security
      * Construtor
      */
     public static Security init() {
-        return new SecurityDummy();
+         return new SecurityDummy();
         // SecurityShiro rt = new SecurityShiro();
         // rt.currentUser = SecurityUtils.getSubject();
         // return rt;
@@ -72,6 +73,22 @@ public class SecurityShiro implements Security
         if (this.currentUser.isAuthenticated()) {
             return true;
         }
+        return false;
+    }
+
+    @Override
+    public boolean hasRole(String role) {
+        return currentUser.hasRole(role);
+    }
+
+    @Override
+    public boolean hasAnyRole(String... roles) {
+        for (String role : roles) {
+            if (hasRole(role)) {
+                return true;
+            }
+        }
+
         return false;
     }
 

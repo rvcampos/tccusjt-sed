@@ -58,7 +58,7 @@ id_professor integer PRIMARY KEY,
 id_contato integer REFERENCES CONTATO(id_contato),
 id_endereco integer references ENDERECO(id_endereco),
 email varchar(30),
-senha varchar(20),
+senha varchar(100),
 cpf  numeric(12) not null);
 
 CREATE TABLE ADMINISTRADOR (
@@ -101,7 +101,7 @@ CREATE TABLE ALUNO (
 id_aluno integer PRIMARY KEY,
 id_contato integer REFERENCES contato(id_contato),
 id_endereco integer references ENDERECO(id_endereco),
-senha varchar(20),
+senha varchar(100),
 email varchar(30),
 cpf  numeric(12)
 );

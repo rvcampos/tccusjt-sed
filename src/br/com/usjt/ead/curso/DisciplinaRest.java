@@ -42,7 +42,7 @@ public class DisciplinaRest implements ICrud
     @POST
     @GET
     @Stylesheet(href = "pag.jsp", type = MediaTypeMore.APP_JSP)
-    @SecurityPrivate(permission = SecType.LER, entity = Entidade.ALUNO)
+    @SecurityPrivate(role={SecType.ADMIN, SecType.PROFESSOR, SecType.ALUNO})
     public void read() {
     }
 
@@ -50,7 +50,7 @@ public class DisciplinaRest implements ICrud
     @Path("detalha")
     @POST
     @Stylesheet(href = "pag.jsp", type = MediaTypeMore.APP_JSP)
-    @SecurityPrivate(permission = SecType.DETALHAR, entity = Entidade.DUMMY)
+    @SecurityPrivate(role={SecType.ADMIN, SecType.PROFESSOR, SecType.ALUNO})
     public void edit_update() {
     }
 
@@ -58,7 +58,7 @@ public class DisciplinaRest implements ICrud
     @Path("cadastrar")
     @GET
     @Stylesheet(href = "curso/cadastrar.jsp", type = MediaTypeMore.APP_JSP)
-    @SecurityPrivate(permission = SecType.CRIAR, entity = Entidade.DUMMY)
+    @SecurityPrivate(role={SecType.ADMIN, SecType.ALUNO})
     public void edit_insert() {
         JSPAttr j = new JSPAttr();
         Session session = HS.getSession();
@@ -76,7 +76,7 @@ public class DisciplinaRest implements ICrud
     @Path("delete")
     @POST
     @Stylesheet(href = "/read.jsp", type = MediaTypeMore.APP_JSP)
-    @SecurityPrivate(permission = SecType.DELETAR, entity = Entidade.DUMMY)
+    @SecurityPrivate(role={SecType.ADMIN, SecType.PROFESSOR})
     public void delete() {
         // TODO Auto-generated method stub
 
@@ -86,7 +86,7 @@ public class DisciplinaRest implements ICrud
     @Path("create")
     @POST
     @Stylesheet(href = "curso/cadastrar.jsp", type = MediaTypeMore.APP_JSP)
-    @SecurityPrivate(permission = SecType.CRIAR, entity = Entidade.DUMMY)
+    @SecurityPrivate(role={SecType.ADMIN, SecType.PROFESSOR})
     public void create() {
         JSPAttr j = new JSPAttr();
         DisciplinaBean objDisciplina = new DisciplinaBean();
@@ -115,7 +115,7 @@ public class DisciplinaRest implements ICrud
     @Path("update")
     @POST
     @Stylesheet(href = "/read.jsp", type = MediaTypeMore.APP_JSP)
-    @SecurityPrivate(permission = SecType.UPDATE, entity = Entidade.DUMMY)
+    @SecurityPrivate(role={SecType.ADMIN, SecType.PROFESSOR})
     public void update() {
         // TODO Auto-generated method stub
 
