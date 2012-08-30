@@ -9,6 +9,8 @@ www.w3.org/TR/html4/loose.dtd">
 </head>
 <script>
 
+var canPost = false;
+
 function validaSenhaForm()
 {
 	if($('#txtSenha').val() == '' || $('#txtCsenha').val() == '')
@@ -19,6 +21,11 @@ function validaSenhaForm()
 	if($('#txtSenha').val() != $('#txtCsenha').val())
 	{
 		alert('Confirmacao de senha invalida');
+		return false;
+	}
+	if($('#canPost').val() == "false")
+	{
+		alert("E-mail inválido ou em uso.");
 		return false;
 	}
 	return true;
@@ -57,6 +64,7 @@ function validaEmail() {
 		dataType : "text",
 		success : function(msg) {
 			$("#infoEmail").html(msg);
+		    canPost=$('#canPost').val();
 		}
 	});
 }

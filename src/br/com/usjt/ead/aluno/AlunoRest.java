@@ -102,6 +102,7 @@ public class AlunoRest implements ICrud
                 session.save(b);
                 tx.commit();
                 Utils.sendMail(b.getEmail(), b.getContato().getNome());
+                j.sucessMsg("Cadastro realizado com sucesso. Em instantes você receberá um e-mail para ativar seu cadastro e poderá usufruir de nossos cursos");
             }
             else {
                 j.set("lista_uf", session.createCriteria(EstadoUFBean.class).addOrder(Order.asc("id_estado")).list());
@@ -257,6 +258,7 @@ public class AlunoRest implements ICrud
             if (Utils.isValidMail(email)) {
                 j.set("labelemail", "E-mail válido");
                 j.set("label", "label label-success");
+                j.set("canPost", true);
 
                 Criteria c = session.createCriteria(AlunoBean.class);
                 c.add(Restrictions.eq("email", email));
@@ -264,10 +266,12 @@ public class AlunoRest implements ICrud
                 if (c.list().size() > 0) {
                         j.set("labelemail", "E-mail já cadastrado");
                         j.set("label", "label label-info");
+                        j.set("canPost", false);
                 }
             } else {
                 j.set("labelemail", "E-mail Inválido");
                 j.set("label", "label label-info");
+                j.set("canPost", false);
             }
         }
         catch (Exception e) {

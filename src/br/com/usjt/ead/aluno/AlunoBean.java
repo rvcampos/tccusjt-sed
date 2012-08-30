@@ -10,6 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
@@ -19,7 +20,7 @@ import br.com.usjt.ead.contato.ContatoBean;
 import br.com.usjt.ead.contato.EnderecoBean;
 
 @Entity
-@Table(name = "ALUNO")
+@Table(name = "ALUNO", uniqueConstraints = { @UniqueConstraint(columnNames = "email", name = "uk_email_aluno") })
 public class AlunoBean
 {
     @Id
@@ -48,7 +49,7 @@ public class AlunoBean
     @Override
     public String toString() {
         return "AlunoBean [id_aluno=" + id_aluno + ", contato=" + contato + ", endereco=" + endereco + ", senha=" + senha
-                + ", email=" + email + ", cpf=" + cpf + ", ativo=" + ativo+ "]";
+                + ", email=" + email + ", cpf=" + cpf + ", ativo=" + ativo + "]";
     }
 
     public Integer getId_aluno() {
@@ -107,7 +108,8 @@ public class AlunoBean
     }
 
     /**
-     * @param ativo the ativo to set
+     * @param ativo
+     *            the ativo to set
      */
     public void setAtivo(Boolean ativo) {
         this.ativo = ativo;
