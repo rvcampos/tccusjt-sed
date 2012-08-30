@@ -8,7 +8,6 @@ www.w3.org/TR/html4/loose.dtd">
 <title>Cadastro de Professor</title>
 </head>
 <script>
-	function validaSenhaForm() {
 		function changeUF(state) {
 			return changeUF(state, null);
 		}
@@ -31,13 +30,6 @@ www.w3.org/TR/html4/loose.dtd">
 			});
 		}
 
-		if ($('#txtSenha').val() != $('#txtCsenha').val()) {
-			alert('Confirmacao de senha invalida');
-			return false;
-		}
-		return true;
-	}
-
 	function validaEmail() {
 		$.ajax({
 			url : "${app_context}professor/checaEmail",
@@ -51,6 +43,25 @@ www.w3.org/TR/html4/loose.dtd">
 				$("#infoEmail").html(msg);
 			}
 		});
+	}
+	function validaSenhaForm()
+	{
+		if($('#txtSenha').val() == '' || $('#txtCsenha').val() == '')
+		{
+			alert('Preencha a senha e a validação');
+			return false;
+		}
+		if($('#txtSenha').val() != $('#txtCsenha').val())
+		{
+			alert('Confirmacao de senha invalida');
+			return false;
+		}
+		if($('#canPost').val() == "false")
+		{
+			alert("E-mail inválido ou em uso.");
+			return false;
+		}
+		return true;
 	}
 </script>
 <form action="${metodo}" method="post" id="formProfessor">
@@ -131,7 +142,7 @@ www.w3.org/TR/html4/loose.dtd">
 								<tr>
 									<td><label>Email</label></td>
 									<td><input type="text" id="txtEmail" value="${txtEmail}"
-										name="txtEmail" maxlength="50" size="50"  onchange="validaEmail();" /><span id="infoEmail"></span></td>
+										name="txtEmail" maxlength="50" size="50"  onchange="validaEmail();" /><span id="infoEmail"><input type="hidden" id="canPost" value="false" /></span></td>
 								</tr>
 
 								<tr>
