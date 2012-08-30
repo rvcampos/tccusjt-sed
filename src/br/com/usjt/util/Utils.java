@@ -25,16 +25,29 @@ import br.com.usjt.jaxrs.JSPAttr;
  */
 public final class Utils
 {
-    private static final ValidatorFactory  factory               = Validation.buildDefaultValidatorFactory();
+    private static final ValidatorFactory      factory               = Validation.buildDefaultValidatorFactory();
     private static Map<String, PropertiesBean> mapa                  = new HashMap<String, PropertiesBean>();
-    private static final String            MSG_ATIVACAO_CADASTRO = "Prezado(a) %s, <br><br>Seja bem-vindo(a) ao sistema de ensino à distância SYSCOM<br><br>"
-                                                                         + "Acesse o link abaixo para ativar sua conta <br><br> <a href=\"http://localhost:8080/tccusjt-sed/aluno/ativar?key=%s\"> Ativação </a>";
+    private static final String                MSG_ATIVACAO_CADASTRO = "Prezado(a) %s, <br><br>Seja bem-vindo(a) ao sistema de ensino à distância SYSCOM<br><br>"
+                                                                             + "Acesse o link abaixo para ativar sua conta <br><br> <a href=\"http://localhost:8080/tccusjt-sed/aluno/ativar?key=%s\"> Ativação </a>";
 
-    private static final Logger            LOG                   = LoggerFactory.getLogger(Utils.class);
+    private static final Logger                LOG                   = LoggerFactory.getLogger(Utils.class);
 
     private Utils()
     {
 
+    }
+
+    public static String tipoString(Integer tipo) {
+        switch (tipo)
+        {
+            case 0:
+                return "admin";
+            case 1:
+                return "professor";
+            case 3:
+                return "aluno";
+        }
+        return "aluno";
     }
 
     private static void carregaProperties() {
@@ -149,9 +162,8 @@ public final class Utils
             LOG.error("Falha ao enviar e-mail de ativação", e);
         }
     }
-    
-    public static boolean isValidMail(String email)
-    {
+
+    public static boolean isValidMail(String email) {
         try {
             InternetAddress add = new InternetAddress(email);
             add.validate();

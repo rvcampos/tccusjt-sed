@@ -70,7 +70,7 @@
 						<tr>
 							<td valign="top">
 						    	<li class="nav-header">Aluno</li>
-								<li><a href="${app_context}aluno/login">Login Aluno</a></li>
+								<li><a href="${app_context}login?src=aluno">Login Aluno</a></li>
 								<li><a href="${app_context}aluno/cadastrar">Cadastrar</a></li>
 								<li><a href="${app_context}aluno/cadastrar">Esqueci
 										Minha senha</a></li>
@@ -79,7 +79,7 @@
 							<td class="td-divider"/>
 							<td valign="top">
 								<li class="nav-header">Professor</li>
-								<li><a href="${app_context}professor/login">Login
+								<li><a href="${app_context}login?src=professor">Login
 										Professor</a></li>
 							</td>
 						</tr>

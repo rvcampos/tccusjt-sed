@@ -1,6 +1,7 @@
 package br.com.usjt.shiro;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.shiro.SecurityUtils;
@@ -56,6 +57,7 @@ public class SecurityRealm extends AuthorizingRealm
             criterio.put("email", token.getUsername());
             Integer usuario_id = null;
             String pass = "";
+            List<?> lst;
             boolean ok = true;
             if (ent != null) {
                 switch (ent)
@@ -66,13 +68,23 @@ public class SecurityRealm extends AuthorizingRealm
                     break;
 
                 case 1:
-                    ProfessorBean b = HS.searchByValue(ProfessorBean.class, criterio).get(0);
+                    lst = HS.searchByValue(ProfessorBean.class, criterio);
+                    if(lst.isEmpty())
+                    {
+                        throw new Exception("Usuário não encontrado");
+                    }
+                    ProfessorBean b = (ProfessorBean) lst.get(0);
                     usuario_id = b.getId_professor();
                     pass = b.getSenha();
                     break;
 
                 case 2:
-                    AlunoBean b2 = HS.searchByValue(AlunoBean.class, criterio).get(0);
+                    lst = HS.searchByValue(AlunoBean.class, criterio);
+                    if(lst.isEmpty())
+                    {
+                        throw new Exception("Usuário não encontrado");
+                    }
+                    AlunoBean b2 = (AlunoBean) lst.get(0);
                     usuario_id = b2.getId_aluno();
                     pass = b2.getSenha();
                     ok = b2.isAtivo();

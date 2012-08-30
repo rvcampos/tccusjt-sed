@@ -17,7 +17,7 @@
 			<form method="post" action="login" name="form_login">
 				<table>
 					<tr>
-						<td>Usuário</td>
+						<td>Usuário <input type="hidden" name="src" value="${src}" /></td>
 						<td><input type="text" name="username" /></td>
 					</tr>
 					<tr>
