@@ -48,7 +48,6 @@ public class SecurityInterceptor implements PreProcessInterceptor
                 String method = r.getHttpMethod().toUpperCase();
                 String path = u.getPath();
                 SecType[] per = null;
-                Entidade ent = null;
 
                 if (m.getMethod().isAnnotationPresent(SecurityPrivate.class)) {
                     per = m.getMethod().getAnnotation(SecurityPrivate.class).role();
@@ -57,10 +56,12 @@ public class SecurityInterceptor implements PreProcessInterceptor
                 SecurityInterceptor.LOG.info("Checando|" + method + ":" + path);
 
                 if (per != null) {
-                    String pp = method + ":" + ent + ":" + per;
-                    SecurityInterceptor.LOG.info("Checando|" + pp);
-                    if (sh.isPermitted(pp)) {
-                        return null;
+                    for (SecType sec : per) {
+                        String pp = sec.toString();
+                        SecurityInterceptor.LOG.info("Checando|" + pp);
+                        if (sh.hasRole(pp)) {
+                            return null;
+                        }
                     }
                 }
 
