@@ -19,8 +19,9 @@ import br.com.usjt.jaxrs.security.SecurityPublic;
 /**
  * JAXRS Login
  */
-@Path ("/")
-public class ShiroLogin {
+@Path("/")
+public class ShiroLogin
+{
 
     private static final Logger LOG = LoggerFactory.getLogger(ShiroLogin.class);
 
@@ -28,10 +29,11 @@ public class ShiroLogin {
      * Exibi login
      */
     @GET
-    @Stylesheet (href = "login/login.jsp", type = MediaTypeMore.APP_JSP)
-    @Path ("{entidade}/login")
+    @Stylesheet(href = "login/login.jsp", type = MediaTypeMore.APP_JSP)
+    @Path("{entidade}/login")
     @SecurityPublic
-    public void getLogin(@PathParam("entidade") String entidade) {}
+    public void getLogin(@PathParam("entidade") String entidade) {
+    }
 
     private static final String MSG = "SHIRO JAXRS LOGIN";
 
@@ -42,19 +44,24 @@ public class ShiroLogin {
      * @param password
      */
     @POST
-    @Path ("{entidade}/login")
-    @Stylesheet (href = "login/login.jsp", type = MediaTypeMore.APP_JSP)
+    @Path("{entidade}/login")
+    @Stylesheet(href = "login/login.jsp", type = MediaTypeMore.APP_JSP)
     @SecurityPublic
-    public void doLogin(@PathParam("entidade") String entidade , @FormParam ("username") String username, @FormParam ("password") String password) {
+    public void doLogin(@PathParam("entidade") String entidade, @FormParam("username") String username,
+            @FormParam("password") String password) {
         String rt = ShiroLogin.MSG;
         try {
             Security sh = SecurityShiro.init();
             int ent = 2;
-            if(entidade.equals("professor"))
-            {
+            if (entidade.equals("professor")) {
                 ent = 1;
             }
-            if (!sh.login(username, password,ent)) { throw new Failure(HttpServletResponse.SC_UNAUTHORIZED); }
+            else if (entidade.equals("admin")) {
+                ent = 0;
+            }
+            if (!sh.login(username, password, ent)) {
+                throw new Failure(HttpServletResponse.SC_UNAUTHORIZED);
+            }
             rt = "Logado";
         }
         catch (Failure e) {
@@ -71,8 +78,8 @@ public class ShiroLogin {
      * Logout
      */
     @GET
-    @Path ("/logout")
-    @Stylesheet (href = "login/login.jsp", type = MediaTypeMore.APP_JSP)
+    @Path("/logout")
+    @Stylesheet(href = "login/login.jsp", type = MediaTypeMore.APP_JSP)
     @SecurityPublic
     public void doLogout() {
         String rt = ShiroLogin.MSG;
@@ -86,5 +93,5 @@ public class ShiroLogin {
         }
         new JSPAttr("msg", rt);
     }
-    
+
 }

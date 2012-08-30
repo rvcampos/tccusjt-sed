@@ -12,7 +12,7 @@ CREATE TABLE properties
   CONSTRAINT properties_nome_key UNIQUE (nome)
 );
 
-insert into properties(1,'email','admin@syscom.ead.nom.br');
-insert into properties(2,'senha','62621741admin');
-insert into properties(3,'smtp','smtp.gmail.com');
-insert into properties(4,'portaSmtp','587');
+insert into properties values (1,'email','admin@syscom.ead.nom.br');
+insert into properties values (2,'senha','62621741admin');
+insert into properties values (3,'smtp','smtp.gmail.com');
+insert into properties values (4,'portaSmtp','587');

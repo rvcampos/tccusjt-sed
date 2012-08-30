@@ -14,18 +14,14 @@ import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.SimplePrincipalCollection;
-import org.hibernate.Criteria;
+import org.apache.ws.security.components.crypto.Crypto;
 import org.hibernate.HibernateException;
-import org.hibernate.Session;
-import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import br.com.usjt.ead.aluno.AlunoBean;
 import br.com.usjt.ead.professor.ProfessorBean;
-import br.com.usjt.usuario.PerfilBean;
-import br.com.usjt.usuario.PermissaoBean;
-import br.com.usjt.usuario.PessoaBean;
+import br.com.usjt.util.CryptoXFacade;
 import br.com.usjt.util.HS;
 
 /**
@@ -54,25 +50,25 @@ public class SecurityRealm extends AuthorizingRealm
             UsernamePasswordToken token = (UsernamePasswordToken) authcToken;
 
             Map<String, String> criterio = new HashMap<String, String>();
-            criterio.put("login", token.getUsername());
+            criterio.put("email", token.getUsername());
             Integer usuario_id = null;
-            Object ent = SecurityUtils.getSubject().getSession().getAttribute("entidade");
+            Object ent = SecurityUtils.getSubject().getSession().getAttribute("ent");
             String pass = "";
             boolean ok = true;
-            if(ent != null)
-            {
+            if (ent != null) {
                 switch ((Integer) ent)
                 {
                 case 0:
-                    
+                    usuario_id = 0;
+                    pass = CryptoXFacade.crypt("admin");
                     break;
-                    
+
                 case 1:
                     ProfessorBean b = HS.searchByValue(ProfessorBean.class, criterio).get(0);
                     usuario_id = b.getId_professor();
                     pass = b.getSenha();
                     break;
-                    
+
                 case 2:
                     AlunoBean b2 = HS.searchByValue(AlunoBean.class, criterio).get(0);
                     usuario_id = b2.getId_aluno();
@@ -82,8 +78,7 @@ public class SecurityRealm extends AuthorizingRealm
                 }
             }
             if (usuario_id != null) {
-                if(!ok)
-                {
+                if (!ok) {
                     throw new Exception("Usuario não ativo");
                 }
                 SimplePrincipalCollection coll = new SimplePrincipalCollection();
@@ -115,32 +110,29 @@ public class SecurityRealm extends AuthorizingRealm
         SimpleAuthorizationInfo sinfo = new SimpleAuthorizationInfo();
         for (Object pc : principals.fromRealm(this.getName())) {
             if (pc instanceof SimplePrincipalCollection) {
-                Long id = (Long) ((SimplePrincipalCollection) pc).getPrimaryPrincipal();
-
-                Session ses = HS.getSession();
+                Integer id = (Integer) ((SimplePrincipalCollection) pc).getPrimaryPrincipal();
                 try {
-                    Criteria crit = ses.createCriteria(PessoaBean.class);
-                    crit.add(Restrictions.idEq(id));
-                    PessoaBean usuario = (PessoaBean) crit.uniqueResult();
-                    for (PerfilBean ln : usuario.getPerfis()) {
-                        for (PermissaoBean ln3 : ln.getPermissoes()) {
-                            if (ln3.getPrivilegio() != null && ln3.getRecurso() != null) {
-                                String msg = ln3.getRecurso().getVerb() + ":" + ln3.getRecurso().getUrl() + ":"
-                                        + ln3.getPrivilegio().getTp_privilegio();
-                                sinfo.addStringPermission(msg);
-                            }
+                    Object ent = SecurityUtils.getSubject().getSession().getAttribute("ent");
+
+                    if (ent != null) {
+                        switch ((Integer) ent)
+                        {
+                        case 0:
+                            sinfo.addRole("admin");
+                            break;
+
+                        case 1:
+                            sinfo.addRole("professor");
+                            break;
+
+                        case 2:
+                            sinfo.addRole("aluno");
+                            break;
                         }
                     }
                 }
                 catch (Exception e) {
                     SecurityRealm.LOG.error("SHIRO PERMISSION", e);
-                }
-                finally {
-                    try {
-                        ses.close();
-                    }
-                    catch (Exception e3) {
-                    }
                 }
             }
         }

@@ -37,7 +37,7 @@ public class ProfessorRest implements ICrud
     @POST
     @GET
     @Stylesheet(href = "professor/listar.jsp", type = MediaTypeMore.APP_JSP)
-    @SecurityPrivate(permission = SecType.LER, entity = Entidade.DUMMY)
+    @SecurityPrivate(role = SecType.ADMIN)
     public void read() {
         JSPAttr j = new JSPAttr();
         Session session = HS.getSession();
@@ -56,7 +56,7 @@ public class ProfessorRest implements ICrud
     @Path("detalha")
     @POST
     @Stylesheet(href = "professor/cadastrar.jsp", type = MediaTypeMore.APP_JSP)
-    @SecurityPrivate(permission = SecType.DETALHAR, entity = Entidade.DUMMY)
+    @SecurityPrivate(role = {SecType.ADMIN, SecType.PROFESSOR})
     public void edit_update() {
         Session session = HS.getSession();
         JSPAttr j = new JSPAttr("metodo","update");
@@ -79,7 +79,7 @@ public class ProfessorRest implements ICrud
     @Path("cadastrar")
     @GET
     @Stylesheet(href = "professor/cadastrar.jsp", type = MediaTypeMore.APP_JSP)
-    @SecurityPrivate(permission = SecType.CRIAR, entity = Entidade.DUMMY)
+    @SecurityPrivate(role = SecType.ADMIN)
     public void edit_insert() {
         JSPAttr j = new JSPAttr("metodo","create");
         Session session = HS.getSession();
@@ -101,7 +101,7 @@ public class ProfessorRest implements ICrud
     @Path("delete")
     @POST
     @Stylesheet(href = "professor/cadastrar.jsp", type = MediaTypeMore.APP_JSP)
-    @SecurityPrivate(permission = SecType.DELETAR, entity = Entidade.DUMMY)
+    @SecurityPrivate(role = SecType.ADMIN)
     public void delete() {
         JSPAttr j = new JSPAttr("metodo","delete");
         Session session = HS.getSession();
@@ -123,7 +123,7 @@ public class ProfessorRest implements ICrud
     @Path("create")
     @POST
     @Stylesheet(href = "professor/cadastrar.jsp", type = MediaTypeMore.APP_JSP)
-    @SecurityPrivate(permission = SecType.CRIAR, entity = Entidade.DUMMY)
+    @SecurityPrivate(role = SecType.ADMIN)
     public void create() {
         JSPAttr j = new JSPAttr("metodo","create");
         ProfessorBean b = new ProfessorBean();
@@ -168,7 +168,7 @@ public class ProfessorRest implements ICrud
     @Path("update")
     @POST
     @Stylesheet(href = "/read.jsp", type = MediaTypeMore.APP_JSP)
-    @SecurityPrivate(permission = SecType.UPDATE, entity = Entidade.DUMMY)
+    @SecurityPrivate(role = {SecType.ADMIN, SecType.PROFESSOR})
     public void update() {
         // TODO Auto-generated method stub
 

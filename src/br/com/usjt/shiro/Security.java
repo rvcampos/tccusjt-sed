@@ -9,4 +9,9 @@ public interface Security {
 	boolean login(String username, String password, int entidade);
 
 	boolean isPermitted(String permission);
+	
+	boolean hasRole(String role);
+	
+	boolean hasAnyRole(String... roles);
+    
 }

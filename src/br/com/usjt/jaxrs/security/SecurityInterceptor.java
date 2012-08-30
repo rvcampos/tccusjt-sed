@@ -47,12 +47,11 @@ public class SecurityInterceptor implements PreProcessInterceptor
                 UriInfo u = r.getUri();
                 String method = r.getHttpMethod().toUpperCase();
                 String path = u.getPath();
-                SecType per = null;
+                SecType[] per = null;
                 Entidade ent = null;
 
                 if (m.getMethod().isAnnotationPresent(SecurityPrivate.class)) {
-                    per = m.getMethod().getAnnotation(SecurityPrivate.class).permission();
-                    ent = m.getMethod().getAnnotation(SecurityPrivate.class).entity();
+                    per = m.getMethod().getAnnotation(SecurityPrivate.class).role();
                 }
 
                 SecurityInterceptor.LOG.info("Checando|" + method + ":" + path);

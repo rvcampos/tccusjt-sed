@@ -21,7 +21,7 @@ public class MaterialRest implements ICrud
     @POST
     @GET
     @Stylesheet(href = "/read.jsp", type = MediaTypeMore.APP_JSP)
-    @SecurityPrivate(permission = SecType.LER, entity = Entidade.DUMMY)
+    @SecurityPrivate(role = { SecType.ADMIN, SecType.ALUNO, SecType.PROFESSOR })
     public void read() {
         // TODO Auto-generated method stub
 
@@ -31,7 +31,7 @@ public class MaterialRest implements ICrud
     @Path("detalha")
     @POST
     @Stylesheet(href = "/detalhar.jsp", type = MediaTypeMore.APP_JSP)
-    @SecurityPrivate(permission = SecType.DETALHAR, entity = Entidade.DUMMY)
+    @SecurityPrivate(role={SecType.ADMIN, SecType.PROFESSOR})
     public void edit_update() {
         // TODO Auto-generated method stub
 
@@ -41,7 +41,7 @@ public class MaterialRest implements ICrud
     @Path("cadastrar")
     @GET
     @Stylesheet(href = "material/cadastrar.jsp", type = MediaTypeMore.APP_JSP)
-    @SecurityPrivate(permission = SecType.CRIAR, entity = Entidade.DUMMY)
+    @SecurityPrivate(role={SecType.ADMIN, SecType.PROFESSOR})
     public void edit_insert() {
         // TODO Auto-generated method stub
 
@@ -51,7 +51,7 @@ public class MaterialRest implements ICrud
     @Path("delete")
     @POST
     @Stylesheet(href = "/read.jsp", type = MediaTypeMore.APP_JSP)
-    @SecurityPrivate(permission = SecType.DELETAR, entity = Entidade.DUMMY)
+    @SecurityPrivate(role={SecType.ADMIN, SecType.PROFESSOR})
     public void delete() {
         // TODO Auto-generated method stub
 
@@ -61,7 +61,7 @@ public class MaterialRest implements ICrud
     @Path("create")
     @POST
     @Stylesheet(href = "/read.jsp", type = MediaTypeMore.APP_JSP)
-    @SecurityPrivate(permission = SecType.CRIAR, entity = Entidade.DUMMY)
+    @SecurityPrivate(role={SecType.ADMIN, SecType.PROFESSOR})
     public void create() {
         // TODO Auto-generated method stub
 
@@ -71,7 +71,7 @@ public class MaterialRest implements ICrud
     @Path("update")
     @POST
     @Stylesheet(href = "/read.jsp", type = MediaTypeMore.APP_JSP)
-    @SecurityPrivate(permission = SecType.UPDATE, entity = Entidade.DUMMY)
+    @SecurityPrivate(role={SecType.ADMIN, SecType.PROFESSOR})
     public void update() {
         // TODO Auto-generated method stub
 
