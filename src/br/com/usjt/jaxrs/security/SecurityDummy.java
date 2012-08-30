@@ -40,5 +40,20 @@ public class SecurityDummy implements br.com.usjt.shiro.Security {
     public boolean hasAnyRole(String... roles) {
         return true;
     }
+
+    @Override
+    public Integer getUserId() {
+        return 0;
+    }
+
+    @Override
+    public String getPrincipals() {
+        return "";
+    }
+
+    @Override
+    public Integer getTipo() {
+        return 0;
+    }
     
 }

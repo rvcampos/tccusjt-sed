@@ -2,6 +2,7 @@ package br.com.usjt.shiro;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.apache.shiro.subject.Subject;
 
 import br.com.usjt.jaxrs.JSPAttr;
@@ -23,10 +24,10 @@ public class SecurityShiro implements Security
      * Construtor
      */
     public static Security init() {
-         return new SecurityDummy();
-        // SecurityShiro rt = new SecurityShiro();
-        // rt.currentUser = SecurityUtils.getSubject();
-        // return rt;
+//         return new SecurityDummy();
+        SecurityShiro rt = new SecurityShiro();
+        rt.currentUser = SecurityUtils.getSubject();
+        return rt;
     }
 
     @Override
@@ -90,6 +91,21 @@ public class SecurityShiro implements Security
         }
 
         return false;
+    }
+
+    @Override
+    public Integer getUserId() {
+        return ((SimplePrincipalCollection) this.currentUser.getPrincipal()).oneByType(Integer.class);
+    }
+
+    @Override
+    public String getPrincipals() {
+        return this.currentUser.getPrincipals() + "";
+    }
+
+    @Override
+    public Integer getTipo() {
+        return (Integer) this.currentUser.getSession().getAttribute("ent");
     }
 
 }

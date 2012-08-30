@@ -48,15 +48,17 @@ public class SecurityRealm extends AuthorizingRealm
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authcToken) throws AuthenticationException {
         try {
             UsernamePasswordToken token = (UsernamePasswordToken) authcToken;
-
+            
+            Security sh = SecurityShiro.init();
+            Integer ent = sh.getTipo();
+            
             Map<String, String> criterio = new HashMap<String, String>();
             criterio.put("email", token.getUsername());
             Integer usuario_id = null;
-            Object ent = SecurityUtils.getSubject().getSession().getAttribute("ent");
             String pass = "";
             boolean ok = true;
             if (ent != null) {
-                switch ((Integer) ent)
+                switch (ent)
                 {
                 case 0:
                     usuario_id = 0;
@@ -108,14 +110,13 @@ public class SecurityRealm extends AuthorizingRealm
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
         SimpleAuthorizationInfo sinfo = new SimpleAuthorizationInfo();
+        Security sh = SecurityShiro.init();
+        Integer ent = sh.getTipo();
         for (Object pc : principals.fromRealm(this.getName())) {
             if (pc instanceof SimplePrincipalCollection) {
-                Integer id = (Integer) ((SimplePrincipalCollection) pc).getPrimaryPrincipal();
                 try {
-                    Object ent = SecurityUtils.getSubject().getSession().getAttribute("ent");
-
                     if (ent != null) {
-                        switch ((Integer) ent)
+                        switch (ent)
                         {
                         case 0:
                             sinfo.addRole("admin");
