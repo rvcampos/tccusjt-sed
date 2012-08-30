@@ -96,7 +96,7 @@ public class JSPAttr
     }
 
     public void sucessMsg(String msg) {
-        set("msgOk", msg);
+        set("msgok", msg);
     }
 
 }

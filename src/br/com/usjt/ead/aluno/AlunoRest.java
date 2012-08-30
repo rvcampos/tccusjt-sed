@@ -212,7 +212,6 @@ public class AlunoRest implements ICrud
     public void reenviarAtivacaoConfirma() {
         JSPAttr j = new JSPAttr();
         Session session = HS.getSession();
-        Transaction tx = session.beginTransaction();
         try {
             String email = j.getParameter("txtEmail");
             AlunoBean aluno = (AlunoBean) session.createCriteria(AlunoBean.class).add(Restrictions.eq("email", email))
@@ -231,7 +230,6 @@ public class AlunoRest implements ICrud
             }
         }
         catch (Exception e) {
-            tx.rollback();
             LOG.error("Falha na operação", e);
         }
         finally {
