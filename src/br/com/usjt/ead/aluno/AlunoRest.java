@@ -82,8 +82,6 @@ public class AlunoRest implements ICrud
     @Stylesheet(href = "/read.jsp", type = MediaTypeMore.APP_JSP)
     @SecurityPrivate(role={SecType.ADMIN, SecType.ALUNO})
     public void delete() {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
@@ -279,7 +277,22 @@ public class AlunoRest implements ICrud
             session.clear();
             session.close();
         }
-
+        // String out = "";
+        // try
+        // {
+        // URLConnection connection = new URL("http://192.168.1.123:10055" + "?"
+        // + "api.Time").openConnection();
+        // connection.setRequestProperty("Accept-Charset", "UTF-8");
+        // InputStream response = connection.getInputStream();
+        // while(response.available() != 0)
+        // {
+        // out += (char) response.read();
+        // }
+        // }catch(Exception e)
+        // {
+        //
+        // }
+        // System.out.println(out);
     }
 
 }

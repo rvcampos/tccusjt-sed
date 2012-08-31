@@ -66,6 +66,7 @@ function validaEmail() {
 		}
 	});
 }
+
 </script>
 		<form action="create" method="post" id="formAluno">
 			<legend>
@@ -196,7 +197,6 @@ function validaEmail() {
 		</tr>
 		</table>
 		<div class="row-fluid">
-
 				<div class="span2">
 					<input class="btn btn-primary" value="Salvar" type="button" name="btnSalvar" onclick="if(validaSenhaForm()){$('#formAluno').submit();}"/>
 				</div>

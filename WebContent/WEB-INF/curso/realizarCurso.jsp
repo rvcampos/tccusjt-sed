@@ -50,4 +50,4 @@ www.w3.org/TR/html4/loose.dtd">
 <button id="cmdCancelar" type="submit" style="width: 70px;"> Cancelar</button>
 </center>				
 	
-		</form>
+</form>
