@@ -29,7 +29,7 @@ www.w3.org/TR/html4/loose.dtd">
 				}
 			});
 		}
-
+		
 	function validaEmail() {
 		$.ajax({
 			url : "${app_context}professor/checaEmail",
@@ -146,12 +146,6 @@ www.w3.org/TR/html4/loose.dtd">
 								</tr>
 
 								<tr>
-									<td><label>Usuário</label></td>
-									<td><input type="text" id="txtUsuario" name="txtUsuario"
-										maxlength="20" size="20" value="${txtUsuario}" /></td>
-								</tr>
-
-								<tr>
 									<td><label>Senha</label></td>
 									<td><input id="txtSenha" name="txtSenha" type="password"
 										maxlength="8" size="8" value="${txtSenha}" /></td>
@@ -216,17 +210,13 @@ www.w3.org/TR/html4/loose.dtd">
 						</div>
 					</div>
 				</div>
-				<div class="row-fluid">
-
-					<div class="span2">
-						<input class="btn btn-primary" value="Salvar" type="button"
-							name="btnSalvar"
-							onclick="if(validaSenhaForm()){$('#formProfessor').submit();}" />
-					</div>
-
-					<div class="span2">
-						<a href="./read" class="btn">Cancelar</a>
-					</div>
-
+		<div class="row-fluid">
+				<div class="span2">
+					<input class="btn btn-primary" value="Salvar" type="button" name="btnSalvar" onclick="if(validaSenhaForm()){$('#formProfessor').submit();}"/>
 				</div>
+
+				<div class="span2">
+					<a href="./read" class="btn">Cancelar</a>
+				</div>
+			</div>
 </form>

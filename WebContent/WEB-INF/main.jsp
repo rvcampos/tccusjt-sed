@@ -8,11 +8,12 @@
 <meta http-equiv="X-UA-Compatible" content="IE=7" />
 <meta charset="UTF-8" />
 <jsp:include page="header.jsp" />
+
 </head>
 <body>
 	<jsp:include page="menu.jsp" />
 	<div class="container" style="padding-top: 60px;">
-		<a href="/jchatbox/applet/jchatboxclient.html">CHAT</a>
+		<a href="http://192.168.1.123:443/?0,0,1,13,0&nn=escobar" target="_blank">CHAT</a>
 
 		<c:if test="${not empty msgok }">
 			<div class="alert alert-success"><strong>${msgok}</strong></div>
