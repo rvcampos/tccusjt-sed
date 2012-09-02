@@ -181,11 +181,13 @@ public class ProfessorRest implements ICrud
             phone.setDdd(Integer.parseInt(j.getParameter("txtTelefoneDDD")));
             phone.setTelefone(Long.parseLong(j.getParameter("txtTelefone").replaceAll("[^0-9]", "")));
             phone.setTipo((TipoTelefoneBean) session.load(TipoTelefoneBean.class, 1));
+            phone.setContato(contato);
             contato.getTelefones().add(phone);
             TelefoneBean celular = new TelefoneBean();
             celular.setDdd(Integer.parseInt(j.getParameter("txtCelularDDD")));
             celular.setTelefone(Long.parseLong(j.getParameter("txtCelular").replaceAll("[^0-9]", "")));
             celular.setTipo((TipoTelefoneBean) session.load(TipoTelefoneBean.class, 2));
+            celular.setContato(contato);
             contato.getTelefones().add(celular);
             b.setContato(contato);
         }
@@ -211,7 +213,7 @@ public class ProfessorRest implements ICrud
      */
     @POST
     @Path("checaEmail")
-    @Stylesheet(href = "aluno/label.jsp", type = MediaTypeMore.APP_JSP)
+    @Stylesheet(href = "professor/label.jsp", type = MediaTypeMore.APP_JSP)
     @SecurityPublic
     public void validaEmail() {
         Session session = HS.getSession();
