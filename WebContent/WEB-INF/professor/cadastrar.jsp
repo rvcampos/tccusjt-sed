@@ -108,11 +108,6 @@ www.w3.org/TR/html4/loose.dtd">
 								</tr>
 
 								<tr>
-									<td><label>Foto</label></td>
-									<td><input type="file" id="foto" name="foto" /></td>
-								</tr>
-
-								<tr>
 									<td><label> Data de Nascimento </label></td>
 									<td><input name="txtNascimento" id="txtNascimento"
 										type="text" maxlength="10" size="12" alt="39/19/2999" /></td>
