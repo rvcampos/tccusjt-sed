@@ -8,6 +8,7 @@
 		<property name="hibernate.connection.autocommit">false</property>
 
 		<mapping class="br.com.usjt.ead.aluno.AlunoBean" />
+		<mapping class="br.com.usjt.ead.aluno.MatriculaBean" />
 
 		<mapping class="br.com.usjt.ead.contato.ContatoBean" />
 		<mapping class="br.com.usjt.ead.contato.TelefoneBean" />

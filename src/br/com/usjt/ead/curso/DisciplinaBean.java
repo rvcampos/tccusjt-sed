@@ -15,23 +15,25 @@ import javax.persistence.Table;
 import br.com.usjt.ead.professor.ProfessorBean;
 
 @Entity
-@Table(name="DISCIPLINA")
+@Table(name = "DISCIPLINA")
 public class DisciplinaBean
 {
     @Id
-    @SequenceGenerator(name="gen", initialValue=1, sequenceName="seq_disciplina")
-    @GeneratedValue(generator="gen", strategy=GenerationType.AUTO)
-    private Integer       id_disciplina;   // integer,
+    @SequenceGenerator(name = "gen", initialValue = 1, sequenceName = "seq_disciplina")
+    @GeneratedValue(generator = "gen", strategy = GenerationType.AUTO)
+    private Integer       id_disciplina;  // integer,
     @Column
     private String        nome_disciplina; // varchar(100),
     @ManyToOne
     @JoinColumn(name = "id_professor")
-    private ProfessorBean professor;       // integer references
+    private ProfessorBean professor;      // integer references
                                            // PROFESSOR(id_professor),
     @Column
-    private Date          data_inicio;     // date,
+    private Date          data_inicio;    // date,
     @Column
-    private Date          data_termino;    // date,
+    private Date          data_termino;   // date,
+    @Column
+    private String        descricao;
 
     @Override
     public String toString() {
@@ -77,5 +79,13 @@ public class DisciplinaBean
 
     public void setData_termino(Date data_termino) {
         this.data_termino = data_termino;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
     }
 }

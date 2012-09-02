@@ -31,11 +31,12 @@
 						<td valign="top">
 							<li class="nav-header">Cursos</li>
 							<shiro:hasRole name="aluno">
-							<li><a href="${app_context}aluno/cursos">Cursos Disponíveis</a></li>
+							<li><a href="${app_context}curso/listar">Cursos Disponíveis</a></li>
 							<li><a href="${app_context}aluno/meusCursos">Meus Cursos</a></li>
 							</shiro:hasRole>
 							<shiro:hasRole name="professor">
 							<li><a href="${app_context}professor/meusCursos">Listar Meus Cursos</a></li>
+							<li><a href="${app_context}curso/cadastrar">Cadastrar Curso</a></li>
 							</shiro:hasRole>
 						</td>
 					</tr>
@@ -81,6 +82,7 @@
 								<li class="nav-header">Professor</li>
 								<li><a href="${app_context}login?src=professor">Login
 										Professor</a></li>
+<%-- 								<li><a href="${app_context}professor/solicitarCadastro">Solicitar Cadastro</a></li> --%>
 							</td>
 						</tr>
 					</table>

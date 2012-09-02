@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import br.com.usjt.ICrud;
+import br.com.usjt.ead.EntityDAO;
 import br.com.usjt.ead.cidadestado.CidadeBean;
 import br.com.usjt.ead.cidadestado.CidadeEstadoRest;
 import br.com.usjt.ead.cidadestado.EstadoUFBean;
@@ -28,6 +29,8 @@ import br.com.usjt.jaxrs.MediaTypeMore;
 import br.com.usjt.jaxrs.security.SecurityPrivate;
 import br.com.usjt.jaxrs.security.SecurityPrivate.SecType;
 import br.com.usjt.jaxrs.security.SecurityPublic;
+import br.com.usjt.shiro.Security;
+import br.com.usjt.shiro.SecurityShiro;
 import br.com.usjt.util.CryptoXFacade;
 import br.com.usjt.util.HS;
 import br.com.usjt.util.Utils;
@@ -219,7 +222,7 @@ public class AlunoRest implements ICrud
                 throw new Exception();
             }
 
-            if (!aluno.isAtivo()) {
+            if (!aluno.getAtivo()) {
                 Utils.sendMail(aluno.getEmail(), aluno.getContato().getNome());
                 j.sucessMsg("Email enviado com sucesso para o e-mail: " + email);
             }
@@ -293,6 +296,32 @@ public class AlunoRest implements ICrud
         //
         // }
         // System.out.println(out);
+    }
+    
+    @Path("meusCursos")
+    @GET
+    @POST
+    @Stylesheet(href = "aluno/meuscursos.jsp", type = MediaTypeMore.APP_JSP)
+    @SecurityPrivate(role=SecType.ALUNO)
+    public void meusCursos()
+    {
+        JSPAttr j = new JSPAttr();
+        Security sh = SecurityShiro.init();
+        Integer id = sh.getUserId();
+        Session session = HS.getSession();
+        EntityDAO dao = new EntityDAO();
+        try {
+            AlunoBean aluno = dao.searchID(id, session, AlunoBean.class);
+            j.set("cursos",aluno.getMatriculas());
+        }
+        catch (Exception e) {
+            LOG.error("Falha ao buscar cursos",e);
+        }
+        finally
+        {
+            session.clear();
+            session.close();
+        }
     }
 
 }

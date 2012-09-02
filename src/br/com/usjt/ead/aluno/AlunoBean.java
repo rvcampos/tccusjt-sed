@@ -1,5 +1,8 @@
 package br.com.usjt.ead.aluno;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -7,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -26,25 +30,33 @@ public class AlunoBean
     @Id
     @SequenceGenerator(name = "gen", initialValue = 1, sequenceName = "seq_aluno")
     @GeneratedValue(generator = "gen", strategy = GenerationType.AUTO)
-    private Integer      id_aluno; // integer PRIMARY KEY,
+    private Integer            id_aluno;                                 // integer
+                                                                          // PRIMARY
+                                                                          // KEY,
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "id_contato")
     @NotNull(message = "Preencha os dados de contato")
     @Valid
-    private ContatoBean  contato; // integer// REFERENCES contato(id_contato),
+    private ContatoBean        contato;                                  // integer//
+                                                                          // REFERENCES
+                                                                          // contato(id_contato),
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_endereco")
-    private EnderecoBean endereco; // integer// references
+    private EnderecoBean       endereco;                                 // integer//
+                                                                          // references
     @Column
     @NotNull(message = "Preencha a senha")
-    private String       senha;   // varchar(20),
+    private String             senha;                                    // varchar(20),
     @Column
     @Email(message = "E-mail inválido")
-    private String       email;   // varchar(30),
+    private String             email;                                    // varchar(30),
     @Column
-    private Long         cpf;     // numeric(12)
+    private Long               cpf;                                      // numeric(12)
     @Column
-    private Boolean      ativo;
+    private Boolean            ativo;
+    @OneToMany
+    @JoinColumn(name = "id_aluno")
+    private Set<MatriculaBean> matriculas = new HashSet<MatriculaBean>();
 
     @Override
     public String toString() {
@@ -100,18 +112,19 @@ public class AlunoBean
         this.cpf = cpf;
     }
 
-    /**
-     * @return the ativo
-     */
-    public Boolean isAtivo() {
+    public Boolean getAtivo() {
         return ativo;
     }
 
-    /**
-     * @param ativo
-     *            the ativo to set
-     */
     public void setAtivo(Boolean ativo) {
         this.ativo = ativo;
+    }
+
+    public Set<MatriculaBean> getMatriculas() {
+        return matriculas;
+    }
+
+    public void setMatriculas(Set<MatriculaBean> matriculas) {
+        this.matriculas = matriculas;
     }
 }

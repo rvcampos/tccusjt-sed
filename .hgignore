@@ -5,3 +5,5 @@ syntax: regexp
 ^flyway-commandline-1\.6\.1/conf/flyway\.properties$
 syntax: regexp
 ^tccusjt-ds\.xml$
+syntax: regexp
+^flyway-commandline-1\.6\.1/conf/flyway\.properties$
