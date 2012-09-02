@@ -24,6 +24,8 @@ import br.com.usjt.ead.contato.ContatoBean;
 import br.com.usjt.ead.contato.EnderecoBean;
 import br.com.usjt.ead.contato.TelefoneBean;
 import br.com.usjt.ead.contato.TipoTelefoneBean;
+import br.com.usjt.ead.curso.DisciplinaBean;
+import br.com.usjt.ead.curso.ModuloBean;
 import br.com.usjt.jaxrs.JSPAttr;
 import br.com.usjt.jaxrs.MediaTypeMore;
 import br.com.usjt.jaxrs.security.SecurityPrivate;
@@ -46,7 +48,7 @@ public class AlunoRest implements ICrud
     @POST
     @GET
     @Stylesheet(href = "pag.jsp", type = MediaTypeMore.APP_JSP)
-    @SecurityPrivate(role=SecType.ADMIN)
+    @SecurityPrivate(role = SecType.ADMIN)
     public void read() {
     }
 
@@ -54,7 +56,7 @@ public class AlunoRest implements ICrud
     @Path("detalha")
     @POST
     @Stylesheet(href = "pag.jsp", type = MediaTypeMore.APP_JSP)
-    @SecurityPrivate(role={SecType.ADMIN, SecType.ALUNO})
+    @SecurityPrivate(role = { SecType.ADMIN, SecType.ALUNO })
     public void edit_update() {
     }
 
@@ -83,7 +85,7 @@ public class AlunoRest implements ICrud
     @Path("delete")
     @POST
     @Stylesheet(href = "/read.jsp", type = MediaTypeMore.APP_JSP)
-    @SecurityPrivate(role={SecType.ADMIN, SecType.ALUNO})
+    @SecurityPrivate(role = { SecType.ADMIN, SecType.ALUNO })
     public void delete() {
     }
 
@@ -162,7 +164,7 @@ public class AlunoRest implements ICrud
     @Path("update")
     @POST
     @Stylesheet(href = "/read.jsp", type = MediaTypeMore.APP_JSP)
-    @SecurityPrivate(role={SecType.ADMIN, SecType.ALUNO})
+    @SecurityPrivate(role = { SecType.ADMIN, SecType.ALUNO })
     public void update() {
     }
 
@@ -240,13 +242,13 @@ public class AlunoRest implements ICrud
             }
         }
     }
-    
+
     /**
      * Carrega Cidade
      */
     @POST
-    @Path ("checaEmail")
-    @Stylesheet (href = "aluno/label.jsp", type = MediaTypeMore.APP_JSP)
+    @Path("checaEmail")
+    @Stylesheet(href = "aluno/label.jsp", type = MediaTypeMore.APP_JSP)
     @SecurityPublic
     public void validaEmail() {
         Session session = HS.getSession();
@@ -263,18 +265,19 @@ public class AlunoRest implements ICrud
                 c.add(Restrictions.eq("email", email));
 
                 if (c.list().size() > 0) {
-                        j.set("labelemail", "E-mail já cadastrado");
-                        j.set("label", "label label-info");
-                        j.set("canPost", false);
+                    j.set("labelemail", "E-mail já cadastrado");
+                    j.set("label", "label label-info");
+                    j.set("canPost", false);
                 }
-            } else {
+            }
+            else {
                 j.set("labelemail", "E-mail Inválido");
                 j.set("label", "label label-info");
                 j.set("canPost", false);
             }
         }
         catch (Exception e) {
-            LOG.error("",e);
+            LOG.error("", e);
         }
         finally {
             session.clear();
@@ -297,14 +300,13 @@ public class AlunoRest implements ICrud
         // }
         // System.out.println(out);
     }
-    
+
     @Path("meusCursos")
     @GET
     @POST
     @Stylesheet(href = "aluno/meuscursos.jsp", type = MediaTypeMore.APP_JSP)
-    @SecurityPrivate(role=SecType.ALUNO)
-    public void meusCursos()
-    {
+    @SecurityPrivate(role = SecType.ALUNO)
+    public void meusCursos() {
         JSPAttr j = new JSPAttr();
         Security sh = SecurityShiro.init();
         Integer id = sh.getUserId();
@@ -312,13 +314,56 @@ public class AlunoRest implements ICrud
         EntityDAO dao = new EntityDAO();
         try {
             AlunoBean aluno = dao.searchID(id, session, AlunoBean.class);
-            j.set("cursos",aluno.getMatriculas());
+            j.set("cursos", aluno.getMatriculas().keySet());
         }
         catch (Exception e) {
-            LOG.error("Falha ao buscar cursos",e);
+            LOG.error("Falha ao buscar cursos", e);
         }
-        finally
-        {
+        finally {
+            session.clear();
+            session.close();
+        }
+    }
+
+    @Path("matricular")
+    @POST
+    @Stylesheet(href = "aluno/meuscursos.jsp", type = MediaTypeMore.APP_JSP)
+    @SecurityPrivate(role = SecType.ALUNO)
+    public void matricular() {
+        JSPAttr j = new JSPAttr();
+        Security sh = SecurityShiro.init();
+        Integer id = sh.getUserId();
+        Integer disciplinaId = null;
+        Session session = HS.getSession();
+        EntityDAO dao = new EntityDAO();
+        Transaction tx = session.beginTransaction();
+        try {
+            disciplinaId = Integer.parseInt(j.getParameter("id_disciplina"));
+            AlunoBean aluno = dao.searchID(id, session, AlunoBean.class);
+            ModuloBean modulo = (ModuloBean) session
+                    .createQuery(
+                            " from " + ModuloBean.class.getSimpleName()
+                                    + " m where m.disciplina.id_disciplina = :disciplina order by m.id_modulo")
+                    .setInteger("disciplina", disciplinaId).list().get(0);
+
+            if (!aluno.getMatriculas().containsKey(modulo)) {
+                MatriculaBean matricula = new MatriculaBean();
+                matricula.setModulo(modulo);
+                matricula.setAluno(aluno);
+                session.save(matricula);
+                aluno.getMatriculas().put(modulo, matricula);
+                tx.commit();
+                j.sucessMsg("Matricula Efetuada com sucesso");
+            }
+            else {
+                j.errorMsg("Você já está matriculado no curso " + modulo.getDisciplina().getNome_disciplina());
+            }
+        }
+        catch (Exception e) {
+            LOG.error("Falha ao efetuar matricula cursos", e);
+            tx.rollback();
+        }
+        finally {
             session.clear();
             session.close();
         }

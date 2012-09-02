@@ -1,6 +1,8 @@
 package br.com.usjt.ead.curso;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -21,19 +24,20 @@ public class DisciplinaBean
     @Id
     @SequenceGenerator(name = "gen", initialValue = 1, sequenceName = "seq_disciplina")
     @GeneratedValue(generator = "gen", strategy = GenerationType.AUTO)
-    private Integer       id_disciplina;  // integer,
+    private Integer         id_disciplina;                      // integer,
     @Column
-    private String        nome_disciplina; // varchar(100),
+    private String          nome_disciplina;                    // varchar(100),
     @ManyToOne
     @JoinColumn(name = "id_professor")
-    private ProfessorBean professor;      // integer references
-                                           // PROFESSOR(id_professor),
+    private ProfessorBean   professor;                          // integer
     @Column
-    private Date          data_inicio;    // date,
+    private Date            data_inicio;                        // date,
     @Column
-    private Date          data_termino;   // date,
+    private Date            data_termino;                       // date,
     @Column
-    private String        descricao;
+    private String          descricao;
+    @OneToMany(mappedBy = "disciplina")
+    private Set<ModuloBean> modulos = new HashSet<ModuloBean>();
 
     @Override
     public String toString() {
@@ -87,5 +91,13 @@ public class DisciplinaBean
 
     public void setDescricao(String descricao) {
         this.descricao = descricao;
+    }
+
+    public Set<ModuloBean> getModulos() {
+        return modulos;
+    }
+
+    public void setModulos(Set<ModuloBean> modulos) {
+        this.modulos = modulos;
     }
 }
