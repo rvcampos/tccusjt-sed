@@ -24,7 +24,7 @@
 			</ul>
 		</li>
 		</shiro:hasRole>
-		<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Cursos<b class="caret"></b></a>
+		<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-book icon-white"></i>Cursos<b class="caret"></b></a>
 			<ul class="dropdown-menu">
 				<table cellpadding="0" cellspacing="0" border="0">
 					<tr>
@@ -43,7 +43,7 @@
 				</table>
 			</ul>
 		</li>
-		<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Conta<b class="caret"></b></a>
+		<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-user icon-white"></i>Conta<b class="caret"></b></a>
 			<ul class="dropdown-menu">
 				<table cellpadding="0" cellspacing="0" border="0">
 					<tr>
@@ -92,7 +92,7 @@
 		</shiro:notAuthenticated>
 		<shiro:authenticated>
 		<li class="divider-vertical"></li>
-		<li><a href="${app_context}logout">Logout</a></li>
+		<li><a href="${app_context}logout"><i class="icon-off icon-white"></i>Logout</a></li>
 		<li class="divider-vertical"></li>
 		</shiro:authenticated>
 		</ul>

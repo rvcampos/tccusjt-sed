@@ -23,7 +23,7 @@ www.w3.org/TR/html4/loose.dtd">
 		<td>${curso.data_inicio}</td>
 		<td>${curso.data_termino}</td>
 		<td>${curso.disciplina.professor.contato.nome}</td>
-		<td></td>
-		<td></td>
+		<td><i class="icon-book"></i></td>
+		<td><i class="icon-remove"></i></td>
 	</c:forEach>
 </table>
