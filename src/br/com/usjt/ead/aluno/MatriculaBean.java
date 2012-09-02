@@ -12,8 +12,8 @@ import javax.persistence.Table;
 
 import br.com.usjt.ead.curso.ModuloBean;
 
-@Table
 @Entity
+@Table(name="MATRICULA")
 public class MatriculaBean
 {
     @Id

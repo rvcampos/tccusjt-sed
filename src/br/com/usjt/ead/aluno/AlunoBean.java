@@ -1,15 +1,19 @@
 package br.com.usjt.ead.aluno;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.MapKey;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
@@ -22,6 +26,7 @@ import org.hibernate.validator.constraints.Email;
 
 import br.com.usjt.ead.contato.ContatoBean;
 import br.com.usjt.ead.contato.EnderecoBean;
+import br.com.usjt.ead.curso.ModuloBean;
 
 @Entity
 @Table(name = "ALUNO", uniqueConstraints = { @UniqueConstraint(columnNames = "email", name = "uk_email_aluno") })
@@ -54,9 +59,10 @@ public class AlunoBean
     private Long               cpf;                                      // numeric(12)
     @Column
     private Boolean            ativo;
-    @OneToMany
-    @JoinColumn(name = "id_aluno")
-    private Set<MatriculaBean> matriculas = new HashSet<MatriculaBean>();
+    @OneToMany(cascade=CascadeType.ALL, orphanRemoval=true)
+    @JoinColumn(name="id_aluno")
+    @MapKey(name="modulo")
+    private Map<ModuloBean,MatriculaBean> matriculas = new HashMap<ModuloBean,MatriculaBean>();
 
     @Override
     public String toString() {
@@ -120,11 +126,12 @@ public class AlunoBean
         this.ativo = ativo;
     }
 
-    public Set<MatriculaBean> getMatriculas() {
+    public Map<ModuloBean, MatriculaBean> getMatriculas() {
         return matriculas;
     }
 
-    public void setMatriculas(Set<MatriculaBean> matriculas) {
+    public void setMatriculas(Map<ModuloBean, MatriculaBean> matriculas) {
         this.matriculas = matriculas;
     }
+
 }

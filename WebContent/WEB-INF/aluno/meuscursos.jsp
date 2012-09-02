@@ -18,11 +18,11 @@ www.w3.org/TR/html4/loose.dtd">
 		<th>Desmatricular</th>
 	</tr>
 	<c:forEach var="curso" items="${cursos}">
-		<td>${curso.modulo.disciplina.nome_disciplina}</td>
-		<td>${curso.modulo.nivel_modulo}</td>
-		<td>${curso.modulo.dt_inicio}</td>
-		<td>${curso.modulo.dt_fim}</td>
-		<td>${curso.modulo.disciplina.professor.contato.nome}</td>
+		<td>${curso.disciplina.nome_disciplina}</td>
+		<td>${curso.nivel_modulo}</td>
+		<td>${curso.data_inicio}</td>
+		<td>${curso.data_termino}</td>
+		<td>${curso.disciplina.professor.contato.nome}</td>
 		<td></td>
 		<td></td>
 	</c:forEach>

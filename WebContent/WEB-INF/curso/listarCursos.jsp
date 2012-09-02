@@ -21,7 +21,10 @@ www.w3.org/TR/html4/loose.dtd">
 		<td>${disciplina.data_inicio}</td>
 		<td>${disciplina.data_termino}</td>
 		<td>${disciplina.professor.contato.nome}</td>
-		<td></td>
+		<td>
+		<form action="${app_context}aluno/matricular" method="POST" id="frmDisciplina${disciplina.id_disciplina}">
+		<input type="hidden" name="id_disciplina" value="${disciplina.id_disciplina }"/>
+		<a onclick="$('#frmDisciplina${disciplina.id_disciplina}').submit();"><i class="icon-hand-up"></i></a></form></td>
 	</tr>
 	</c:forEach>
 </table>
