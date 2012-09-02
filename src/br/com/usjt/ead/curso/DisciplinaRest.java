@@ -1,56 +1,62 @@
 package br.com.usjt.ead.curso;
 
-import java.sql.Date;
-import java.sql.SQLData;
 import java.text.SimpleDateFormat;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 
-import org.apache.commons.beanutils.converters.SqlDateConverter;
-import org.apache.velocity.runtime.directive.Parse;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Restrictions;
 import org.jboss.resteasy.annotations.providers.jaxb.Stylesheet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import br.com.usjt.ICrud;
 import br.com.usjt.ead.EntityDAO;
-import br.com.usjt.ead.cidadestado.CidadeBean;
-import br.com.usjt.ead.cidadestado.EstadoUFBean;
-import br.com.usjt.ead.contato.ContatoBean;
-import br.com.usjt.ead.contato.EnderecoBean;
-import br.com.usjt.ead.contato.TelefoneBean;
-import br.com.usjt.ead.contato.TipoTelefoneBean;
 import br.com.usjt.ead.professor.ProfessorBean;
 import br.com.usjt.jaxrs.JSPAttr;
 import br.com.usjt.jaxrs.MediaTypeMore;
 import br.com.usjt.jaxrs.security.SecurityPrivate;
-import br.com.usjt.jaxrs.security.SecurityPrivate.Entidade;
 import br.com.usjt.jaxrs.security.SecurityPrivate.SecType;
-import br.com.usjt.util.CryptoXFacade;
+import br.com.usjt.shiro.Security;
+import br.com.usjt.shiro.SecurityShiro;
 import br.com.usjt.util.HS;
 
 @Path("/curso")
 public class DisciplinaRest implements ICrud
 {
 
+    private static final Logger LOG = LoggerFactory.getLogger(DisciplinaRest.class);
+
     @Override
-    @Path("")
+    @Path("listar")
     @POST
     @GET
-    @Stylesheet(href = "pag.jsp", type = MediaTypeMore.APP_JSP)
-    @SecurityPrivate(role={SecType.ADMIN, SecType.PROFESSOR, SecType.ALUNO})
+    @Stylesheet(href = "curso/listarCursos.jsp", type = MediaTypeMore.APP_JSP)
+    @SecurityPrivate(role = { SecType.ADMIN, SecType.PROFESSOR, SecType.ALUNO })
     public void read() {
+        JSPAttr j = new JSPAttr();
+        Security sh = SecurityShiro.init();
+        Session session = HS.getSession();
+        EntityDAO dao = new EntityDAO();
+        try {
+            j.set("disciplinas", dao.searchAll(session, DisciplinaBean.class));
+        }
+        catch (Exception e) {
+            LOG.error("Falha ao buscar cursos", e);
+        }
+        finally {
+            session.clear();
+            session.close();
+        }
     }
 
     @Override
     @Path("detalha")
     @POST
     @Stylesheet(href = "pag.jsp", type = MediaTypeMore.APP_JSP)
-    @SecurityPrivate(role={SecType.ADMIN, SecType.PROFESSOR, SecType.ALUNO})
+    @SecurityPrivate(role = { SecType.ADMIN, SecType.PROFESSOR, SecType.ALUNO })
     public void edit_update() {
     }
 
@@ -58,7 +64,7 @@ public class DisciplinaRest implements ICrud
     @Path("cadastrar")
     @GET
     @Stylesheet(href = "curso/cadastrar.jsp", type = MediaTypeMore.APP_JSP)
-    @SecurityPrivate(role={SecType.ADMIN, SecType.ALUNO})
+    @SecurityPrivate(role = { SecType.ADMIN, SecType.PROFESSOR })
     public void edit_insert() {
         JSPAttr j = new JSPAttr();
         Session session = HS.getSession();
@@ -76,7 +82,7 @@ public class DisciplinaRest implements ICrud
     @Path("delete")
     @POST
     @Stylesheet(href = "/read.jsp", type = MediaTypeMore.APP_JSP)
-    @SecurityPrivate(role={SecType.ADMIN, SecType.PROFESSOR})
+    @SecurityPrivate(role = { SecType.ADMIN, SecType.PROFESSOR })
     public void delete() {
         // TODO Auto-generated method stub
 
@@ -86,25 +92,29 @@ public class DisciplinaRest implements ICrud
     @Path("create")
     @POST
     @Stylesheet(href = "curso/cadastrar.jsp", type = MediaTypeMore.APP_JSP)
-    @SecurityPrivate(role={SecType.ADMIN, SecType.PROFESSOR})
+    @SecurityPrivate(role = { SecType.ADMIN, SecType.PROFESSOR })
     public void create() {
         JSPAttr j = new JSPAttr();
         DisciplinaBean objDisciplina = new DisciplinaBean();
         Session session = HS.getSession();
         Transaction tx = session.beginTransaction();
         SimpleDateFormat dtFormat = new SimpleDateFormat("dd/MM/yyyy");
+        Security sh = SecurityShiro.init();
         try {
             objDisciplina.setNome_disciplina(j.getParameter("txtNomeDisciplina").toString());
             objDisciplina.setData_inicio(dtFormat.parse(j.getParameter("txtDataInicio").toString()));
             objDisciplina.setData_termino(dtFormat.parse(j.getParameter("txtDataTermino").toString()));
-            objDisciplina.setProfessor((ProfessorBean) session.load(ProfessorBean.class, 3));
-            System.out.println("Antes do save");
+            objDisciplina.setDescricao(j.getParameter("txtDesc"));
+            objDisciplina.setProfessor((ProfessorBean) session.load(ProfessorBean.class, sh.getUserId()));
             session.save(objDisciplina);
-            System.out.println("depois do save");
             tx.commit();
+            j.sucessMsg("Disciplina criada com sucesso");
         }
         catch (Exception e) {
+            LOG.error("Falha ao inserir disciplina",e);
             tx.rollback();
+            j.repopular();
+            j.errorMsg();
         }
         finally {
             session.close();
@@ -115,7 +125,7 @@ public class DisciplinaRest implements ICrud
     @Path("update")
     @POST
     @Stylesheet(href = "/read.jsp", type = MediaTypeMore.APP_JSP)
-    @SecurityPrivate(role={SecType.ADMIN, SecType.PROFESSOR})
+    @SecurityPrivate(role = { SecType.ADMIN, SecType.PROFESSOR })
     public void update() {
         // TODO Auto-generated method stub
 

@@ -9,12 +9,12 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
 
-public class EntityDAO<T>
+public class EntityDAO
 {
 
     private static Logger LOG = Logger.getLogger(EntityDAO.class);
 
-    public T searchID(Number id, Session session, Class<T> classe) {
+    public <T> T searchID(Number id, Session session, Class<T> classe) {
         T bean = null;
         try {
             bean = (T) session.get(classe, id);
@@ -26,7 +26,7 @@ public class EntityDAO<T>
         return bean;
     }
 
-    public boolean insert(Session session, T bean) {
+    public <T> boolean insert(Session session, T bean) {
         Transaction tx = session.beginTransaction();
         try {
             session.save(bean);
@@ -42,7 +42,7 @@ public class EntityDAO<T>
         return false;
     }
 
-    public boolean delete(Session session, Number id, Class<T> classe) {
+    public <T> boolean delete(Session session, Number id, Class<T> classe) {
         Transaction tx = session.beginTransaction();
         try {
             session.delete(searchID(id, session, classe));
@@ -57,7 +57,7 @@ public class EntityDAO<T>
         return false;
     }
 
-    public List<T> searchByValue(Session session, Class<T> classe, Map<String, Object> valores) {
+    public <T> List<T> searchByValue(Session session, Class<T> classe, Map<String, Object> valores) {
         Criteria c = session.createCriteria(classe);
         for (Map.Entry<String, Object> entry : valores.entrySet()) {
             c.add(Restrictions.eq(entry.getKey(), entry.getValue()));
@@ -65,7 +65,7 @@ public class EntityDAO<T>
         return c.list();
     }
     
-    public List<T> searchAll(Session session, Class<T> classe)
+    public <T> List<T> searchAll(Session session, Class<T> classe)
     {
         return session.createCriteria(classe).list();
     }

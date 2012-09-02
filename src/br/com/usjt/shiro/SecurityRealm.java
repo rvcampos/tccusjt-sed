@@ -87,7 +87,7 @@ public class SecurityRealm extends AuthorizingRealm
                     AlunoBean b2 = (AlunoBean) lst.get(0);
                     usuario_id = b2.getId_aluno();
                     pass = b2.getSenha();
-                    ok = b2.isAtivo();
+                    ok = b2.getAtivo();
                     break;
                 }
             }

@@ -74,6 +74,7 @@ nome_disciplina varchar(100),
 id_professor integer references PROFESSOR(id_professor),
 data_inicio date,
 data_termino date,
+descricao varchar(255),
 PRIMARY KEY(id_disciplina)
 );
 
@@ -109,7 +110,8 @@ cpf  numeric(12)
 CREATE TABLE MATRICULA (
 id_matricula integer PRIMARY KEY,
 id_modulo integer REFERENCES MODULO(id_modulo),
-id_aluno integer REFERENCES ALUNO(id_aluno)
+id_aluno integer REFERENCES ALUNO(id_aluno),
+concluido boolean default false
 );
 
 CREATE SEQUENCE seq_aluno
@@ -141,6 +143,20 @@ CREATE SEQUENCE seq_aluno
   CACHE 1;
   
   CREATE SEQUENCE seq_professor
+  INCREMENT 1
+  MINVALUE 0
+  MAXVALUE 99999999
+  START 1
+  CACHE 1;
+  
+  CREATE SEQUENCE seq_disciplina
+  INCREMENT 1
+  MINVALUE 0
+  MAXVALUE 99999999
+  START 1
+  CACHE 1;
+  
+  CREATE SEQUENCE seq_matricula
   INCREMENT 1
   MINVALUE 0
   MAXVALUE 99999999

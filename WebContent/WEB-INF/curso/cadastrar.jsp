@@ -41,6 +41,11 @@ www.w3.org/TR/html4/loose.dtd">
         <td align="right"><label> Data Termino </label></td>
 		<td><input name="txtDataTermino" id="txtDataTermino" type='text' maxlength="10" size="12" alt="39/19/2999"></td>
     </tr>  
+    
+     <tr>
+        <td align="right"><label>Descrição</label></td>
+		<td><textarea rows="10" cols="25" name="txtDesc">${txtDesc}</textarea></td>
+    </tr>  
    
 </table>
 
