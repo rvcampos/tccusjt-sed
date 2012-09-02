@@ -1,5 +1,6 @@
 package br.com.usjt.ead.contato;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -16,20 +17,21 @@ import javax.validation.constraints.NotNull;
 public class TelefoneBean
 {
     @Id
-    @SequenceGenerator(name="gen", initialValue=1, sequenceName="seq_telefone")
-    @GeneratedValue(generator="gen", strategy=GenerationType.AUTO)
+    @SequenceGenerator(name = "gen", initialValue = 1, sequenceName = "seq_telefone")
+    @GeneratedValue(generator = "gen", strategy = GenerationType.AUTO)
     private Long             id_telefone; // integer PRIMARY KEY,
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_contato")
+    @NotNull
     private ContatoBean      contato;    // integer references contato
     @ManyToOne
     @JoinColumn(name = "tipo", referencedColumnName = "id_tipo")
     private TipoTelefoneBean tipo;
     @Column
-    @NotNull(message="Favor informar o DDD")
+    @NotNull(message = "Favor informar o DDD")
     private Integer          ddd;        // integer,
     @Column
-    @NotNull(message="Favor informar o Telefone")
+    @NotNull(message = "Favor informar o Telefone")
     private Long             telefone;   // numeric(9)
 
     @Override

@@ -40,12 +40,12 @@ public final class Utils
     public static String tipoString(Integer tipo) {
         switch (tipo)
         {
-            case 0:
-                return "admin";
-            case 1:
-                return "professor";
-            case 3:
-                return "aluno";
+        case 0:
+            return "admin";
+        case 1:
+            return "professor";
+        case 3:
+            return "aluno";
         }
         return "aluno";
     }
@@ -163,6 +163,14 @@ public final class Utils
         }
     }
 
+    public static boolean isEmpty(Object string) {
+        if (string == null || string.toString().trim().isEmpty()) {
+            return true;
+        }
+
+        return false;
+    }
+
     public static boolean isValidMail(String email) {
         try {
             InternetAddress add = new InternetAddress(email);
@@ -172,6 +180,23 @@ public final class Utils
             return false;
         }
         return true;
+    }
+
+    public static String padding(Object string, int tamanhoDesejado, String caracter) {
+        String toPad = string.toString();
+
+        if (toPad == null) {
+            toPad = "";
+        }
+
+        if (toPad.length() == tamanhoDesejado) {
+            return toPad;
+        }
+        StringBuilder b = new StringBuilder(toPad);
+        while (b.length() < tamanhoDesejado) {
+            b.insert(0, caracter);
+        }
+        return b.toString();
     }
 
 }
