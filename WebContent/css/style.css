@@ -22,3 +22,5 @@
 	margin: 0;
 	padding: 0.3em;
 }
+
+.achievements-wrapper { height: 600px; overflow: auto; }
