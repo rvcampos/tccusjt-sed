@@ -6,7 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -20,10 +20,10 @@ public class MatriculaBean
     @SequenceGenerator(name = "gen", initialValue = 1, sequenceName = "seq_matricula")
     @GeneratedValue(generator = "gen", strategy = GenerationType.AUTO)
     private Integer    id_matricula; // integer NOT NULL,
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "id_modulo")
     private ModuloBean modulo;      // integer,
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "id_aluno")
     private AlunoBean  aluno;       // integer,
     @Column

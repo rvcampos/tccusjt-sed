@@ -24,7 +24,6 @@ import br.com.usjt.ead.contato.ContatoBean;
 import br.com.usjt.ead.contato.EnderecoBean;
 import br.com.usjt.ead.contato.TelefoneBean;
 import br.com.usjt.ead.contato.TipoTelefoneBean;
-import br.com.usjt.ead.curso.DisciplinaBean;
 import br.com.usjt.ead.curso.ModuloBean;
 import br.com.usjt.jaxrs.JSPAttr;
 import br.com.usjt.jaxrs.MediaTypeMore;
@@ -53,11 +52,52 @@ public class AlunoRest implements ICrud
     }
 
     @Override
-    @Path("detalha")
-    @POST
-    @Stylesheet(href = "pag.jsp", type = MediaTypeMore.APP_JSP)
+    @Path("alterarDados")
+    @GET
+    @Stylesheet(href = "aluno/alterar.jsp", type = MediaTypeMore.APP_JSP)
     @SecurityPrivate(role = { SecType.ADMIN, SecType.ALUNO })
     public void edit_update() {
+        JSPAttr j = new JSPAttr();
+        Session session = HS.getSession();
+        Security sh = SecurityShiro.init();
+        EntityDAO dao = new EntityDAO();
+        try {
+            AlunoBean aluno = dao.searchID(sh.getUserId(), session, AlunoBean.class);
+            j.set("lista_uf", session.createCriteria(EstadoUFBean.class).addOrder(Order.asc("id_estado")).list());
+            populaEditUpdate(j, aluno);
+        }
+        catch (Exception e) {
+            LOG.error("Falha ao carregar", e);
+        }
+        finally {
+            session.close();
+        }
+    }
+
+    private void populaEditUpdate(JSPAttr j, AlunoBean aluno) {
+        j.set("txtEmail", aluno.getEmail());
+        j.set("txtCPF",  Utils.padding(aluno.getCpf(),14,"0"));
+        j.set("txtCep", Utils.padding(aluno.getEndereco().getCep(), 8, "0"));
+        j.set("txtEndereco", aluno.getEndereco().getLogradouro());
+        j.set("txtBairro", aluno.getEndereco().getBairro());
+        j.set("txtNascimento", aluno.getContato().getData_nascimento());
+        j.set("txtRG", aluno.getContato().getRg());
+        j.set("txtNome", aluno.getContato().getNome());
+
+        for (TelefoneBean tel : aluno.getContato().getTelefones()) {
+            if (tel.getTipo().getId_tipo() == 1) {
+                j.set("txtTelefone", tel.getTelefone());
+                j.set("txtTelefoneDDD", tel.getDdd());
+            }
+            else {
+                j.set("txtCelularDDD", tel.getDdd());
+                j.set("txtCelular", tel.getTelefone());
+            }
+        }
+        j.set("uf_id", aluno.getEndereco().getCidade().getEstado().getId_estado());
+        j.set("list_city", aluno.getEndereco().getCidade().getEstado().getCidades());
+        j.set("cidade", aluno.getEndereco().getCidade().getId_cidade());
+
     }
 
     @Override
@@ -99,7 +139,7 @@ public class AlunoRest implements ICrud
         Session session = HS.getSession();
         Transaction tx = session.beginTransaction();
         try {
-            AlunoBean b = popula(j, session);
+            AlunoBean b = popula(j, session, false);
             if (Utils.isValid(b)) {
                 b.setAtivo(false);
                 session.save(b);
@@ -124,37 +164,64 @@ public class AlunoRest implements ICrud
         }
     }
 
-    private AlunoBean popula(JSPAttr j, Session session) {
+    private AlunoBean popula(JSPAttr j, Session session, boolean update) {
         AlunoBean b = new AlunoBean();
+        if (!Utils.isEmpty(j.getParameter("aluno_id"))) {
+            b = (AlunoBean) session.get(AlunoBean.class, Integer.parseInt(j.getParameter("aluno_id")));
+        }
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         try {
-            b.setEmail(j.getParameter("txtEmail"));
+            if (!update) {
+                b.setEmail(j.getParameter("txtEmail"));
+            }
             b.setSenha(CryptoXFacade.crypt(j.getParameter("txtSenha")));
             b.setCpf(Long.parseLong(j.getParameter("txtCPF").replaceAll("[^0-9]", "")));
-            EnderecoBean end = new EnderecoBean();
+            EnderecoBean end = b.getEndereco();
+            if (end == null) {
+                end = new EnderecoBean();
+                b.setEndereco(end);
+            }
             end.setCep(Integer.parseInt(j.getParameter("txtCep").replaceAll("[^0-9]", "")));
             end.setLogradouro(j.getParameter("txtEndereco"));
             end.setBairro(j.getParameter("txtBairro"));
             end.setCidade((CidadeBean) session.load(CidadeBean.class, Integer.parseInt(j.getParameter("cidade"))));
-            b.setEndereco(end);
-            ContatoBean contato = new ContatoBean();
+            ContatoBean contato = b.getContato();
+            if (contato == null) {
+                contato = new ContatoBean();
+            }
             contato.setData_nascimento(sdf.parse(j.getParameter("txtNascimento")));
             contato.setRg(j.getParameter("txtRG"));
             contato.setNome(j.getParameter("txtNome"));
-            TelefoneBean phone = new TelefoneBean();
-            phone.setDdd(Integer.parseInt(j.getParameter("txtTelefoneDDD")));
-            phone.setTelefone(Long.parseLong(j.getParameter("txtTelefone").replaceAll("[^0-9]", "")));
-            phone.setTipo((TipoTelefoneBean) session.load(TipoTelefoneBean.class, 1));
-            contato.getTelefones().add(phone);
-            TelefoneBean celular = new TelefoneBean();
-            celular.setDdd(Integer.parseInt(j.getParameter("txtCelularDDD")));
-            celular.setTelefone(Long.parseLong(j.getParameter("txtCelular").replaceAll("[^0-9]", "")));
-            celular.setTipo((TipoTelefoneBean) session.load(TipoTelefoneBean.class, 2));
-            contato.getTelefones().add(celular);
-            b.setContato(contato);
+            if (!update) {
+                TelefoneBean phone = new TelefoneBean();
+                phone.setDdd(Integer.parseInt(j.getParameter("txtTelefoneDDD")));
+                phone.setTelefone(Long.parseLong(j.getParameter("txtTelefone").replaceAll("[^0-9]", "")));
+                phone.setTipo((TipoTelefoneBean) session.load(TipoTelefoneBean.class, 1));
+                phone.setContato(contato);
+                contato.getTelefones().add(phone);
+                TelefoneBean celular = new TelefoneBean();
+                celular.setDdd(Integer.parseInt(j.getParameter("txtCelularDDD")));
+                celular.setTelefone(Long.parseLong(j.getParameter("txtCelular").replaceAll("[^0-9]", "")));
+                celular.setTipo((TipoTelefoneBean) session.load(TipoTelefoneBean.class, 2));
+                celular.setContato(contato);
+                contato.getTelefones().add(celular);
+                b.setContato(contato);
+            }
+            else {
+                for (TelefoneBean phone : b.getContato().getTelefones()) {
+                    if (phone.getTipo().getId_tipo() == 1) {
+                        phone.setDdd(Integer.parseInt(j.getParameter("txtTelefoneDDD")));
+                        phone.setTelefone(Long.parseLong(j.getParameter("txtTelefone").replaceAll("[^0-9]", "")));
+                    }
+                    else {
+                        phone.setDdd(Integer.parseInt(j.getParameter("txtCelularDDD")));
+                        phone.setTelefone(Long.parseLong(j.getParameter("txtCelular").replaceAll("[^0-9]", "")));
+                    }
+                }
+            }
         }
         catch (Exception e) {
-
+            LOG.error("Falha ao popular aluno", e);
         }
 
         return b;
@@ -366,6 +433,7 @@ public class AlunoRest implements ICrud
         finally {
             session.clear();
             session.close();
+            meusCursos();
         }
     }
 
