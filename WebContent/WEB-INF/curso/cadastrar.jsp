@@ -51,8 +51,8 @@ www.w3.org/TR/html4/loose.dtd">
 
 <br>
 <center>
-<button id="cmdIncluir" type="submit" style="width: 70px;" onclick="$('#formDisciplina').submit();"> Incluir</button>
-<button id="cmdCancelar" type="submit" style="width: 70px;"> Cancelar</button>
+<button id="cmdIncluir" type="submit" style="width: 70px;"> Incluir</button>
+<button id="cmdCancelar" type="button" style="width: 70px;"> Cancelar</button>
 </center>				
 	
 		</form>
