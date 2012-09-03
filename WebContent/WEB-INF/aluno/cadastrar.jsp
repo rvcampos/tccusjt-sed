@@ -140,7 +140,7 @@ www.w3.org/TR/html4/loose.dtd">
 				</div>
 
 				<div class="control-group">
-					<label class="control-label" for="txtCPF">Nome Completo </label>
+					<label class="control-label" for="txtCPF">CPF </label>
 					<div class="controls">
 						<input type="text" id="txtCPF" name="txtCPF" value="${txtRG}"
 							placeholder="CPF" alt="cpf">

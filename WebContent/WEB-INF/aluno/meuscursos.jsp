@@ -8,7 +8,7 @@ www.w3.org/TR/html4/loose.dtd">
 <title>Meus Cursos</title>
 </head>
 <table class="table">
-	<tr>
+	<tr class="header">
 		<th>Disciplina</th>
 		<th>Nivel</th>
 		<th>Data de Inicio</th>
@@ -18,12 +18,16 @@ www.w3.org/TR/html4/loose.dtd">
 		<th>Desmatricular</th>
 	</tr>
 	<c:forEach var="curso" items="${cursos}">
-		<td>${curso.disciplina.nome_disciplina}</td>
-		<td>${curso.nivel_modulo}</td>
-		<td>${curso.data_inicio}</td>
-		<td>${curso.data_termino}</td>
-		<td>${curso.disciplina.professor.contato.nome}</td>
+	<c:set var="status" value="error" />
+	<c:if test="${curso.concluido eq true}"><c:set var="status" value="success" /></c:if>
+	<tr class="status">
+		<td>${curso.modulo.disciplina.nome_disciplina}</td>
+		<td>${curso.modulo.nivel_modulo}</td>
+		<td>${curso.modulo.data_inicio}</td>
+		<td>${curso.modulo.data_termino}</td>
+		<td>${curso.modulo.disciplina.professor.contato.nome}</td>
 		<td><i class="icon-book"></i></td>
 		<td><i class="icon-remove"></i></td>
+	</tr>
 	</c:forEach>
 </table>
