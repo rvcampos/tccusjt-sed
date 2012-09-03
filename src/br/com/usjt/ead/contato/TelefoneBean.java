@@ -36,7 +36,7 @@ public class TelefoneBean
 
     @Override
     public String toString() {
-        return "TelefoneBean [id_telefone=" + id_telefone + ", contato=" + contato + ", tipo=" + tipo + ", ddd=" + ddd
+        return "TelefoneBean [id_telefone=" + id_telefone + ", tipo=" + tipo + ", ddd=" + ddd
                 + ", telefone=" + telefone + "]";
     }
 

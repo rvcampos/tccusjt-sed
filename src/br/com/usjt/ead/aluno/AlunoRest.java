@@ -166,8 +166,8 @@ public class AlunoRest implements ICrud
 
     private AlunoBean popula(JSPAttr j, Session session, boolean update) {
         AlunoBean b = new AlunoBean();
-        if (!Utils.isEmpty(j.getParameter("aluno_id"))) {
-            b = (AlunoBean) session.get(AlunoBean.class, Integer.parseInt(j.getParameter("aluno_id")));
+        if (update) {
+            b = (AlunoBean) session.get(AlunoBean.class, SecurityShiro.init().getUserId());
         }
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         try {
@@ -228,11 +228,32 @@ public class AlunoRest implements ICrud
     }
 
     @Override
-    @Path("update")
+    @Path("alterar")
     @POST
     @Stylesheet(href = "/read.jsp", type = MediaTypeMore.APP_JSP)
     @SecurityPrivate(role = { SecType.ADMIN, SecType.ALUNO })
     public void update() {
+        Session session = HS.getSession();
+        JSPAttr j = new JSPAttr();
+        AlunoBean b = new AlunoBean();
+        try {
+            if(Utils.isValid(b))
+            {
+                session.save(b);
+            }
+            else
+            {
+                j.repopular();
+            }
+        }
+        catch (Exception e) {
+            LOG.error("Falha ao alterar dados cadastrais de aluno",e);
+            j.repopular();
+        }
+        finally
+        {
+            
+        }
     }
 
     @Path("ativar")
@@ -381,7 +402,7 @@ public class AlunoRest implements ICrud
         EntityDAO dao = new EntityDAO();
         try {
             AlunoBean aluno = dao.searchID(id, session, AlunoBean.class);
-            j.set("cursos", aluno.getMatriculas().keySet());
+            j.set("cursos", aluno.getMatriculas().values());
         }
         catch (Exception e) {
             LOG.error("Falha ao buscar cursos", e);
