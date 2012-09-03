@@ -15,17 +15,6 @@
 	<jsp:include page="menu.jsp" />
 	<div class="container-fluid" style="padding-top: 60px;">
 	<div class="row-fluid">
-			<div class="span2 achievements-wrapper">
-				<rss:feed
-					url="http://g1.globo.com/Rss2/0,,AS0-6174,00.xml"
-					feedId="g1"  />
-				<ul>
-					<rss:forEachItem feedId="g1">
-						<li><rss:itemDescription feedId="g1" /><br>
-						<br>
-					</rss:forEachItem>
-				</ul>
-			</div>
 			<div class="span10">
 
 				<a href="http://192.168.1.123:443/?0,0,1,13,0&nn=escobar" target="_blank">CHAT</a>
