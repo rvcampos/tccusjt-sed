@@ -66,25 +66,52 @@ public class ProfessorRest implements ICrud
     }
 
     @Override
-    @Path("detalha")
-    @POST
-    @Stylesheet(href = "professor/cadastrar.jsp", type = MediaTypeMore.APP_JSP)
+    @Path("alterarDados")
+    @GET
+    @Stylesheet(href = "professor/alterar.jsp", type = MediaTypeMore.APP_JSP)
     @SecurityPrivate(role = { SecType.ADMIN, SecType.PROFESSOR })
     public void edit_update() {
+        JSPAttr j = new JSPAttr();
         Session session = HS.getSession();
-        JSPAttr j = new JSPAttr("metodo", "update");
+        Security sh = SecurityShiro.init();
+        EntityDAO dao = new EntityDAO();
         try {
-            ProfessorBean bean = (ProfessorBean) session.get(ProfessorBean.class, Integer.parseInt(j.getParameter("id_prof")));
-            j.set("prof", bean);
-            j.set("txtEmail", bean.getEmail());
-            j.set("txtNome", bean.getContato().getNome());
+            ProfessorBean professor = dao.searchID(sh.getUserId(), session, ProfessorBean.class);
+            j.set("lista_uf", session.createCriteria(EstadoUFBean.class).addOrder(Order.asc("id_estado")).list());
+            populaEditUpdate(j, professor);
         }
         catch (Exception e) {
-            LOG.error("Falha ao detalhar professor", e);
+            LOG.error("Falha ao carregar", e);
         }
         finally {
             session.close();
         }
+    }
+    
+    private void populaEditUpdate(JSPAttr j, ProfessorBean professor) {
+        j.set("txtEmail", professor.getEmail());
+        j.set("txtCPF",  Utils.padding(professor.getCpf(),14,"0"));
+        j.set("txtCep", Utils.padding(professor.getEndereco().getCep(), 8, "0"));
+        j.set("txtEndereco", professor.getEndereco().getLogradouro());
+        j.set("txtBairro", professor.getEndereco().getBairro());
+        j.set("txtNascimento", professor.getContato().getData_nascimento());
+        j.set("txtRG", professor.getContato().getRg());
+        j.set("txtNome", professor.getContato().getNome());
+
+        for (TelefoneBean tel : professor.getContato().getTelefones()) {
+            if (tel.getTipo().getId_tipo() == 1) {
+                j.set("txtTelefone", tel.getTelefone());
+                j.set("txtTelefoneDDD", tel.getDdd());
+            }
+            else {
+                j.set("txtCelularDDD", tel.getDdd());
+                j.set("txtCelular", tel.getTelefone());
+            }
+        }
+        j.set("uf_id", professor.getEndereco().getCidade().getEstado().getId_estado());
+        j.set("list_city", professor.getEndereco().getCidade().getEstado().getCidades());
+        j.set("cidade", professor.getEndereco().getCidade().getId_cidade());
+
     }
 
     @Override
@@ -229,14 +256,34 @@ public class ProfessorRest implements ICrud
     }
 
     @Override
-    @Path("update")
+    @Path("alterar")
     @POST
     @Stylesheet(href = "/read.jsp", type = MediaTypeMore.APP_JSP)
     @SecurityPrivate(role = { SecType.ADMIN, SecType.PROFESSOR })
     public void update() {
-        // TODO Auto-generated method stub
-
+        Session session = HS.getSession();
+        JSPAttr j = new JSPAttr();
+        ProfessorBean b = new ProfessorBean();
+        try {
+            if(Utils.isValid(b))
+            {
+                session.save(b);
+            }
+            else
+            {
+                j.repopular();
+            }
+        }
+        catch (Exception e) {
+            LOG.error("Falha ao alterar dados cadastrais de professor",e);
+            j.repopular();
+        }
+        finally
+        {
+            
+        }
     }
+
 
     /**
      * Carrega Cidade
