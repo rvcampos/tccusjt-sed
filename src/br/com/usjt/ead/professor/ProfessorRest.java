@@ -1,6 +1,8 @@
 package br.com.usjt.ead.professor;
 
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -16,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import br.com.usjt.ICrud;
+import br.com.usjt.ead.EntityDAO;
 import br.com.usjt.ead.aluno.AlunoBean;
 import br.com.usjt.ead.cidadestado.CidadeBean;
 import br.com.usjt.ead.cidadestado.CidadeEstadoRest;
@@ -24,12 +27,15 @@ import br.com.usjt.ead.contato.ContatoBean;
 import br.com.usjt.ead.contato.EnderecoBean;
 import br.com.usjt.ead.contato.TelefoneBean;
 import br.com.usjt.ead.contato.TipoTelefoneBean;
+import br.com.usjt.ead.curso.DisciplinaBean;
 import br.com.usjt.jaxrs.JSPAttr;
 import br.com.usjt.jaxrs.MediaTypeMore;
 import br.com.usjt.jaxrs.security.SecurityPrivate;
 import br.com.usjt.jaxrs.security.SecurityPublic;
 import br.com.usjt.jaxrs.security.SecurityPrivate.Entidade;
 import br.com.usjt.jaxrs.security.SecurityPrivate.SecType;
+import br.com.usjt.shiro.Security;
+import br.com.usjt.shiro.SecurityShiro;
 import br.com.usjt.util.CryptoXFacade;
 import br.com.usjt.util.HS;
 import br.com.usjt.util.Utils;
@@ -114,8 +120,32 @@ public class ProfessorRest implements ICrud
         Transaction tx = session.beginTransaction();
         try {
             ProfessorBean bean = (ProfessorBean) session.get(ProfessorBean.class, Integer.parseInt(j.getParameter("id_prof")));
-            session.save(bean);
+            session.delete(bean);
             tx.commit();
+        }
+        catch (Exception e) {
+            tx.rollback();
+        }
+        finally {
+            session.close();
+        }
+    }
+    
+    @Path("deleteCurso")
+    @POST
+    @Stylesheet(href = "professor/meusCursos.jsp", type = MediaTypeMore.APP_JSP)
+    @SecurityPrivate(role = SecType.PROFESSOR)
+    public void deleteCurso() {
+        JSPAttr j = new JSPAttr("metodo", "delete");
+        Session session = HS.getSession();
+        Transaction tx = session.beginTransaction();
+        try {
+            DisciplinaBean bean = (DisciplinaBean) session.get(DisciplinaBean.class, Integer.parseInt(j.getParameter("id_disciplina")));
+            session.delete(bean);
+            tx.commit();
+            
+            //Carrego os cursos novamente para atualizar a página
+            meusCursos();
         }
         catch (Exception e) {
             tx.rollback();
@@ -247,5 +277,30 @@ public class ProfessorRest implements ICrud
         }
 
     }
-
+    
+    @Path("meusCursos")
+    @GET
+    @POST
+    @Stylesheet(href = "professor/meusCursos.jsp", type = MediaTypeMore.APP_JSP)
+    @SecurityPrivate(role = SecType.PROFESSOR)
+    public void meusCursos() {
+        JSPAttr j = new JSPAttr();
+        Security sh = SecurityShiro.init();
+        Integer id = sh.getUserId();
+        Session session = HS.getSession();
+        EntityDAO dao = new EntityDAO();
+        try {
+            Map<String,Object> map = new HashMap<String,Object>();
+            map.put("professor.id_professor", id);
+            
+            j.set("cursos", dao.searchByValue(session, DisciplinaBean.class, map));
+        }
+        catch (Exception e) {
+            LOG.error("Falha ao buscar cursos", e);
+        }
+        finally {
+            session.clear();
+            session.close();
+        }
+    }
 }
