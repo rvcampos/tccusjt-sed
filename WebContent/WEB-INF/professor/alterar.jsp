@@ -73,7 +73,7 @@ function changeUF(state, callback) {
 				<div class="control-group">
 					<label class="control-label" for="txtEmail">Email</label>
 					<div class="controls">
-						<input type="text" id="txtEmail" name="txtEmail" maxlength="50" />
+						<input type="text" id="txtEmail" name="txtEmail" value="${txtEmail}" readonly="readonly" maxlength="50" />
 					</div>
 				</div>
 				<div class="control-group">
