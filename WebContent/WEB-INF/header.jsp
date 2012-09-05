@@ -21,5 +21,17 @@ $(document).ready(function() {
 $('.datepicker').datepicker();
 $('input[type="text"]').setMask();
 $('.dropdown-toggle').dropdown();
+
+String.prototype.format = function (args) {
+    var newStr = this;
+    for (var key in args) {
+        newStr = newStr.replace('{' + key + '}', args[key]);
+        while(newStr.indexOf('{' + key + '}') != -1)
+        {
+        	newStr = newStr.replace('{' + key + '}', args[key]);
+        }
+    }
+    return newStr;
+}
 });
 </script>
