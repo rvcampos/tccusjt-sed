@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- JBOSS datasource configuration goes into $JBOSS_HOME/server/<default>/deploy/ -->
+<datasources>
+	<local-tx-datasource>
+		<jndi-name>jdbc/tccusjt</jndi-name>
+		<use-java-context>true</use-java-context>
+		<driver-class>org.postgresql.Driver</driver-class>
+		<connection-url>jdbc:postgresql://localhost:5432/ead
+		</connection-url>
+		<user-name>ead</user-name>
+		<password>ead</password>
+		<min-pool-size>5</min-pool-size>
+		<max-pool-size>100</max-pool-size>
+	</local-tx-datasource>
+</datasources>

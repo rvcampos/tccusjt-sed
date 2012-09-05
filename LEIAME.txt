@@ -1,0 +1,26 @@
+===========================================================================================
+Recurso: flyway-commandline-1.6.1
+Descricao: Esse cara serve para colecionar e executar queries automaticamente, ou seja,
+cria um arquivo SQL e joga as queries la dentro. 
+Como ele funciona:
+   flyway-commandline-1.6.1
+   /conf/flyway.properties = Configs de url do banco, usuario, senha, schema
+   na pasta SQL pode criar-se os arquivos separadamente, por exemplo:
+   V1_0__usuario.sql -> Queries para tabelas de controle de usuarios
+   V1_1__cadastro.sql -> Queries para tabelas de cadastros
+   
+   Vx_y__nomearquivo.sql
+   
+   x-> versao MAJOR
+   y -> Versao MINOR
+   
+   ordem de migracao por x_y
+   V1_0__usuario
+   V1_1__cadastro
+   V2_0__aulas
+   
+Como utilizar?
+pelo terminal do linux la em cima, va ate a pasta do flyway-commandline-1.6.1 e digite o seguinte comando
+./flyway.sh clean    -> limpa todo o schema de bd
+./flyway.sh migrate  -> migra os SQLs para o banco
+===========================================================================================

@@ -1,0 +1,26 @@
+@CHARSET "ISO-8859-1";
+.disabledInput:disabled {
+	color:black;
+	background-color:transparent;
+	border:0px;
+}
+.ui-combobox {
+	position: static;
+	display: inline-block;
+}
+.ui-button {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	margin-left: -1px;
+	padding: 0;
+	/* adjust styles for IE 6/7 */
+	*height: 1.7em;
+	*top: 0.1em;
+}
+.ui-autocomplete-input {
+	margin: 0;
+	padding: 0.3em;
+}
+
+.achievements-wrapper { height: 600px; overflow: auto; }
