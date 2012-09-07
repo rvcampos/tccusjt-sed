@@ -1,10 +1,10 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-	pageEncoding="ISO-8859-1"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://
 www.w3.org/TR/html4/loose.dtd">
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Cadastro de Professor</title>
 </head>
 <script>
@@ -48,7 +48,7 @@ www.w3.org/TR/html4/loose.dtd">
 	{
 		if($('#txtSenha').val() == '' || $('#txtCsenha').val() == '')
 		{
-			alert('Preencha a senha e a validação');
+			alert('Preencha a senha e a validaÃ§Ã£o');
 			return false;
 		}
 		if($('#txtSenha').val() != $('#txtCsenha').val())
@@ -58,7 +58,7 @@ www.w3.org/TR/html4/loose.dtd">
 		}
 		if($('#canPost').val() == "false")
 		{
-			alert("E-mail inválido ou em uso.");
+			alert("E-mail invÃ¡lido ou em uso.");
 			return false;
 		}
 		return true;
@@ -155,7 +155,7 @@ www.w3.org/TR/html4/loose.dtd">
 						<div class="tab-pane" id="3">
 							<table class="table">
 								<tr>
-									<td><label>Endereço</label></td>
+									<td><label>EndereÃ§o</label></td>
 									<td><input type="text" id="txtEndereco" name="txtEndereco"
 										maxlength="50" size="50" value="${txtEndereco}" /></td>
 								</tr>
