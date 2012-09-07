@@ -20,6 +20,7 @@ import org.hibernate.HibernateException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import br.com.usjt.ead.admin.AdminBean;
 import br.com.usjt.ead.aluno.AlunoBean;
 import br.com.usjt.ead.professor.ProfessorBean;
 import br.com.usjt.util.CryptoXFacade;
@@ -63,8 +64,14 @@ public class SecurityRealm extends AuthorizingRealm
                 switch (ent)
                 {
                 case 0:
-                    usuario_id = 0;
-                    pass = CryptoXFacade.crypt("admin");
+                    lst = HS.searchByValue(AdminBean.class, criterio);
+                    if(lst.isEmpty())
+                    {
+                        throw new Exception("Usuário não encontrado");
+                    }
+                    AdminBean bean = (AdminBean) lst.get(0);
+                    usuario_id = bean.getId_admin();
+                    pass = bean.getSenha();
                     break;
 
                 case 1:
