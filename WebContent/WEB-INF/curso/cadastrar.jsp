@@ -3,6 +3,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://
 www.w3.org/TR/html4/loose.dtd">
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="x" uri="http://java.sun.com/jsp/jstl/xml" %>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Cadastro de Disciplina</title>
@@ -17,15 +18,25 @@ www.w3.org/TR/html4/loose.dtd">
 	}
 	var i,j;
 	var html = "";
-	var defcontrol = '<div class="control-group"><label class="control-label" for="{txtname}">{label}</label><div class="controls"><input name="{txtname}" id="{txtname}" type="text" maxlength="300"/></div></div>';
-	var alter = '<div class="control-group"><label class="control-label" for="{txtname}"><span class="badge badge-info">{label}</span></label><div class="controls"> <input name="{txtname}" id="{txtname}" type="text" maxlength="300"/>&nbsp&nbsp&nbsp<input type="radio" name="{radioname}" value="{chkval}" /></div></div>';
+	var defcontrol = '<div class="control-group"><label class="control-label" for="{txtname}">{label}</label><div class="controls"><input name="{txtname}" id="{txtname}" type="text" maxlength="300" value="{valor}"/></div></div>';
+	var alter = '<div class="control-group"><label class="control-label" for="{txtname}"><span class="badge badge-info">{label}</span></label><div class="controls"> <input name="{txtname}" id="{txtname}" type="text" maxlength="300" value="{valor}"/>&nbsp&nbsp&nbsp<input type="radio" name="{radioname}" value="{chkval}" /></div></div>';
 	
 	for(i = 1; i <= qtdquest; i++)
 	{
-		html = html + defcontrol.format({ txtname: 'txt' + id + 'quest' + i, label: 'Questão: ' + i});
+		var valq = $('#txt'+ id + 'quest' + i).val();
+		if(valq == null)
+		{
+			valq = '';
+		}
+		html = html + defcontrol.format({ txtname: 'txt' + id + 'quest' + i, label: 'Questão: ' + i, valor: valq});
 		for(j = 1; j <= qtdalt; j++)
 		{
-			html = html + alter.format({ txtname: 'txt' + id + 'quest' + i +'alt' + j, label: 'Alternativa ' + j, radioname: 'opt' + id + '' + i, chkval: '' + j});
+			var vala = $('#txt'+ id + 'quest' + i +'alt' + j).val();
+			if(vala == null)
+			{
+				vala = '';
+			}
+			html = html + alter.format({ txtname: 'txt' + id + 'quest' + i +'alt' + j, label: 'Alternativa ' + j, radioname: 'opt' + id + '' + i, chkval: '' + j, valor: vala});
 		}
 	}
 	$('#'+id).html(html);
@@ -117,7 +128,8 @@ www.w3.org/TR/html4/loose.dtd">
 										value="gerar" />
 								</div>
 							</div>
-							<div id="questoesBasico"></div>
+							<div id="questoesBasico">
+							</div>
 						</div>
 					</div>
 				</div>
@@ -210,6 +222,7 @@ www.w3.org/TR/html4/loose.dtd">
 			</div>
 		</div>
 	</div>
+	<x
 	<div class="row-fluid">
 		<div class="span2">
 			<input class="btn btn-primary" value="Salvar" type="submit"
