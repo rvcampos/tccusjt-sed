@@ -1,6 +1,7 @@
 package br.com.usjt.ead.curso;
 
 import java.text.SimpleDateFormat;
+import java.util.Iterator;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -15,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import br.com.usjt.ICrud;
 import br.com.usjt.ead.EntityDAO;
 import br.com.usjt.ead.professor.ProfessorBean;
+import br.com.usjt.ead.professor.ProfessorRest;
 import br.com.usjt.jaxrs.JSPAttr;
 import br.com.usjt.jaxrs.MediaTypeMore;
 import br.com.usjt.jaxrs.security.SecurityPrivate;
@@ -38,7 +40,6 @@ public class DisciplinaRest implements ICrud
     @SecurityPrivate(role = { SecType.ADMIN, SecType.PROFESSOR, SecType.ALUNO })
     public void read() {
         JSPAttr j = new JSPAttr();
-        Security sh = SecurityShiro.init();
         Session session = HS.getSession();
         EntityDAO dao = new EntityDAO();
         try {
@@ -59,24 +60,36 @@ public class DisciplinaRest implements ICrud
     @Stylesheet(href = "curso/cadastrar.jsp", type = MediaTypeMore.APP_JSP)
     @SecurityPrivate(role = { SecType.ADMIN, SecType.PROFESSOR })
     public void edit_update() {
-        JSPAttr j = new JSPAttr();
+        JSPAttr j = new JSPAttr("metodo","update");
         Session session = HS.getSession();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         try {
             Integer id = Integer.parseInt(j.getParameter("id_disciplina"));
             DisciplinaBean disciplina = (DisciplinaBean) session.get(DisciplinaBean.class, id);
+            j.set("id_disciplina", id);
+            j.set("txtNomeDisciplina", disciplina.getNome_disciplina());
+            j.set("txtDesc", disciplina.getDescricao());
+            j.set("txtDataInicio", sdf.format(disciplina.getData_inicio()));
+            j.set("txtDataTermino", sdf.format(disciplina.getData_termino()));
             for (ModuloBean mod : disciplina.getModulos()) {
                 switch (mod.getNivel_modulo())
                 {
                 case 1:
                     j.set("basico", mod);
+                    j.set("qtdquestoesBas", mod.getAvaliacao().getQuestoes().size());
+                    j.set("qtdaltBas", mod.getAvaliacao().getQuestoes().get(0).getAlternativas().size());
                     break;
 
                 case 2:
                     j.set("intermediario", mod);
+                    j.set("qtdquestoesInt", mod.getAvaliacao().getQuestoes().size());
+                    j.set("qtdaltInt", mod.getAvaliacao().getQuestoes().get(0).getAlternativas().size());
                     break;
 
                 case 3:
                     j.set("avancado", mod);
+                    j.set("qtdquestoesAdv", mod.getAvaliacao().getQuestoes().size());
+                    j.set("qtdaltAdv", mod.getAvaliacao().getQuestoes().get(0).getAlternativas().size());
                     break;
                 }
             }
@@ -101,11 +114,28 @@ public class DisciplinaRest implements ICrud
     @Override
     @Path("delete")
     @POST
-    @Stylesheet(href = "/read.jsp", type = MediaTypeMore.APP_JSP)
+    @Stylesheet(href = "professor/meusCursos.jsp", type = MediaTypeMore.APP_JSP)
     @SecurityPrivate(role = { SecType.ADMIN, SecType.PROFESSOR })
     public void delete() {
-        // TODO Auto-generated method stub
-
+        Session session = HS.getSession();
+        JSPAttr j = new JSPAttr();
+        Transaction tx = session.beginTransaction();
+        try {
+            DisciplinaBean d = (DisciplinaBean) session.get(DisciplinaBean.class, Integer.parseInt(j.getParameter("id_disciplina")));
+            session.delete(d);
+            tx.commit();
+            j.sucessMsg("Curso deletado com sucesso");
+        }
+        catch (Exception e) {
+            tx.rollback();
+            LOG.error("Falha ao deletar curso",e);
+            j.errorMsg();
+        }
+        finally
+        {
+            session.close();
+            new ProfessorRest().meusCursos();
+        }
     }
 
     @Override
@@ -169,11 +199,17 @@ public class DisciplinaRest implements ICrud
     }
 
     private DisciplinaBean populaOsModulosCreate(JSPAttr j, DisciplinaBean objDisciplina) {
+        Iterator<ModuloBean> it = objDisciplina.getModulos().iterator();
         ModuloBean basico = new ModuloBean();
-        basico.setDisciplina(objDisciplina);
-        basico.setNivel_modulo(1);
-        basico.setData_inicio(objDisciplina.getData_inicio());
-        basico.setData_termino(objDisciplina.getData_termino());
+        if (it.hasNext()) {
+            basico = it.next();
+        }
+        else {
+            basico.setDisciplina(objDisciplina);
+            basico.setNivel_modulo(1);
+            basico.setData_inicio(objDisciplina.getData_inicio());
+            basico.setData_termino(objDisciplina.getData_termino());
+        }
         if (((!Utils.isEmpty(j.getParameter("qtdquestoesBas")) && !Utils.isEmpty(j.getParameter("qtdaltBas"))))) {
             AvaliacaoBean b = new AvaliacaoBean();
             b.setModulo(basico);
@@ -198,10 +234,15 @@ public class DisciplinaRest implements ICrud
         }
 
         ModuloBean intermediario = new ModuloBean();
-        intermediario.setDisciplina(objDisciplina);
-        intermediario.setNivel_modulo(2);
-        intermediario.setData_inicio(objDisciplina.getData_inicio());
-        intermediario.setData_termino(objDisciplina.getData_termino());
+        if (it.hasNext()) {
+            intermediario = it.next();
+        }
+        else {
+            intermediario.setDisciplina(objDisciplina);
+            intermediario.setNivel_modulo(2);
+            intermediario.setData_inicio(objDisciplina.getData_inicio());
+            intermediario.setData_termino(objDisciplina.getData_termino());
+        }
         if (((!Utils.isEmpty(j.getParameter("qtdquestoesInt")) && !Utils.isEmpty(j.getParameter("qtdaltInt"))))) {
             AvaliacaoBean inte = new AvaliacaoBean();
             inte.setModulo(intermediario);
@@ -225,10 +266,15 @@ public class DisciplinaRest implements ICrud
             intermediario.setAvaliacao(inte);
         }
         ModuloBean avancado = new ModuloBean();
-        avancado.setDisciplina(objDisciplina);
-        avancado.setNivel_modulo(3);
-        avancado.setData_inicio(objDisciplina.getData_inicio());
-        avancado.setData_termino(objDisciplina.getData_termino());
+        if (it.hasNext()) {
+            avancado = it.next();
+        }
+        else {
+            avancado.setDisciplina(objDisciplina);
+            avancado.setNivel_modulo(3);
+            avancado.setData_inicio(objDisciplina.getData_inicio());
+            avancado.setData_termino(objDisciplina.getData_termino());
+        }
         if (((!Utils.isEmpty(j.getParameter("qtdquestoesAdv")) && !Utils.isEmpty(j.getParameter("qtdaltAdv"))))) {
             AvaliacaoBean adv = new AvaliacaoBean();
             adv.setModulo(avancado);
@@ -266,6 +312,7 @@ public class DisciplinaRest implements ICrud
         if (((!Utils.isEmpty(j.getParameter("qtdquestoesBas")) && !Utils.isEmpty(j.getParameter("qtdaltBas"))))) {
             AvaliacaoBean b = new AvaliacaoBean();
             b.setModulo(basico);
+            b.getQuestoes().clear();
             for (int i = 1; i <= Integer.parseInt(j.getParameter("qtdquestoesBas")); i++) {
                 QuestaoBean questao = new QuestaoBean();
                 questao.setAvaliacao(b);
@@ -349,10 +396,34 @@ public class DisciplinaRest implements ICrud
     @Override
     @Path("update")
     @POST
-    @Stylesheet(href = "/read.jsp", type = MediaTypeMore.APP_JSP)
+    @Stylesheet(href = "professor/meusCursos.jsp", type = MediaTypeMore.APP_JSP)
     @SecurityPrivate(role = { SecType.ADMIN, SecType.PROFESSOR })
     public void update() {
-        // TODO Auto-generated method stub
-
+        Session session = HS.getSession();
+        JSPAttr j = new JSPAttr();
+        DisciplinaBean disciplina = new DisciplinaBean();
+        Transaction tx = session.beginTransaction();
+        try {
+            disciplina = (DisciplinaBean) session.get(DisciplinaBean.class, Integer.parseInt(j.getParameter("id_disciplina")));
+            disciplina = populaOsModulosUpdate(j, disciplina);
+            if(Utils.isValid(disciplina))
+            {
+                session.update(disciplina);
+                tx.commit();
+                j.sucessMsg();
+            }
+            else
+            {
+                
+            }
+        }
+        catch (Exception e) {
+            j.errorMsg();
+            LOG.error("Falha ao alterar curso",e);
+        }
+        finally {
+            session.close();
+            new ProfessorRest().meusCursos();
+        }
     }
 }

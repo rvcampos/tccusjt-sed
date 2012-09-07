@@ -17,6 +17,8 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.Valid;
 
+import org.hibernate.annotations.OrderBy;
+
 import br.com.usjt.ead.professor.ProfessorBean;
 
 @Entity
@@ -40,6 +42,7 @@ public class DisciplinaBean
     private String          descricao;
     @OneToMany(mappedBy = "disciplina", cascade=CascadeType.ALL)
     @Valid
+    @OrderBy(clause="nivel_modulo asc")
     private Set<ModuloBean> modulos = new HashSet<ModuloBean>();
 
     @Override

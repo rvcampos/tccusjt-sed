@@ -20,22 +20,22 @@ import org.hibernate.annotations.CascadeType;
 import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
-@Table(name="questao")
+@Table(name = "questao")
 public class QuestaoBean
 {
     @Id
     @SequenceGenerator(name = "gen", initialValue = 1, sequenceName = "seq_questao")
     @GeneratedValue(generator = "gen", strategy = GenerationType.AUTO)
-    private Long                       id_questao;
+    private Long                  id_questao;
     @Column
-    private String                     conteudo;
+    private String                conteudo;
     @ManyToOne
-    @JoinColumn(name="id_avaliacao")
-    @Cascade(value=CascadeType.ALL)
-    private AvaliacaoBean              avaliacao;
-    @OneToMany(mappedBy="questao")
-    @Cascade(value=org.hibernate.annotations.CascadeType.ALL)
-    @NotEmpty(message="As alternativas devem estar preenchidas")
+    @JoinColumn(name = "id_avaliacao")
+    @Cascade(value = CascadeType.ALL)
+    private AvaliacaoBean         avaliacao;
+    @OneToMany(mappedBy = "questao", orphanRemoval = true)
+    @Cascade(value = org.hibernate.annotations.CascadeType.ALL)
+    @NotEmpty(message = "As alternativas devem estar preenchidas")
     @Valid
     private List<AlternativaBean> alternativas = new ArrayList<AlternativaBean>();
 

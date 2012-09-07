@@ -22,9 +22,9 @@ www.w3.org/TR/html4/loose.dtd">
 					<input type="hidden" value=${curso.id_disciplina} name="id_disciplina" />
 					<a onclick="$('#formMeusCursos${curso.id_disciplina}').submit();"><i class="icon-pencil"></i></a>
 				</form></td>
-			<td><form action="deleteCurso" method="post" id="formMeusCursosDel${curso.id_disciplina}">
+			<td><form action="${app_context}curso/delete" method="post" id="formMeusCursosDel${curso.id_disciplina}">
 					<input type="hidden" value="${curso.id_disciplina}" name="id_disciplina" />
-					<a onclick="$('#formMeusCursosDel${curso.id_disciplina}').submit();"><i class="icon-remove"></i></a>
+					<a onclick="if(confirm('Deseja deletar esse curso?')){$('#formMeusCursosDel${curso.id_disciplina}').submit();}"><i class="icon-remove"></i></a>
 				</form></td>
 			<td>${curso.nome_disciplina}</td>
 			<td>${curso.data_inicio}</td>
