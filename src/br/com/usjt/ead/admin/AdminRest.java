@@ -48,7 +48,7 @@ public class AdminRest implements ICrud
     @Path("alterarDados")
     @GET
     @Stylesheet(href = "admin/alterar.jsp", type = MediaTypeMore.APP_JSP)
-    @SecurityPrivate(role = { SecType.ADMIN, SecType.ALUNO })
+    @SecurityPrivate(role = { SecType.ADMIN })
     public void edit_update() {
         JSPAttr j = new JSPAttr();
         Session session = HS.getSession();
@@ -97,7 +97,7 @@ public class AdminRest implements ICrud
     @Path("delete")
     @POST
     @Stylesheet(href = "/read.jsp", type = MediaTypeMore.APP_JSP)
-    @SecurityPrivate(role = { SecType.ADMIN, SecType.ALUNO })
+    @SecurityPrivate(role = { SecType.ADMIN })
     public void delete() {
     }
 
@@ -156,8 +156,8 @@ public class AdminRest implements ICrud
     @Override
     @Path("alterar")
     @POST
-    @Stylesheet(href = "/read.jsp", type = MediaTypeMore.APP_JSP)
-    @SecurityPrivate(role = { SecType.ADMIN, SecType.ALUNO })
+    @Stylesheet(href = "admin/alterar.jsp", type = MediaTypeMore.APP_JSP)
+    @SecurityPrivate(role = { SecType.ADMIN })
     public void update() {
         Session session = HS.getSession();
         JSPAttr j = new JSPAttr();
