@@ -26,20 +26,20 @@ public class AvaliacaoBean
     @Id
     @SequenceGenerator(name = "gen", initialValue = 1, sequenceName = "seq_avaliacao")
     @GeneratedValue(generator = "gen", strategy = GenerationType.AUTO)
-    private Integer    id_avaliacao; // integer,
+    private Integer           id_avaliacao;                           // integer,
     @OneToOne
     @JoinColumn(name = "id_modulo")
-    @Cascade(value=org.hibernate.annotations.CascadeType.ALL)
-    private ModuloBean modulo;      // varchar(100),
-    @OneToMany(mappedBy="avaliacao")
-    @Cascade(value=org.hibernate.annotations.CascadeType.ALL)
-    @NotEmpty(message="As questões devem ser preenchidas")
+    @Cascade(value = org.hibernate.annotations.CascadeType.ALL)
+    private ModuloBean        modulo;                                 // varchar(100),
+    @OneToMany(mappedBy = "avaliacao", orphanRemoval = true)
+    @Cascade(value = org.hibernate.annotations.CascadeType.ALL)
+    @NotEmpty(message = "As questões devem ser preenchidas")
     @Valid
     private List<QuestaoBean> questoes = new ArrayList<QuestaoBean>();
 
     @Override
     public String toString() {
-        return "AvaliacaoBean [id_avaliacao=" + id_avaliacao + ", questoes=" + questoes +"]";
+        return "AvaliacaoBean [id_avaliacao=" + id_avaliacao + ", questoes=" + questoes + "]";
     }
 
     public Integer getId_avaliacao() {

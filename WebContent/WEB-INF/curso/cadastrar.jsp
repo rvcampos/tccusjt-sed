@@ -8,7 +8,7 @@ www.w3.org/TR/html4/loose.dtd">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Cadastro de Disciplina</title>
 
-<script type="text/javascript">
+<script type="text/javascript" charset="UTF-8">
 	function gerar(id, qtdquest, qtdalt)
 {
 	if(qtdquest == '' || qtdalt == '')

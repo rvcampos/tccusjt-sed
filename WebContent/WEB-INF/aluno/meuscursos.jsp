@@ -27,7 +27,9 @@ www.w3.org/TR/html4/loose.dtd">
 		<td>${curso.modulo.data_termino}</td>
 		<td>${curso.modulo.disciplina.professor.contato.nome}</td>
 		<td><i class="icon-book"></i></td>
-		<td><i class="icon-remove"></i></td>
+		<td><form action="${app_context}aluno/desmatricular" method="POST" id="frmDisciplina${disciplina.id_disciplina}">
+		<input type="hidden" name="id_disciplina" value="${disciplina.id_disciplina }"/>
+		<a onclick="$('#frmDisciplina${disciplina.id_disciplina}').submit();"><i class="icon-remove"></i></a></form></td>
 	</tr>
 	</c:forEach>
 </table>
