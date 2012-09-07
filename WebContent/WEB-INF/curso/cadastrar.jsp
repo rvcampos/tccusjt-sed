@@ -1,19 +1,18 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-	pageEncoding="ISO-8859-1"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://
 www.w3.org/TR/html4/loose.dtd">
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Cadastro de Disciplina</title>
 
 <script type="text/javascript">
-
-function gerar(id, qtdquest, qtdalt)
+	function gerar(id, qtdquest, qtdalt)
 {
 	if(qtdquest == '' || qtdalt == '')
 	{
-		alert('Preencha a quantiade de Questões e alternativas');
+		alert('Preencha a quantiade de QuestÃµes e alternativas');
 		return false;
 	}
 	var i,j;
@@ -24,7 +23,7 @@ function gerar(id, qtdquest, qtdalt)
 	
 	for(i = 0; i < qtdquest; i++)
 	{
-		html = html + defcontrol.format({ txtname: 'txt' + id + 'quest' + i, label: 'Questão: ' + i});
+		html = html + defcontrol.format({ txtname: 'txt' + id + 'quest' + i, label: 'QuestÃ£o: ' + i});
 		for(j = 0; j < qtdalt; j++)
 		{
 			html = html + defcontrol.format({ txtname: 'txt' + id + 'quest' + i +'alt' + j, label: 'Alternativa ' + j});
@@ -32,8 +31,7 @@ function gerar(id, qtdquest, qtdalt)
 	}
 	$('#'+id).html(html);
 }
-
-</script>
+	</script>
 </head>
 <form action="create" class="form-horizontal" method="post"
 	id="formDisciplina">
@@ -44,9 +42,9 @@ function gerar(id, qtdquest, qtdalt)
 		<ul class="nav nav-tabs">
 			<li class="active"><a href="#1" data-toggle="tab">Dados da
 					Disciplina</a></li>
-			<li><a href="#2" data-toggle="tab">Básico</a></li>
-			<li><a href="#3" data-toggle="tab">Intermediário</a></li>
-			<li><a href="#4" data-toggle="tab">Avançado</a></li>
+			<li><a href="#2" data-toggle="tab">Basico</a></li>
+			<li><a href="#3" data-toggle="tab">IntermediÃ¡rio</a></li>
+			<li><a href="#4" data-toggle="tab">AvanÃ§ado</a></li>
 		</ul>
 		<div class="tab-content">
 			<div class="tab-pane active" id="1">
@@ -63,45 +61,67 @@ function gerar(id, qtdquest, qtdalt)
 						Inicio</label>
 					<div class="controls">
 						<input name="txtDataInicio" id="txtDataInicio"
-							placeholder="Data de Início" type='text' maxlength="10" size="12"
+							placeholder="Data de InÃ­cio" type='text' maxlength="10" size="12"
 							alt="39/19/2999" />
 					</div>
 				</div>
 				<div class="control-group">
 					<label class="control-label" for="txtDataTermino">Data de
-						Término</label>
+						TÃ©rmino</label>
 					<div class="controls">
 						<input name="txtDataTermino" id="txtDataTermino" type='text'
 							maxlength="10" size="12" alt="39/19/2999" />
 					</div>
 				</div>
 				<div class="control-group">
-					<label class="control-label" for="txtDesc">Descrição</label>
+					<label class="control-label" for="txtDesc">DescriÃ§Ã£o</label>
 					<div class="controls">
 						<textarea rows="10" cols="25" name="txtDesc">${txtDesc}</textarea>
 					</div>
 				</div>
 			</div>
 			<div class="tab-pane active" id="2">
-				<div class="control-group">
-					<label class="control-label" for="txtQtd1">Quantidade de
-						Questões</label>
-					<div class="controls">
-						<input type="text" name="qtdquestoesBas" id="qtdquestbasico"
-							alt="99" />
+				<div class="tabbable">
+					<ul class="nav nav-tabs">
+						<li><a href="#basicmat" data-toggle="tab">Material</a></li>
+						<li><a href="#basicqst" data-toggle="tab">QuestÃµes</a></li>
+					</ul>
+					<div class="tab-content">
+						<div class="tab-pane" id="basicmat">
+							<div class="control-group">
+								<label class="control-label" for="txtQtd1">Material</label>
+								<div class="controls">
+									<input type="file" name="txtmaterial" value="upload" />
+								</div>
+							</div>
+						</div>
+						<div class="tab-pane" id="basicqst">
+							<div class="control-group">
+								<label class="control-label" for="txtQtd1">Quantidade de
+									QuestÃµes</label>
+								<div class="controls">
+									<input type="text" name="qtdquestoesBas" id="qtdquestbasico"
+										alt="99" />
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label" for="txtQtdAlt">Quantidade
+									de Alternativas</label>
+								<div class="controls">
+									<input type="text" name="qtdaltBas" id="qtdaltbasico" alt="99" />
+								</div>
+							</div>
+							<div class="control-group">
+								<div class="controls">
+									<input type="button"
+										onclick="gerar('questoesBasico', $('#qtdquestbasico').val(), $('#qtdaltbasico').val());"
+										value="gerar" />
+								</div>
+							</div>
+							<div id="questoesBasico"></div>
+						</div>
 					</div>
 				</div>
-				<div class="control-group">
-					<label class="control-label" for="txtQtdAlt">Quantidade de
-						Alternativas</label>
-					<div class="controls">
-						<input type="text" name="qtdaltBas" id="qtdaltbasico" alt="99" />
-					</div>
-				</div>
-				<div class="control-group">
-					<div class="controls"><input type="button" onclick="gerar('questoesBasico', $('#qtdquestbasico').val(), $('#qtdaltbasico').val());" value="gerar"/></div>
-				</div>
-				<div id="questoesBasico"></div>
 			</div>
 		</div>
 	</div>

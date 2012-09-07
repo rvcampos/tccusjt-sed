@@ -1,11 +1,11 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-	pageEncoding="ISO-8859-1"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://
 www.w3.org/TR/html4/loose.dtd">
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Alterar Dados Professor</title>
 </head>
 <script>
@@ -14,7 +14,7 @@ function validaSenhaForm()
 {
 	if($('#txtSenha').val() != '' || $('#txtCsenha').val() != '')
 	{
-		alert('Preencha a senha e a validação');
+		alert('Preencha a senha e a validaÃ§Ã£o');
 		return false;
 		if($('#txtSenha').val() != $('#txtCsenha').val())
 		{
@@ -87,7 +87,7 @@ function changeUF(state, callback) {
 					<label class="control-label" for="txtCsenha">Confirma Senha</label>
 					<div class="controls">
 						<input type="password" id="txtCsenha" name="txtCsenha"
-							placeholder="Confirmação de Senha" maxlength="8">
+							placeholder="ConfirmaÃ§Ã£o de Senha" maxlength="8">
 					</div>
 				</div>
 			</div>
@@ -143,11 +143,11 @@ function changeUF(state, callback) {
 			<div class="tab-pane" id="3">
 
 				<div class="control-group">
-					<label class="control-label" for="txtEndereco">Endereço</label>
+					<label class="control-label" for="txtEndereco">EndereÃ§o</label>
 					<div class="controls">
 						<input type="text" id="txtEndereco" name="txtEndereco"
 							value="${txtEndereco}"
-							placeholder="Logradouro, número, apto, bloco" maxlength="50">
+							placeholder="Logradouro, nÃºmero, apto, bloco" maxlength="50">
 					</div>
 				</div>
 				<div class="control-group">
