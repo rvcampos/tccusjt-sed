@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -36,7 +37,7 @@ public class DisciplinaBean
     private Date            data_termino;                       // date,
     @Column
     private String          descricao;
-    @OneToMany(mappedBy = "disciplina")
+    @OneToMany(mappedBy = "disciplina", cascade=CascadeType.ALL)
     private Set<ModuloBean> modulos = new HashSet<ModuloBean>();
 
     @Override

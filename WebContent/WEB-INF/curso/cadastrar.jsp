@@ -18,15 +18,14 @@ www.w3.org/TR/html4/loose.dtd">
 	var i,j;
 	var html = "";
 	var defcontrol = '<div class="control-group"><label class="control-label" for="{txtname}">{label}</label><div class="controls"><input name="{txtname}" id="{txtname}" type="text" maxlength="300"/></div></div>';
-	var tabs = '<div class="tabbable"><ul class="nav nav-tabs">{tabsli}</ul><div class="tab-content">{tabshtml}</div></div>';
-	var litab = '<li class="active"><a href="#'+id+'{num}" data-toggle="tab">{qnum}</a></li>';
+	var alter = '<div class="control-group"><label class="control-label" for="{txtname}"><span class="badge badge-info">{label}</span></label><div class="controls"> <input name="{txtname}" id="{txtname}" type="text" maxlength="300"/>&nbsp&nbsp&nbsp<input type="radio" name="{radioname}" value="{chkval}" /></div></div>';
 	
-	for(i = 0; i < qtdquest; i++)
+	for(i = 1; i <= qtdquest; i++)
 	{
 		html = html + defcontrol.format({ txtname: 'txt' + id + 'quest' + i, label: 'Questão: ' + i});
-		for(j = 0; j < qtdalt; j++)
+		for(j = 1; j <= qtdalt; j++)
 		{
-			html = html + defcontrol.format({ txtname: 'txt' + id + 'quest' + i +'alt' + j, label: 'Alternativa ' + j});
+			html = html + alter.format({ txtname: 'txt' + id + 'quest' + i +'alt' + j, label: 'Alternativa ' + j, radioname: 'opt' + id + '' + i, chkval: '' + j});
 		}
 	}
 	$('#'+id).html(html);
@@ -80,9 +79,9 @@ www.w3.org/TR/html4/loose.dtd">
 					</div>
 				</div>
 			</div>
-			<div class="tab-pane active" id="2">
+			<div class="tab-pane" id="2">
 				<div class="tabbable">
-					<ul class="nav nav-tabs">
+					<ul class="nav nav-pills">
 						<li><a href="#basicmat" data-toggle="tab">Material</a></li>
 						<li><a href="#basicqst" data-toggle="tab">Questões</a></li>
 					</ul>
@@ -101,14 +100,14 @@ www.w3.org/TR/html4/loose.dtd">
 									Questões</label>
 								<div class="controls">
 									<input type="text" name="qtdquestoesBas" id="qtdquestbasico"
-										alt="99" />
+										alt="99" maxlength="2"/>
 								</div>
 							</div>
 							<div class="control-group">
 								<label class="control-label" for="txtQtdAlt">Quantidade
 									de Alternativas</label>
 								<div class="controls">
-									<input type="text" name="qtdaltBas" id="qtdaltbasico" alt="99" />
+									<input type="text" name="qtdaltBas" id="qtdaltbasico" alt="99" maxlength="2"/>
 								</div>
 							</div>
 							<div class="control-group">
@@ -119,6 +118,92 @@ www.w3.org/TR/html4/loose.dtd">
 								</div>
 							</div>
 							<div id="questoesBasico"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="tab-pane" id="3">
+				<div class="tabbable">
+					<ul class="nav nav-pills">
+						<li><a href="#intmat" data-toggle="tab">Material</a></li>
+						<li><a href="#intqst" data-toggle="tab">Questões</a></li>
+					</ul>
+					<div class="tab-content">
+						<div class="tab-pane" id="intmat">
+							<div class="control-group">
+								<label class="control-label" for="txtQtd2">Material</label>
+								<div class="controls">
+									<input type="file" name="txtmaterial" value="upload" />
+								</div>
+							</div>
+						</div>
+						<div class="tab-pane" id="intqst">
+							<div class="control-group">
+								<label class="control-label" for="qtdquestoesInt">Quantidade de
+									Questões</label>
+								<div class="controls">
+									<input type="text" name="qtdquestoesInt" id="qtdquestintermediario"
+										alt="99" />
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label" for="qtdaltInt">Quantidade
+									de Alternativas</label>
+								<div class="controls">
+									<input type="text" name="qtdaltInt" id="qtdaltintermediario" alt="99" />
+								</div>
+							</div>
+							<div class="control-group">
+								<div class="controls">
+									<input type="button"
+										onclick="gerar('questoesIntermediario', $('#qtdquestintermediario').val(), $('#qtdaltintermediario').val());"
+										value="gerar" />
+								</div>
+							</div>
+							<div id="questoesIntermediario"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="tab-pane" id="4">
+				<div class="tabbable">
+					<ul class="nav nav-pills">
+						<li><a href="#advmat" data-toggle="tab">Material</a></li>
+						<li><a href="#advqst" data-toggle="tab">Questões</a></li>
+					</ul>
+					<div class="tab-content">
+						<div class="tab-pane" id="advmat">
+							<div class="control-group">
+								<label class="control-label" for="txtQtd1">Material</label>
+								<div class="controls">
+									<input type="file" name="txtmaterial" value="upload" />
+								</div>
+							</div>
+						</div>
+						<div class="tab-pane" id="advqst">
+							<div class="control-group">
+								<label class="control-label" for="qtdquestoesAdv">Quantidade de
+									Questões</label>
+								<div class="controls">
+									<input type="text" name="qtdquestoesAdv" id="qtdquestavancado"
+										alt="99" />
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label" for="qtdaltAdv">Quantidade
+									de Alternativas</label>
+								<div class="controls">
+									<input type="text" name="qtdaltAdv" id="qtdaltavancado" alt="99" />
+								</div>
+							</div>
+							<div class="control-group">
+								<div class="controls">
+									<input type="button"
+										onclick="gerar('questoesAvancado', $('#qtdquestavancado').val(), $('#qtdaltavancado').val());"
+										value="gerar" />
+								</div>
+							</div>
+							<div id="questoesAvancado"></div>
 						</div>
 					</div>
 				</div>

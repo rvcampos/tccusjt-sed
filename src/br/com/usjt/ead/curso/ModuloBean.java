@@ -2,6 +2,7 @@ package br.com.usjt.ead.curso;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -13,6 +14,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+
+import org.hibernate.annotations.Cascade;
 
 @Entity
 @Table(name = "MODULO")
@@ -33,12 +36,13 @@ public class ModuloBean
     @Column
     private Date           data_termino; // date,
     @OneToOne(mappedBy = "modulo")
+    @Cascade(value=org.hibernate.annotations.CascadeType.ALL)
     private AvaliacaoBean  avaliacao;
 
     @Override
     public String toString() {
         return "ModuloBean [id_modulo=" + id_modulo + ", nivel_modulo=" + nivel_modulo + ", disciplina=" + disciplina
-                + ", data_inicio=" + data_inicio + ", data_termino=" + data_termino + "]";
+                + ", data_inicio=" + data_inicio + ", data_termino=" + data_termino + ", avaliacao="+avaliacao+"]";
     }
 
     public Integer getId_modulo() {
@@ -79,6 +83,14 @@ public class ModuloBean
 
     public void setData_termino(Date data_termino) {
         this.data_termino = data_termino;
+    }
+
+    public AvaliacaoBean getAvaliacao() {
+        return avaliacao;
+    }
+
+    public void setAvaliacao(AvaliacaoBean avaliacao) {
+        this.avaliacao = avaliacao;
     }
 
 }
