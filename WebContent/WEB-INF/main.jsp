@@ -14,9 +14,7 @@
 </head>
 <body>
 	<jsp:include page="menu.jsp" />
-	<div class="container-fluid" style="padding-top: 60px;">
-	<div class="row-fluid">
-			<div class="span10">
+	<div class="container" style="padding-top: 60px;">
 
 				<a href="http://192.168.1.123:443/?0,0,1,13,0&nn=escobar" target="_blank">CHAT</a>
 
@@ -31,8 +29,6 @@
 					</div>
 				</c:if>
 				<jsp:include page="${pagina}"></jsp:include>
-			</div>
-		</div>
 	</div>
 
 </body>
