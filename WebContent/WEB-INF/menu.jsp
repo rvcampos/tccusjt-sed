@@ -60,6 +60,10 @@
 						<shiro:hasRole name="professor">
 							<li><a href="${app_context}professor/alterarDados">Alterar Dados Cadastrais</a></li>
 						</shiro:hasRole>
+						
+						<shiro:hasRole name="admin">
+							<li><a href="${app_context}admin/alterarDados">Alterar Dados Cadastrais</a></li>
+						</shiro:hasRole>
 						</td>
 					</tr>
 				</table>
