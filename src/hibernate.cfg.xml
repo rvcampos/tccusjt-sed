@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+                                         "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+	<session-factory name="EnsinoDistanciaFac">
+		<property name="hibernate.connection.datasource">java:jdbc/tccusjt</property>
+		<property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
+		<property name="hibernate.connection.autocommit">false</property>
+
+		<mapping class="br.com.usjt.ead.aluno.AlunoBean" />
+		<mapping class="br.com.usjt.ead.aluno.MatriculaBean" />
+
+		<mapping class="br.com.usjt.ead.contato.ContatoBean" />
+		<mapping class="br.com.usjt.ead.contato.TelefoneBean" />
+		<mapping class="br.com.usjt.ead.contato.EnderecoBean" />
+		<mapping class="br.com.usjt.ead.contato.TipoTelefoneBean" />
+
+		<mapping class="br.com.usjt.ead.curso.AvaliacaoBean" />
+		<mapping class="br.com.usjt.ead.curso.DisciplinaBean" />
+		<mapping class="br.com.usjt.ead.curso.ModuloBean" />
+		<mapping class="br.com.usjt.ead.curso.QuestaoBean" />
+		<mapping class="br.com.usjt.ead.curso.AlternativaBean" />
+
+		<mapping class="br.com.usjt.ead.professor.ProfessorBean" />
+		
+		<mapping class="br.com.usjt.ead.material.MaterialDidaticoBean" />
+		
+		<mapping class="br.com.usjt.ead.cidadestado.CidadeBean" />
+		<mapping class="br.com.usjt.ead.cidadestado.EstadoUFBean" />
+		
+		<mapping class="br.com.usjt.ead.PropertiesBean" />
+
+	</session-factory>
+</hibernate-configuration>
