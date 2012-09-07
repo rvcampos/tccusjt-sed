@@ -13,9 +13,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.Valid;
 
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
+import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
 @Table(name="questao")
@@ -33,6 +35,8 @@ public class QuestaoBean
     private AvaliacaoBean              avaliacao;
     @OneToMany(mappedBy="questao")
     @Cascade(value=org.hibernate.annotations.CascadeType.ALL)
+    @NotEmpty(message="As alternativas devem estar preenchidas")
+    @Valid
     private List<AlternativaBean> alternativas = new ArrayList<AlternativaBean>();
 
     public Long getId_questao() {
@@ -65,6 +69,11 @@ public class QuestaoBean
 
     public void setAlternativas(List<AlternativaBean> alternativas) {
         this.alternativas = alternativas;
+    }
+
+    @Override
+    public String toString() {
+        return "QuestaoBean [id_questao=" + id_questao + ", conteudo=" + conteudo + ", alternativas=" + alternativas + "]";
     }
 
 }

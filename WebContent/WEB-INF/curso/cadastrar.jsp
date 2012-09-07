@@ -18,7 +18,7 @@ www.w3.org/TR/html4/loose.dtd">
 	}
 	var i,j;
 	var html = "";
-	var defcontrol = '<div class="control-group"><label class="control-label" for="{txtname}">{label}</label><div class="controls"><input name="{txtname}" id="{txtname}" type="text" maxlength="300" value="{valor}"/></div></div>';
+	var defcontrol = '<div class="control-group"><label class="control-label" for="{txtname}">{label}</label><div class="controls"><input name="{txtname}" class="input-xxlarge" id="{txtname}" type="text" maxlength="300" value="{valor}"/></div></div>';
 	var alter = '<div class="control-group"><label class="control-label" for="{txtname}"><span class="badge badge-info">{label}</span></label><div class="controls"> <input name="{txtname}" id="{txtname}" type="text" maxlength="300" value="{valor}"/>&nbsp&nbsp&nbsp<input type="radio" name="{radioname}" value="{chkval}" /></div></div>';
 	
 	for(i = 1; i <= qtdquest; i++)
@@ -43,7 +43,7 @@ www.w3.org/TR/html4/loose.dtd">
 }
 	</script>
 </head>
-<form action="create" class="form-horizontal" method="post"
+<form action="${metodo}" class="form-horizontal" method="post"
 	id="formDisciplina">
 	<legend>
 		<b>Cadastro </b>
@@ -63,7 +63,9 @@ www.w3.org/TR/html4/loose.dtd">
 						da Disciplina</label>
 					<div class="controls">
 						<input type="text" id="txtNomeDisciplina" name="txtNomeDisciplina"
-							value="${txtNome}" placeholder="Nome Completo" maxlength="50" />
+							value="${txtNomeDisciplina}" placeholder="Nome Completo" maxlength="50" />
+							<input type="hidden" id="id_disciplina" name="id_disciplina"
+							value="${id_disciplina}" />
 					</div>
 				</div>
 				<div class="control-group">
@@ -72,7 +74,7 @@ www.w3.org/TR/html4/loose.dtd">
 					<div class="controls">
 						<input name="txtDataInicio" id="txtDataInicio"
 							placeholder="Data de Início" type='text' maxlength="10" size="12"
-							alt="39/19/2999" />
+							alt="39/19/2999" value="${txtDataInicio}"/>
 					</div>
 				</div>
 				<div class="control-group">
@@ -80,7 +82,7 @@ www.w3.org/TR/html4/loose.dtd">
 						Término</label>
 					<div class="controls">
 						<input name="txtDataTermino" id="txtDataTermino" type='text'
-							maxlength="10" size="12" alt="39/19/2999" />
+							maxlength="10" size="12" alt="39/19/2999" value="${txtDataTermino}" />
 					</div>
 				</div>
 				<div class="control-group">
@@ -111,14 +113,14 @@ www.w3.org/TR/html4/loose.dtd">
 									Questões</label>
 								<div class="controls">
 									<input type="text" name="qtdquestoesBas" id="qtdquestbasico"
-										alt="99" maxlength="2"/>
+										alt="99" maxlength="2"  value="${qtdquestoesBas}"/>
 								</div>
 							</div>
 							<div class="control-group">
 								<label class="control-label" for="txtQtdAlt">Quantidade
 									de Alternativas</label>
 								<div class="controls">
-									<input type="text" name="qtdaltBas" id="qtdaltbasico" alt="99" maxlength="2"/>
+									<input type="text" name="qtdaltBas" id="qtdaltbasico" alt="99" maxlength="2" value="${qtdaltBas}"/>
 								</div>
 							</div>
 							<div class="control-group">
@@ -129,6 +131,35 @@ www.w3.org/TR/html4/loose.dtd">
 								</div>
 							</div>
 							<div id="questoesBasico">
+							<c:set var="countQuest" value="${1}"/>
+								<c:forEach var="quest" items="${basico.avaliacao.questoes}">
+									<div class="control-group">
+										<label class="control-label"
+											for="txtquestoesBasicoquest${countQuest}">Questão
+											${countQuest}</label>
+										<div class="controls">
+											<input type="text" name="txtquestoesBasicoquest${countQuest}"
+												id="txtquestoesBasicoquest${countQuest}" class="input-xxlarge" maxlength="300" value="${quest.conteudo}" />
+											<input type="hidden" name="id_basico" value="${basico.id_modulo }" />
+										</div>
+									</div>
+									<c:set var="countAlt" value="${1}"/>
+									<c:forEach var="alt" items="${quest.alternativas}">
+										<div class="control-group">
+											<label class="control-label"
+												for="txtquestBasicoquest${countQuest}alt${countAlt}"> <span
+												class="badge badge-info">Alternativa </span>
+											</label>
+											<div class="controls">
+												<input name="txtquestoesBasicoquest${countQuest}alt${countAlt}" id="txtquestoesBasicoquest${countQuest}alt${countAlt}" type="text"
+													maxlength="300" value="${alt.conteudo}" /> &nbsp&nbsp&nbsp<input
+													type="radio" name="optquestoesBasico${countQuest}" value="${countQuest}" <c:if test="${alt.correta}">checked="checked"</c:if> />
+											</div>
+										</div>
+										<c:set var="countAlt" value="${countAlt + 1}"/>
+									</c:forEach>
+									<c:set var="countQuest" value="${countQuest + 1}"/>
+								</c:forEach>
 							</div>
 						</div>
 					</div>
@@ -155,14 +186,14 @@ www.w3.org/TR/html4/loose.dtd">
 									Questões</label>
 								<div class="controls">
 									<input type="text" name="qtdquestoesInt" id="qtdquestintermediario"
-										alt="99" />
+										alt="99" value="${qtdquestoesInt}" />
 								</div>
 							</div>
 							<div class="control-group">
 								<label class="control-label" for="qtdaltInt">Quantidade
 									de Alternativas</label>
 								<div class="controls">
-									<input type="text" name="qtdaltInt" id="qtdaltintermediario" alt="99" />
+									<input type="text" name="qtdaltInt" id="qtdaltintermediario" alt="99" value="${qtdaltInt}"/>
 								</div>
 							</div>
 							<div class="control-group">
@@ -172,7 +203,37 @@ www.w3.org/TR/html4/loose.dtd">
 										value="gerar" />
 								</div>
 							</div>
-							<div id="questoesIntermediario"></div>
+							<div id="questoesIntermediario">
+							<c:set var="countQuest" value="${1}"/>
+								<c:forEach var="quest" items="${intermediario.avaliacao.questoes}">
+									<div class="control-group">
+										<label class="control-label"
+											for="txtquestoesIntermediarioquest${countQuest}">Questão
+											${countQuest}</label>
+										<div class="controls">
+											<input type="text" name="txtquestoesIntermediarioquest${countQuest}"
+												id="txtquestoesIntermediarioquest${countQuest}" class="input-xxlarge" maxlength="300" value="${quest.conteudo}" />
+											<input type="hidden" name="id_intermediario" value="${intermediario.id_modulo }" />
+										</div>
+									</div>
+									<c:set var="countAlt" value="${1}"/>
+									<c:forEach var="alt" items="${quest.alternativas}">
+										<div class="control-group">
+											<label class="control-label"
+												for="txtquestIntermediarioquest${countQuest}alt${countAlt}"> <span
+												class="badge badge-info">Alternativa </span>
+											</label>
+											<div class="controls">
+												<input name="txtquestoesIntermediarioquest${countQuest}alt${countAlt}" id="txtquestoesIntermediarioquest${countQuest}alt${countAlt}" type="text"
+													maxlength="300" value="${alt.conteudo}" /> &nbsp&nbsp&nbsp<input
+													type="radio" name="optquestoesIntermediario${countQuest}" value="${countQuest}" <c:if test="${alt.correta}">checked="checked"</c:if> />
+											</div>
+										</div>
+										<c:set var="countAlt" value="${countAlt + 1}"/>
+									</c:forEach>
+									<c:set var="countQuest" value="${countQuest + 1}"/>
+								</c:forEach>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -198,14 +259,14 @@ www.w3.org/TR/html4/loose.dtd">
 									Questões</label>
 								<div class="controls">
 									<input type="text" name="qtdquestoesAdv" id="qtdquestavancado"
-										alt="99" />
+										alt="99" value="${qtdquestoesAdv}"/>
 								</div>
 							</div>
 							<div class="control-group">
 								<label class="control-label" for="qtdaltAdv">Quantidade
 									de Alternativas</label>
 								<div class="controls">
-									<input type="text" name="qtdaltAdv" id="qtdaltavancado" alt="99" />
+									<input type="text" name="qtdaltAdv" id="qtdaltavancado" alt="99" value="${qtdaltAdv}"/>
 								</div>
 							</div>
 							<div class="control-group">
@@ -215,7 +276,37 @@ www.w3.org/TR/html4/loose.dtd">
 										value="gerar" />
 								</div>
 							</div>
-							<div id="questoesAvancado"></div>
+							<div id="questoesAvancado">
+								<c:set var="countQuest" value="${1}"/>
+								<c:forEach var="quest" items="${avancado.avaliacao.questoes}">
+									<div class="control-group">
+										<label class="control-label"
+											for="txtquestoesAvancadoquest${countQuest}">Questão
+											${countQuest}</label>
+										<div class="controls">
+											<input type="text" name="txtquestoesAvancadoquest${countQuest}"
+												id="txtquestoesAvancadoquest${countQuest}" class="input-xxlarge" maxlength="300" value="${quest.conteudo}" />
+											<input type="hidden" name="id_avancado" value="${avancado.id_modulo }" />
+										</div>
+									</div>
+									<c:set var="countAlt" value="${1}"/>
+									<c:forEach var="alt" items="${quest.alternativas}">
+										<div class="control-group">
+											<label class="control-label"
+												for="txtquestBasicoquest${countQuest}alt${countAlt}"> <span
+												class="badge badge-info">Alternativa </span>
+											</label>
+											<div class="controls">
+												<input name="txtquestoesAvancadoquest${countQuest}alt${countAlt}" id="txtquestoesAvancadoquest${countQuest}alt${countAlt}" type="text"
+													maxlength="300" value="${alt.conteudo}" /> &nbsp&nbsp&nbsp<input
+													type="radio" name="optquestoesAvancado${countQuest}" value="${countQuest}" <c:if test="${alt.correta}">checked="checked"</c:if> />
+											</div>
+										</div>
+										<c:set var="countAlt" value="${countAlt + 1}"/>
+									</c:forEach>
+									<c:set var="countQuest" value="${countQuest + 1}"/>
+								</c:forEach>
+							</div>
 						</div>
 					</div>
 				</div>

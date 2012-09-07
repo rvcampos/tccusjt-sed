@@ -2,7 +2,6 @@ package br.com.usjt.ead.curso;
 
 import java.util.Date;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -13,6 +12,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.Cascade;
@@ -37,11 +37,13 @@ public class ModuloBean
     private Date           data_termino; // date,
     @OneToOne(mappedBy = "modulo")
     @Cascade(value=org.hibernate.annotations.CascadeType.ALL)
+    @NotNull(message="Questões e alternativas devem ser preenchidas")
+    @Valid
     private AvaliacaoBean  avaliacao;
 
     @Override
     public String toString() {
-        return "ModuloBean [id_modulo=" + id_modulo + ", nivel_modulo=" + nivel_modulo + ", disciplina=" + disciplina
+        return "ModuloBean [id_modulo=" + id_modulo + ", nivel_modulo=" + nivel_modulo + ", disciplina=" + disciplina.getNome_disciplina()
                 + ", data_inicio=" + data_inicio + ", data_termino=" + data_termino + ", avaliacao="+avaliacao+"]";
     }
 

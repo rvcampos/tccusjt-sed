@@ -63,4 +63,9 @@ public class AlternativaBean
         this.correta = correta;
     }
 
+    @Override
+    public String toString() {
+        return "AlternativaBean [id_alternativa=" + id_alternativa + ", conteudo=" + conteudo + ", correta=" + correta + "]";
+    }
+
 }

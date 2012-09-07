@@ -15,6 +15,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.Valid;
 
 import br.com.usjt.ead.professor.ProfessorBean;
 
@@ -38,12 +39,13 @@ public class DisciplinaBean
     @Column
     private String          descricao;
     @OneToMany(mappedBy = "disciplina", cascade=CascadeType.ALL)
+    @Valid
     private Set<ModuloBean> modulos = new HashSet<ModuloBean>();
 
     @Override
     public String toString() {
         return "DisciplinaBean [id_disciplina=" + id_disciplina + ", nome_disciplina=" + nome_disciplina + ", professor="
-                + professor + ", data_inicio=" + data_inicio + ", data_termino=" + data_termino + "]";
+                + professor.getContato().getNome() + ", data_inicio=" + data_inicio + ", data_termino=" + data_termino + "]";
     }
 
     public Integer getId_disciplina() {

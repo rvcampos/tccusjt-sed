@@ -14,8 +14,6 @@ function validaSenhaForm()
 {
 	if($('#txtSenha').val() != '' || $('#txtCsenha').val() != '')
 	{
-		alert('Preencha a senha e a validação');
-		return false;
 		if($('#txtSenha').val() != $('#txtCsenha').val())
 		{
 			alert('Confirmacao de senha invalida');
