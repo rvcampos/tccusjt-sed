@@ -38,6 +38,10 @@
 							<li><a href="${app_context}professor/meusCursos">Listar Meus Cursos</a></li>
 							<li><a href="${app_context}curso/cadastrar">Cadastrar Curso</a></li>
 							</shiro:hasRole>
+							<shiro:hasRole name="admin">
+								<li><a href="${app_context}curso/listar">Cursos Disponíveis</a></li>
+								<li><a href="${app_context}curso/cadastrar">Cadastrar Curso</a></li>
+							</shiro:hasRole>
 						</td>
 					</tr>
 				</table>
