@@ -18,6 +18,8 @@
 		<mapping class="br.com.usjt.ead.curso.AvaliacaoBean" />
 		<mapping class="br.com.usjt.ead.curso.DisciplinaBean" />
 		<mapping class="br.com.usjt.ead.curso.ModuloBean" />
+		<mapping class="br.com.usjt.ead.curso.QuestaoBean" />
+		<mapping class="br.com.usjt.ead.curso.AlternativaBean" />
 
 		<mapping class="br.com.usjt.ead.professor.ProfessorBean" />
 		
