@@ -10,14 +10,9 @@ www.w3.org/TR/html4/loose.dtd">
 </head>
 <script>
 
-function validaSenhaForm()
-{
-	if($('#txtSenha').val() != '' || $('#txtCsenha').val() != '')
-	{
-		alert('Preencha a senha e a validação');
-		return false;
-		if($('#txtSenha').val() != $('#txtCsenha').val())
-		{
+function validaSenhaForm() {
+	if ($('#txtSenha').val() != '' || $('#txtCsenha').val() != '') {
+		if ($('#txtSenha').val() != $('#txtCsenha').val()) {
 			alert('Confirmacao de senha invalida');
 			return false;
 		}
