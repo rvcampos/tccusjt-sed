@@ -10,43 +10,37 @@ www.w3.org/TR/html4/loose.dtd">
 </head>
 <script>
 
-function validaSenhaForm()
-{
-	if($('#txtSenha').val() != '' || $('#txtCsenha').val() != '')
-	{
-		alert('Preencha a senha e a validação');
-		return false;
-		if($('#txtSenha').val() != $('#txtCsenha').val())
-		{
-			alert('Confirmacao de senha invalida');
-			return false;
-		}
-	}
-	return true;
-}
-
-function changeUF(state) {
-	return changeUF(state, null);
-}
-function changeUF(state, callback) {
-	$.ajax({
-		url : "${app_context}cidade/carrega_uf",
-		type : "POST",
-		cache : false,
-		data : {
-			"estado_id" : state
-		},
-		dataType : "text",
-		success : function(msg) {
-			$("#ufcidade").html(msg);
-			$("#combobox_city").combobox();
-				if (callback) {
-				callback();
+	function validaSenhaForm() {
+		if ($('#txtSenha').val() != '' || $('#txtCsenha').val() != '') {
+			if ($('#txtSenha').val() != $('#txtCsenha').val()) {
+				alert('Confirmacao de senha invalida');
+				return false;
 			}
 		}
-	});
-}
+		return true;
+	}
 
+	function changeUF(state) {
+		return changeUF(state, null);
+	}
+	function changeUF(state, callback) {
+		$.ajax({
+			url : "${app_context}cidade/carrega_uf",
+			type : "POST",
+			cache : false,
+			data : {
+				"estado_id" : state
+			},
+			dataType : "text",
+			success : function(msg) {
+				$("#ufcidade").html(msg);
+				$("#combobox_city").combobox();
+				if (callback) {
+					callback();
+				}
+			}
+		});
+	}
 </script>
 		<form class="form-horizontal" action="alterar" method="post"
 	id="formAluno">
@@ -73,7 +67,7 @@ function changeUF(state, callback) {
 				<div class="control-group">
 					<label class="control-label" for="txtEmail">Email</label>
 					<div class="controls">
-						<input type="text" id="txtEmail" name="txtEmail" maxlength="50" />
+						<input type="text" id="txtEmail" name="txtEmail" value="${txtEmail}" readonly="readonly" maxlength="50" />
 					</div>
 				</div>
 				<div class="control-group">
