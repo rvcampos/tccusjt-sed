@@ -517,7 +517,7 @@ public class DisciplinaRest implements ICrud
             }
             else {
                 m.setDt_avaliacao(new Date(new Date().getTime() + 2 * oneDay));
-                j.errorMsg("Você falhou em obter a porcentagem mínima de acerto. Não se desanime, estude mais e tente novamente em 24 horas");
+                j.errorMsg("Você falhou em obter a porcentagem mínima de acerto("+pctNec+"%). Não se desanime, estude mais e tente novamente em 48 horas");
             }
             session.update(m);
             tx.commit();
