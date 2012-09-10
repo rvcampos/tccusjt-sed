@@ -1,4 +1,3 @@
-
 /*!
 * Datepicker for Bootstrap
 *
@@ -44,7 +43,7 @@ left: 7px;
 display: none;
 }
 .datepicker table {
-width: 150px;
+width: 100%;
 margin: 0;
 }
 .datepicker td, .datepicker th {

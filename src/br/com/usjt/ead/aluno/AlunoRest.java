@@ -1,6 +1,7 @@
 package br.com.usjt.ead.aluno;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -24,6 +25,7 @@ import br.com.usjt.ead.contato.ContatoBean;
 import br.com.usjt.ead.contato.EnderecoBean;
 import br.com.usjt.ead.contato.TelefoneBean;
 import br.com.usjt.ead.contato.TipoTelefoneBean;
+import br.com.usjt.ead.curso.DisciplinaBean;
 import br.com.usjt.ead.curso.ModuloBean;
 import br.com.usjt.jaxrs.JSPAttr;
 import br.com.usjt.jaxrs.MediaTypeMore;
@@ -76,7 +78,7 @@ public class AlunoRest implements ICrud
 
     private void populaEditUpdate(JSPAttr j, AlunoBean aluno) {
         j.set("txtEmail", aluno.getEmail());
-        j.set("txtCPF",  Utils.padding(aluno.getCpf(),14,"0"));
+        j.set("txtCPF", Utils.padding(aluno.getCpf(), 14, "0"));
         j.set("txtCep", Utils.padding(aluno.getEndereco().getCep(), 8, "0"));
         j.set("txtEndereco", aluno.getEndereco().getLogradouro());
         j.set("txtBairro", aluno.getEndereco().getBairro());
@@ -237,22 +239,19 @@ public class AlunoRest implements ICrud
         JSPAttr j = new JSPAttr();
         AlunoBean b = new AlunoBean();
         try {
-            if(Utils.isValid(b))
-            {
+            if (Utils.isValid(b)) {
                 session.save(b);
             }
-            else
-            {
+            else {
                 j.repopular();
             }
         }
         catch (Exception e) {
-            LOG.error("Falha ao alterar dados cadastrais de aluno",e);
+            LOG.error("Falha ao alterar dados cadastrais de aluno", e);
             j.repopular();
         }
-        finally
-        {
-            
+        finally {
+
         }
     }
 
@@ -431,13 +430,13 @@ public class AlunoRest implements ICrud
             ModuloBean modulo = (ModuloBean) session
                     .createQuery(
                             " from " + ModuloBean.class.getSimpleName()
-                                    + " m where m.disciplina.id_disciplina = :disciplina order by m.id_modulo")
+                                    + " m where m.disciplina.id_disciplina = :disciplina and m.nivel_modulo = 1")
                     .setInteger("disciplina", disciplinaId).list().get(0);
-
             if (!aluno.getMatriculas().containsKey(modulo)) {
                 MatriculaBean matricula = new MatriculaBean();
                 matricula.setModulo(modulo);
                 matricula.setAluno(aluno);
+                matricula.setDt_avaliacao(new Date());
                 session.save(matricula);
                 aluno.getMatriculas().put(modulo, matricula);
                 tx.commit();
@@ -458,4 +457,41 @@ public class AlunoRest implements ICrud
         }
     }
 
+    @Path("cursar")
+    @POST
+    @Stylesheet(href = "curso/cursar.jsp", type = MediaTypeMore.APP_JSP)
+    @SecurityPrivate(role = SecType.ALUNO)
+    public void cursar() {
+        JSPAttr j = new JSPAttr();
+        Session session = HS.getSession();
+        j.set("override", "curso/main.jsp");
+        try {
+            MatriculaBean matricula = (MatriculaBean) session.get(MatriculaBean.class,Integer.parseInt(j.getParameter("id_matricula")));
+            j.set("nomeCurso", matricula.getModulo().getDisciplina().getNome_disciplina());
+            j.set("id_matricula", matricula.getId_matricula());
+            j.set("id_modulo", matricula.getModulo().getId_modulo());
+            j.set("fazProva", matricula.getDt_avaliacao().before(new Date()));
+            j.set("dt_aval", matricula.getDt_avaliacao());
+            String nivel = "Básico";
+            switch(matricula.getModulo().getNivel_modulo())
+            {
+            case 2:
+                nivel = "Intermediário";
+               break;
+            case 3:
+                nivel = "Avançado";
+                break;
+            }
+            j.set("nivel", nivel);
+        }
+        catch (Exception e) {
+            LOG.error("Falha na operação", e);
+        }
+        finally {
+            if (session.isOpen()) {
+                session.clear();
+                session.close();
+            }
+        }
+    }
 }

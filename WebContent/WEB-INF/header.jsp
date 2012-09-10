@@ -18,10 +18,8 @@
 
 <script type="text/javascript">
 $(document).ready(function() {
-$('.datepicker').datepicker();
 $('input[type="text"]').setMask();
 $('.dropdown-toggle').dropdown();
-
 String.prototype.format = function (args) {
     var newStr = this;
     for (var key in args) {
@@ -33,5 +31,6 @@ String.prototype.format = function (args) {
     }
     return newStr;
 }
+$('.datepicker').datepicker();
 });
 </script>

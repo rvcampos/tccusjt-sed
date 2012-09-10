@@ -81,8 +81,12 @@ www.w3.org/TR/html4/loose.dtd">
 					<label class="control-label" for="txtDataTermino">Data de
 						Término</label>
 					<div class="controls">
-						<input name="txtDataTermino" id="txtDataTermino" type='text'
-							maxlength="10" size="12" alt="39/19/2999" value="${txtDataTermino}" />
+						<div class="input-append date" id="dp3" data-date="${txtDataTermino}"
+							data-date-format="dd/mm/yyyy">
+							<input class="span2" size="16" type="text" name="txtDataTermino"
+								id="txtDataTermino" value="${txtDataTermino}"> <span
+								class="add-on"><i class="icon-th"></i></span>
+						</div>
 					</div>
 				</div>
 				<div class="control-group">

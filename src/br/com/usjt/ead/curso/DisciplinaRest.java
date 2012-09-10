@@ -1,6 +1,7 @@
 package br.com.usjt.ead.curso;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Iterator;
 
 import javax.ws.rs.GET;
@@ -15,6 +16,9 @@ import org.slf4j.LoggerFactory;
 
 import br.com.usjt.ICrud;
 import br.com.usjt.ead.EntityDAO;
+import br.com.usjt.ead.aluno.AlunoBean;
+import br.com.usjt.ead.aluno.AlunoRest;
+import br.com.usjt.ead.aluno.MatriculaBean;
 import br.com.usjt.ead.professor.ProfessorBean;
 import br.com.usjt.ead.professor.ProfessorRest;
 import br.com.usjt.jaxrs.JSPAttr;
@@ -30,7 +34,9 @@ import br.com.usjt.util.Utils;
 public class DisciplinaRest implements ICrud
 {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DisciplinaRest.class);
+    private static final long   oneDay = 86400000L;
+
+    private static final Logger LOG    = LoggerFactory.getLogger(DisciplinaRest.class);
 
     @Override
     @Path("listar")
@@ -60,7 +66,7 @@ public class DisciplinaRest implements ICrud
     @Stylesheet(href = "curso/cadastrar.jsp", type = MediaTypeMore.APP_JSP)
     @SecurityPrivate(role = { SecType.ADMIN, SecType.PROFESSOR })
     public void edit_update() {
-        JSPAttr j = new JSPAttr("metodo","update");
+        JSPAttr j = new JSPAttr("metodo", "update");
         Session session = HS.getSession();
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         try {
@@ -121,18 +127,18 @@ public class DisciplinaRest implements ICrud
         JSPAttr j = new JSPAttr();
         Transaction tx = session.beginTransaction();
         try {
-            DisciplinaBean d = (DisciplinaBean) session.get(DisciplinaBean.class, Integer.parseInt(j.getParameter("id_disciplina")));
+            DisciplinaBean d = (DisciplinaBean) session.get(DisciplinaBean.class,
+                    Integer.parseInt(j.getParameter("id_disciplina")));
             session.delete(d);
             tx.commit();
             j.sucessMsg("Curso deletado com sucesso");
         }
         catch (Exception e) {
             tx.rollback();
-            LOG.error("Falha ao deletar curso",e);
+            LOG.error("Falha ao deletar curso", e);
             j.errorMsg();
         }
-        finally
-        {
+        finally {
             session.close();
             new ProfessorRest().meusCursos();
         }
@@ -406,24 +412,125 @@ public class DisciplinaRest implements ICrud
         try {
             disciplina = (DisciplinaBean) session.get(DisciplinaBean.class, Integer.parseInt(j.getParameter("id_disciplina")));
             disciplina = populaOsModulosUpdate(j, disciplina);
-            if(Utils.isValid(disciplina))
-            {
+            if (Utils.isValid(disciplina)) {
                 session.update(disciplina);
                 tx.commit();
                 j.sucessMsg();
             }
-            else
-            {
-                
+            else {
+
             }
         }
         catch (Exception e) {
             j.errorMsg();
-            LOG.error("Falha ao alterar curso",e);
+            LOG.error("Falha ao alterar curso", e);
         }
         finally {
             session.close();
             new ProfessorRest().meusCursos();
         }
     }
+
+    @Path("realizaAvaliacao")
+    @POST
+    @Stylesheet(href = "curso/avaliacao.jsp", type = MediaTypeMore.APP_JSP)
+    @SecurityPrivate(role = { SecType.ALUNO })
+    public void realizaAvaliacao() {
+        JSPAttr j = new JSPAttr();
+        Session session = HS.getSession();
+        try {
+            MatriculaBean m = (MatriculaBean) session.get(MatriculaBean.class, Integer.parseInt(j.getParameter("matricula")));
+            j.set("modulo", m.getModulo());
+            j.set("matricula", m);
+        }
+        catch (Exception e) {
+            LOG.error("Falha na operação", e);
+        }
+        finally {
+            if (session.isOpen()) {
+                session.clear();
+                session.close();
+            }
+        }
+    }
+
+    @Path("corrigeProva")
+    @POST
+    @Stylesheet(href = "aluno/meuscursos.jsp", type = MediaTypeMore.APP_JSP)
+    @SecurityPrivate(role = { SecType.ALUNO })
+    public void corrigeProva() {
+        JSPAttr j = new JSPAttr();
+        Session session = HS.getSession();
+        Transaction tx = session.beginTransaction();
+        boolean last = false;
+        try {
+            MatriculaBean m = (MatriculaBean) session.get(MatriculaBean.class, Integer.parseInt(j.getParameter("matricula")));
+
+            int acertos = 0;
+            int qtdAlt = m.getModulo().getAvaliacao().getQuestoes().size();
+            double pctNec = 100.00d;
+            String mod = "Intermediário";
+            switch (m.getModulo().getNivel_modulo())
+            {
+            case 1:
+                pctNec *= 0.65;
+                break;
+            case 2:
+                pctNec *= 0.75;
+                mod = "Avançado";
+                break;
+
+            case 3:
+                pctNec *= 0.85;
+                last = true;
+                break;
+            }
+            for (QuestaoBean questao : m.getModulo().getAvaliacao().getQuestoes()) {
+                String selecionada = j.getParameter("questao" + questao.getId_questao());
+                if (!Utils.isEmpty(selecionada)) {
+                    if (questao.isCorrectAlternativa(Long.parseLong(selecionada))) {
+                        acertos++;
+                    }
+                }
+            }
+
+            double pct = (acertos / qtdAlt) * 100;
+            if (pct >= pctNec) {
+                m.setConcluido(true);
+                if (last) {
+                    j.sucessMsg("Parabéns! Você foi aprovado e pode emitir seu certificado de conclusão!");
+                    m.setCertificado(true);
+                }
+                else {
+                    j.sucessMsg("Parabéns! Você passou para o nível " + mod + " do curso "
+                            + m.getModulo().getDisciplina().getNome_disciplina());
+                    MatriculaBean b = new MatriculaBean();
+                    b.setAluno(m.getAluno());
+                    b.setDt_avaliacao(new Date());
+                    int nivel = m.getModulo().getNivel_modulo() + 1;
+                    b.setModulo((ModuloBean) session.createQuery("from " + ModuloBean.class.getSimpleName()
+                                    + " m where m.disciplina.id_disciplina = :disciplina and m.nivel_modulo = :nivel").setInteger("disciplina", m.getModulo().getDisciplina().getId_disciplina()).setInteger("nivel", nivel).uniqueResult());
+                    session.save(b);
+                }
+            }
+            else {
+                m.setDt_avaliacao(new Date(new Date().getTime() + 2 * oneDay));
+                j.errorMsg("Você falhou em obter a porcentagem mínima de acerto. Não se desanime, estude mais e tente novamente em 24 horas");
+            }
+            session.update(m);
+            tx.commit();
+
+        }
+        catch (Exception e) {
+            LOG.error("Falha na operação", e);
+        }
+        finally {
+            if (session.isOpen()) {
+                session.clear();
+                session.close();
+            }
+            new AlunoRest().meusCursos();
+        }
+    }
+
 }

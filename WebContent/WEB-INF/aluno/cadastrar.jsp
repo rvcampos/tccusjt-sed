@@ -151,9 +151,12 @@ www.w3.org/TR/html4/loose.dtd">
 					<label class="control-label" for="txtCPF"> Data de
 						Nascimento</label>
 					<div class="controls">
-						<input type="text" id="txtNascimento" name="txtNascimento"
-							value="${txtNascimento}" placeholder="Data de Nascimento"
-							alt="39/19/2999">
+						<div class="input-append date datepicker" data-date=""
+							data-date-format="dd/mm/yyyy" style="float: left">
+							<input class="span2" size="16" type="text" name="txtNascimento"
+								value="${txtNascimento}" alt="39/19/9999"> <span class="add-on"><i
+								class="icon-calendar"></i> </span>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -213,7 +216,7 @@ www.w3.org/TR/html4/loose.dtd">
 					<label class="control-label" for="txtCep">Cep</label>
 					<div class="controls">
 						<input type="text" id="txtCep" name="txtCep" value="${txtCep}"
-							placeholder="99999-999" maxlength="8" alt ="99999-999" >
+							placeholder="99999-999" maxlength="8" alt="99999-999">
 					</div>
 				</div>
 			</div>
