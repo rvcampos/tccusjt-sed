@@ -16,20 +16,27 @@ www.w3.org/TR/html4/loose.dtd">
 		<th>Professor</th>
 		<th>Cursar</th>
 		<th>Desmatricular</th>
+		<th>Emitir Certificado</th>
 	</tr>
 	<c:forEach var="curso" items="${cursos}">
 	<c:set var="status" value="error" />
-	<c:if test="${curso.concluido eq true}"><c:set var="status" value="success" /></c:if>
-	<tr class="status">
-		<td>${curso.modulo.disciplina.nome_disciplina}</td>
-		<td>${curso.modulo.nivel_modulo}</td>
-		<td>${curso.modulo.data_inicio}</td>
-		<td>${curso.modulo.data_termino}</td>
-		<td>${curso.modulo.disciplina.professor.contato.nome}</td>
-		<td><i class="icon-book"></i></td>
-		<td><form action="${app_context}aluno/desmatricular" method="POST" id="frmDisciplina${disciplina.id_disciplina}">
-		<input type="hidden" name="id_disciplina" value="${disciplina.id_disciplina }"/>
-		<a onclick="$('#frmDisciplina${disciplina.id_disciplina}').submit();"><i class="icon-remove"></i></a></form></td>
-	</tr>
+	<c:if test="${curso.certificado eq true or curso.concluido eq false}">
+		<tr>
+			<td>${curso.modulo.disciplina.nome_disciplina}</td>
+			<td>${curso.modulo.nivel_modulo}</td>
+			<td>${curso.modulo.data_inicio}</td>
+			<td>${curso.modulo.data_termino}</td>
+			<td>${curso.modulo.disciplina.professor.contato.nome}</td>
+			<td><c:if test="${not curso.certificado}"><form action="${app_context}aluno/cursar" method="POST" id="frmCursar${curso.id_matricula}">
+			<input type="hidden" name="id_matricula" value="${curso.id_matricula }"/>
+			<a onclick="$('#frmCursar${curso.id_matricula}').submit();"><i class="icon-book"></i></a></form></c:if></td>
+			<td><c:if test="${not curso.certificado}"><form action="${app_context}aluno/desmatricular" method="POST" id="frmDisciplina${curso.modulo.disciplina.id_disciplina}">
+			<input type="hidden" name="id_disciplina" value="${curso.modulo.disciplina.id_disciplina }"/>
+			<a onclick="$('#frmDisciplina${curso.modulo.disciplina.id_disciplina}').submit();"><i class="icon-remove"></i></a></form></c:if></td>
+			<td><c:if test="${curso.certificado}"><form action="${app_context}aluno/desmatricular" method="POST" id="frmDisciplina${curso.modulo.disciplina.id_disciplina}">
+			<input type="hidden" name="id_disciplina" value="${curso.modulo.disciplina.id_disciplina }"/>
+			<a onclick="$('#frmDisciplina${curso.modulo.disciplina.id_disciplina}').submit();"><i class="icon-print"></i></a></form></c:if></td>
+		</tr>
+	</c:if>
 	</c:forEach>
 </table>

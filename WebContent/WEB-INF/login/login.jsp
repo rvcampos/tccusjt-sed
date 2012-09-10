@@ -1,4 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags"%>
 <!DOCTYPE html>
@@ -25,13 +26,14 @@
 						<td><input type="password" name="password" /></td>
 					</tr>
 					<tr>
-						<td><input type="submit" value="Login" class="btn" id="btnLogin" data-loading-text="Logando..." onclick="$('#btnLogin').button('loading');" /></td>
+						<td><input type="submit" value="Login" class="btn"
+							id="btnLogin" data-loading-text="Logando..."
+							onclick="$('#btnLogin').button('loading');" /></td>
 					</tr>
 				</table>
 			</form>
 		</shiro:notAuthenticated>
-		<br />
-		<br />
+		<br /> <br />
 	</div>
 </body>
 </html>

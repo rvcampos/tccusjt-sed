@@ -75,5 +75,18 @@ public class QuestaoBean
     public String toString() {
         return "QuestaoBean [id_questao=" + id_questao + ", conteudo=" + conteudo + ", alternativas=" + alternativas + "]";
     }
+    
+    public boolean isCorrectAlternativa(Long idAlternativa)
+    {
+        for(AlternativaBean alt : getAlternativas())
+        {
+            if(alt.getCorreta())
+            {
+                return alt.getId_alternativa().equals(idAlternativa);
+            }
+        }
+        
+        return false;
+    }
 
 }

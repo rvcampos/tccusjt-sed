@@ -306,10 +306,10 @@
 				navStep: 10
 		}],
 		dates:{
-			days: ["Domingo", "Segunda", "TerÁa", "Quarta", "Quinta", "Sexta", "S·bado", "Domingo"],
-			daysShort: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "S·b", "Dom"],
-			daysMin: ["Do", "Se", "Te", "Qu", "Qi", "Se", "S·", "Do"],
-			months: ["Janeiro", "Fevereiro", "MarÁo", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"],
+			days: ["Domingo", "Segunda", "Ter√ßa", "Quarta", "Quinta", "Sexta", "S√°bado", "Domingo"],
+			daysShort: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "S√°b", "Dom"],
+			daysMin: ["Do", "Se", "Te", "Qu", "Qi", "Se", "S√°", "Do"],
+			months: ["Janeiro", "Fevereiro", "Mar√ßo", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"],
 			monthsShort: ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]
 		},
 		isLeapYear: function (year) {
@@ -322,7 +322,7 @@
 			var separator = format.match(/[.\/-].*?/),
 				parts = format.split(/\W+/);
 			if (!separator || !parts || parts.length == 0){
-				throw new Error("Formato de data inv·lida.");
+				throw new Error("Formato de data inv√°lida.");
 			}
 			return {separator: separator, parts: parts};
 		},
