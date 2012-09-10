@@ -310,6 +310,7 @@ public class DisciplinaRest implements ICrud
     }
 
     private DisciplinaBean populaOsModulosUpdate(JSPAttr j, DisciplinaBean objDisciplina) {
+        objDisciplina.getModulos().clear();
         ModuloBean basico = new ModuloBean();
         basico.setDisciplina(objDisciplina);
         basico.setNivel_modulo(1);
@@ -412,6 +413,7 @@ public class DisciplinaRest implements ICrud
         try {
             disciplina = (DisciplinaBean) session.get(DisciplinaBean.class, Integer.parseInt(j.getParameter("id_disciplina")));
             disciplina = populaOsModulosUpdate(j, disciplina);
+            disciplina.setNome_disciplina(j.getParameter("txtNomeDisciplina"));
             if (Utils.isValid(disciplina)) {
                 session.update(disciplina);
                 tx.commit();
