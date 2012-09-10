@@ -1,5 +1,7 @@
 package br.com.usjt.jaxrs;
 
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.util.Enumeration;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,6 +25,12 @@ public class JSPAttr
     public JSPAttr()
     {
         this.request = ResteasyProviderFactory.getContextData(HttpServletRequest.class);
+        try {
+            request.setCharacterEncoding("UTF-8");
+        }
+        catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -65,6 +73,13 @@ public class JSPAttr
      * GET Parameter
      */
     public String getParameter(String key) {
+        return this.request.getParameter(key);
+    }
+    
+    /**
+     * GET Parameter
+     */
+    public String getParameter(String key, Charset charset) {
         return this.request.getParameter(key);
     }
 
