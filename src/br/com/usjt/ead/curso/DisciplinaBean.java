@@ -106,4 +106,17 @@ public class DisciplinaBean
     public void setModulos(Set<ModuloBean> modulos) {
         this.modulos = modulos;
     }
+    
+    public ModuloBean getModuloByLevel(Integer nivel)
+    {
+        for(ModuloBean b : getModulos())
+        {
+            if(b.getNivel_modulo().intValue() == nivel.intValue())
+            {
+                return b;
+            }
+        }
+        
+        return null;
+    }
 }

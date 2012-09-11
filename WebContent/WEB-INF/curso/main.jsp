@@ -34,14 +34,13 @@
               <li>Disponível em - ${dt}</li>
               </c:if>
               <li class="nav-header">Contato</li>
-              <li><a href="#">Chat</a></li>
+              <li><a href="${urlChat}" target="_blank">Chat</a></li>
               <li><a href="#">E-mail</a></li>
             </ul>
           </div>
 			</div>
 			<div class="span10">
-
-				<a href="http://192.168.1.123:443/?0,0,1,13,0&nn=escobar"
+				<a href="${urlChat}"
 					target="_blank">CHAT</a>
 
 				<c:if test="${not empty msgok }">

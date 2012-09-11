@@ -36,15 +36,20 @@ public class ModuloBean
     @Column
     private Date           data_termino; // date,
     @OneToOne(mappedBy = "modulo")
-    @Cascade(value=org.hibernate.annotations.CascadeType.ALL)
-    @NotNull(message="Questões e alternativas devem ser preenchidas")
+    @Cascade(value = org.hibernate.annotations.CascadeType.ALL)
+    @NotNull(message = "Questões e alternativas devem ser preenchidas")
     @Valid
     private AvaliacaoBean  avaliacao;
 
+    @OneToOne(mappedBy = "modulo", orphanRemoval = true)
+    @Cascade(value = org.hibernate.annotations.CascadeType.ALL)
+    private SalaChatBean   chat;
+
     @Override
     public String toString() {
-        return "ModuloBean [id_modulo=" + id_modulo + ", nivel_modulo=" + nivel_modulo + ", disciplina=" + disciplina.getNome_disciplina()
-                + ", data_inicio=" + data_inicio + ", data_termino=" + data_termino + ", avaliacao="+avaliacao+"]";
+        return "ModuloBean [id_modulo=" + id_modulo + ", nivel_modulo=" + nivel_modulo + ", disciplina="
+                + disciplina.getNome_disciplina() + ", data_inicio=" + data_inicio + ", data_termino=" + data_termino
+                + ", avaliacao=" + avaliacao + "]";
     }
 
     public Integer getId_modulo() {
@@ -93,6 +98,14 @@ public class ModuloBean
 
     public void setAvaliacao(AvaliacaoBean avaliacao) {
         this.avaliacao = avaliacao;
+    }
+
+    public SalaChatBean getChat() {
+        return chat;
+    }
+
+    public void setChat(SalaChatBean chat) {
+        this.chat = chat;
     }
 
 }

@@ -122,7 +122,7 @@ function validaSenhaForm()
 				<div class="control-group">
 					<label class="control-label" for="txtCPF">CPF </label>
 					<div class="controls">
-						<input type="text" id="txtCPF" name="txtCPF" value="${txtRG}"
+						<input type="text" id="txtCPF" name="txtCPF" value="${txtCPF}"
 							placeholder="CPF" alt="cpf">
 					</div>
 				</div>

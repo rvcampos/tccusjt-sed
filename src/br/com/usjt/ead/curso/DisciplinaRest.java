@@ -1,5 +1,6 @@
 package br.com.usjt.ead.curso;
 
+import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
@@ -8,6 +9,11 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.jboss.resteasy.annotations.providers.jaxb.Stylesheet;
@@ -16,7 +22,6 @@ import org.slf4j.LoggerFactory;
 
 import br.com.usjt.ICrud;
 import br.com.usjt.ead.EntityDAO;
-import br.com.usjt.ead.aluno.AlunoBean;
 import br.com.usjt.ead.aluno.AlunoRest;
 import br.com.usjt.ead.aluno.MatriculaBean;
 import br.com.usjt.ead.professor.ProfessorBean;
@@ -35,7 +40,9 @@ public class DisciplinaRest implements ICrud
 {
 
     private static final long   oneDay = 86400000L;
-
+    private static final String CHATURI = "http://127.0.0.1:443/?0,%s,0,13,2";
+    
+    
     private static final Logger LOG    = LoggerFactory.getLogger(DisciplinaRest.class);
 
     @Override
@@ -204,9 +211,11 @@ public class DisciplinaRest implements ICrud
         }
     }
 
-    private DisciplinaBean populaOsModulosCreate(JSPAttr j, DisciplinaBean objDisciplina) {
+    private DisciplinaBean populaOsModulosCreate(JSPAttr j, DisciplinaBean objDisciplina) throws Exception{
         Iterator<ModuloBean> it = objDisciplina.getModulos().iterator();
         ModuloBean basico = new ModuloBean();
+        DefaultHttpClient httpclient = new DefaultHttpClient();
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
         if (it.hasNext()) {
             basico = it.next();
         }
@@ -237,6 +246,19 @@ public class DisciplinaRest implements ICrud
             }
 
             basico.setAvaliacao(b);
+            HttpGet get = new HttpGet("http://127.0.0.1:443/?api.AddRoom="+objDisciplina.getNome_disciplina().replaceAll(" ", "%20")+",basico,,true");
+            HttpResponse resp = httpclient.execute(get);
+            HttpEntity entity = resp.getEntity();
+            SalaChatBean sala = new SalaChatBean();
+            String roomId = EntityUtils.toString(entity).replaceAll("ID: ", "").trim();
+            String uri = String.format(CHATURI, roomId);
+            sala.setModulo(basico);
+            sala.setId_chat(roomId);
+            sala.setUri(uri);
+            sala.setDias("seg, ter, qua, qui, sex, sab, dom");
+            sala.setHorario(new Time(sdf.parse("19:00:00").getTime()));
+            sala.setHorario_termino(new Time(sdf.parse("23:59:00").getTime()));
+            basico.setChat(sala);
         }
 
         ModuloBean intermediario = new ModuloBean();
@@ -284,7 +306,7 @@ public class DisciplinaRest implements ICrud
         if (((!Utils.isEmpty(j.getParameter("qtdquestoesAdv")) && !Utils.isEmpty(j.getParameter("qtdaltAdv"))))) {
             AvaliacaoBean adv = new AvaliacaoBean();
             adv.setModulo(avancado);
-            for (int i = 1; i <= Integer.parseInt(j.getParameter("qtdquestoesInt")); i++) {
+            for (int i = 1; i <= Integer.parseInt(j.getParameter("qtdquestoesAdv")); i++) {
                 QuestaoBean questao = new QuestaoBean();
                 questao.setAvaliacao(adv);
                 questao.setConteudo(j.getParameter("txtquestoesAvancadoquest" + i));
@@ -309,16 +331,21 @@ public class DisciplinaRest implements ICrud
         return objDisciplina;
     }
 
-    private DisciplinaBean populaOsModulosUpdate(JSPAttr j, DisciplinaBean objDisciplina) {
-        objDisciplina.getModulos().clear();
-        ModuloBean basico = new ModuloBean();
-        basico.setDisciplina(objDisciplina);
-        basico.setNivel_modulo(1);
-        basico.setData_inicio(objDisciplina.getData_inicio());
-        basico.setData_termino(objDisciplina.getData_termino());
+    private DisciplinaBean populaOsModulosUpdate(JSPAttr j, DisciplinaBean objDisciplina, Session session) {
+        ModuloBean basico = objDisciplina.getModuloByLevel(1);
+        if (basico == null) {
+            basico = new ModuloBean();
+            basico.setDisciplina(objDisciplina);
+            basico.setNivel_modulo(1);
+            basico.setData_inicio(objDisciplina.getData_inicio());
+            basico.setData_termino(objDisciplina.getData_termino());
+        }
         if (((!Utils.isEmpty(j.getParameter("qtdquestoesBas")) && !Utils.isEmpty(j.getParameter("qtdaltBas"))))) {
-            AvaliacaoBean b = new AvaliacaoBean();
-            b.setModulo(basico);
+            AvaliacaoBean b = basico.getAvaliacao();
+            if (b == null) {
+                b = new AvaliacaoBean();
+                b.setModulo(basico);
+            }
             b.getQuestoes().clear();
             for (int i = 1; i <= Integer.parseInt(j.getParameter("qtdquestoesBas")); i++) {
                 QuestaoBean questao = new QuestaoBean();
@@ -340,14 +367,21 @@ public class DisciplinaRest implements ICrud
             basico.setAvaliacao(b);
         }
 
-        ModuloBean intermediario = new ModuloBean();
-        intermediario.setDisciplina(objDisciplina);
-        intermediario.setNivel_modulo(2);
-        intermediario.setData_inicio(objDisciplina.getData_inicio());
-        intermediario.setData_termino(objDisciplina.getData_termino());
+        ModuloBean intermediario = objDisciplina.getModuloByLevel(2);
+        if (intermediario == null) {
+            intermediario = new ModuloBean();
+            intermediario.setDisciplina(objDisciplina);
+            intermediario.setNivel_modulo(2);
+            intermediario.setData_inicio(objDisciplina.getData_inicio());
+            intermediario.setData_termino(objDisciplina.getData_termino());
+        }
         if (((!Utils.isEmpty(j.getParameter("qtdquestoesInt")) && !Utils.isEmpty(j.getParameter("qtdaltInt"))))) {
-            AvaliacaoBean inte = new AvaliacaoBean();
-            inte.setModulo(intermediario);
+            AvaliacaoBean inte = intermediario.getAvaliacao();
+            if (inte == null) {
+                inte = new AvaliacaoBean();
+                inte.setModulo(intermediario);
+            }
+            inte.getQuestoes().clear();
             for (int i = 1; i <= Integer.parseInt(j.getParameter("qtdquestoesInt")); i++) {
                 QuestaoBean questao = new QuestaoBean();
                 questao.setAvaliacao(inte);
@@ -367,20 +401,27 @@ public class DisciplinaRest implements ICrud
 
             intermediario.setAvaliacao(inte);
         }
-        ModuloBean avancado = new ModuloBean();
-        avancado.setDisciplina(objDisciplina);
-        avancado.setNivel_modulo(3);
-        avancado.setData_inicio(objDisciplina.getData_inicio());
-        avancado.setData_termino(objDisciplina.getData_termino());
+        ModuloBean avancado = objDisciplina.getModuloByLevel(3);
+        if (avancado == null) {
+            avancado = new ModuloBean();
+            avancado.setDisciplina(objDisciplina);
+            avancado.setNivel_modulo(3);
+            avancado.setData_inicio(objDisciplina.getData_inicio());
+            avancado.setData_termino(objDisciplina.getData_termino());
+        }
         if (((!Utils.isEmpty(j.getParameter("qtdquestoesAdv")) && !Utils.isEmpty(j.getParameter("qtdaltAdv"))))) {
-            AvaliacaoBean adv = new AvaliacaoBean();
-            adv.setModulo(avancado);
-            for (int i = 1; i <= Integer.parseInt(j.getParameter("qtdquestoesInt")); i++) {
+            AvaliacaoBean adv = avancado.getAvaliacao();
+            if (adv == null) {
+                adv = new AvaliacaoBean();
+                adv.setModulo(avancado);
+            }
+            adv.getQuestoes().clear();
+            for (int i = 1; i <= Integer.parseInt(j.getParameter("qtdquestoesAdv")); i++) {
                 QuestaoBean questao = new QuestaoBean();
                 questao.setAvaliacao(adv);
                 questao.setConteudo(j.getParameter("txtquestoesAvancadoquest" + i));
                 int certa = Integer.parseInt(j.getParameter("optquestoesAvancado" + i));
-                for (int k = 1; k <= Integer.parseInt(j.getParameter("qtdaltInt")); k++) {
+                for (int k = 1; k <= Integer.parseInt(j.getParameter("qtdaltAdv")); k++) {
                     AlternativaBean alternativa = new AlternativaBean();
                     alternativa.setConteudo(j.getParameter("txtquestoesAvancadoquest" + i + "alt" + k));
                     alternativa.setQuestao(questao);
@@ -394,9 +435,6 @@ public class DisciplinaRest implements ICrud
 
             avancado.setAvaliacao(adv);
         }
-        objDisciplina.getModulos().add(basico);
-        objDisciplina.getModulos().add(intermediario);
-        objDisciplina.getModulos().add(avancado);
         return objDisciplina;
     }
 
@@ -412,7 +450,7 @@ public class DisciplinaRest implements ICrud
         Transaction tx = session.beginTransaction();
         try {
             disciplina = (DisciplinaBean) session.get(DisciplinaBean.class, Integer.parseInt(j.getParameter("id_disciplina")));
-            disciplina = populaOsModulosUpdate(j, disciplina);
+            disciplina = populaOsModulosUpdate(j, disciplina, session);
             disciplina.setNome_disciplina(j.getParameter("txtNomeDisciplina"));
             if (Utils.isValid(disciplina)) {
                 session.update(disciplina);
@@ -420,7 +458,7 @@ public class DisciplinaRest implements ICrud
                 j.sucessMsg();
             }
             else {
-
+                j.errorMsg();
             }
         }
         catch (Exception e) {
@@ -467,61 +505,71 @@ public class DisciplinaRest implements ICrud
         boolean last = false;
         try {
             MatriculaBean m = (MatriculaBean) session.get(MatriculaBean.class, Integer.parseInt(j.getParameter("matricula")));
+            if (m.getDt_avaliacao().before(new Date())) {
+                int acertos = 0;
+                int qtdAlt = m.getModulo().getAvaliacao().getQuestoes().size();
+                double pctNec = 100.00d;
+                String mod = "Intermediário";
+                switch (m.getModulo().getNivel_modulo())
+                {
+                case 1:
+                    pctNec *= 0.65;
+                    break;
+                case 2:
+                    pctNec *= 0.75;
+                    mod = "Avançado";
+                    break;
 
-            int acertos = 0;
-            int qtdAlt = m.getModulo().getAvaliacao().getQuestoes().size();
-            double pctNec = 100.00d;
-            String mod = "Intermediário";
-            switch (m.getModulo().getNivel_modulo())
-            {
-            case 1:
-                pctNec *= 0.65;
-                break;
-            case 2:
-                pctNec *= 0.75;
-                mod = "Avançado";
-                break;
-
-            case 3:
-                pctNec *= 0.85;
-                last = true;
-                break;
-            }
-            for (QuestaoBean questao : m.getModulo().getAvaliacao().getQuestoes()) {
-                String selecionada = j.getParameter("questao" + questao.getId_questao());
-                if (!Utils.isEmpty(selecionada)) {
-                    if (questao.isCorrectAlternativa(Long.parseLong(selecionada))) {
-                        acertos++;
+                case 3:
+                    pctNec *= 0.85;
+                    last = true;
+                    break;
+                }
+                for (QuestaoBean questao : m.getModulo().getAvaliacao().getQuestoes()) {
+                    String selecionada = j.getParameter("questao" + questao.getId_questao());
+                    if (!Utils.isEmpty(selecionada)) {
+                        if (questao.isCorrectAlternativa(Long.parseLong(selecionada))) {
+                            acertos++;
+                        }
                     }
                 }
-            }
 
-            double pct = (acertos / qtdAlt) * 100;
-            if (pct >= pctNec) {
-                m.setConcluido(true);
-                if (last) {
-                    j.sucessMsg("Parabéns! Você foi aprovado e pode emitir seu certificado de conclusão!");
-                    m.setCertificado(true);
+                double pct = (acertos / qtdAlt) * 100;
+                if (pct >= pctNec) {
+                    m.setConcluido(true);
+                    m.setDt_avaliacao(new Date());
+                    if (last) {
+                        j.sucessMsg("Parabéns! Você foi aprovado e pode emitir seu certificado de conclusão!");
+                        m.setCertificado(true);
+                    }
+                    else {
+                        j.sucessMsg("Parabéns! Você passou para o nível " + mod + " do curso "
+                                + m.getModulo().getDisciplina().getNome_disciplina());
+                        MatriculaBean b = new MatriculaBean();
+                        b.setAluno(m.getAluno());
+                        b.setDt_avaliacao(new Date());
+                        int nivel = m.getModulo().getNivel_modulo() + 1;
+                        b.setModulo((ModuloBean) session
+                                .createQuery(
+                                        "from " + ModuloBean.class.getSimpleName()
+                                                + " m where m.disciplina.id_disciplina = :disciplina and m.nivel_modulo = :nivel")
+                                .setInteger("disciplina", m.getModulo().getDisciplina().getId_disciplina())
+                                .setInteger("nivel", nivel).uniqueResult());
+                        session.save(b);
+                    }
                 }
                 else {
-                    j.sucessMsg("Parabéns! Você passou para o nível " + mod + " do curso "
-                            + m.getModulo().getDisciplina().getNome_disciplina());
-                    MatriculaBean b = new MatriculaBean();
-                    b.setAluno(m.getAluno());
-                    b.setDt_avaliacao(new Date());
-                    int nivel = m.getModulo().getNivel_modulo() + 1;
-                    b.setModulo((ModuloBean) session.createQuery("from " + ModuloBean.class.getSimpleName()
-                                    + " m where m.disciplina.id_disciplina = :disciplina and m.nivel_modulo = :nivel").setInteger("disciplina", m.getModulo().getDisciplina().getId_disciplina()).setInteger("nivel", nivel).uniqueResult());
-                    session.save(b);
+                    m.setDt_avaliacao(new Date(new Date().getTime() + 2 * oneDay));
+                    j.errorMsg("Você falhou em obter a porcentagem mínima de acerto(" + pctNec
+                            + "%). Não se desanime, estude mais e tente novamente em 48 horas");
                 }
+                session.update(m);
+                tx.commit();
             }
-            else {
-                m.setDt_avaliacao(new Date(new Date().getTime() + 2 * oneDay));
-                j.errorMsg("Você falhou em obter a porcentagem mínima de acerto("+pctNec+"%). Não se desanime, estude mais e tente novamente em 48 horas");
+            else
+            {
+                j.errorMsg("Não tente trapacear. Espere até o dia da prova =)");
             }
-            session.update(m);
-            tx.commit();
-
         }
         catch (Exception e) {
             LOG.error("Falha na operação", e);

@@ -31,7 +31,6 @@ public class QuestaoBean
     private String                conteudo;
     @ManyToOne
     @JoinColumn(name = "id_avaliacao")
-    @Cascade(value = CascadeType.ALL)
     private AvaliacaoBean         avaliacao;
     @OneToMany(mappedBy = "questao", orphanRemoval = true)
     @Cascade(value = org.hibernate.annotations.CascadeType.ALL)

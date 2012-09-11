@@ -29,7 +29,6 @@ public class AvaliacaoBean
     private Integer           id_avaliacao;                           // integer,
     @OneToOne
     @JoinColumn(name = "id_modulo")
-    @Cascade(value = org.hibernate.annotations.CascadeType.ALL)
     private ModuloBean        modulo;                                 // varchar(100),
     @OneToMany(mappedBy = "avaliacao", orphanRemoval = true)
     @Cascade(value = org.hibernate.annotations.CascadeType.ALL)

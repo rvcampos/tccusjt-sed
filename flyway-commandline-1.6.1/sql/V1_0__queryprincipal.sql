@@ -108,7 +108,7 @@ cpf  numeric(12)
 );
 
 CREATE TABLE MATRICULA (
-id_matricula integer PRIMARY KEY,
+id_matricula bigint PRIMARY KEY,
 id_modulo integer REFERENCES MODULO(id_modulo),
 id_aluno integer REFERENCES ALUNO(id_aluno),
 concluido boolean default false
@@ -159,6 +159,6 @@ CREATE SEQUENCE seq_aluno
   CREATE SEQUENCE seq_matricula
   INCREMENT 1
   MINVALUE 0
-  MAXVALUE 99999999
+  MAXVALUE 9999999999999999
   START 1
   CACHE 1;

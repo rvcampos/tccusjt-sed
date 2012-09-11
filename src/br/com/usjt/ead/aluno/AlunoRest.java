@@ -1,7 +1,10 @@
 package br.com.usjt.ead.aluno;
 
+import java.sql.Time;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -25,8 +28,8 @@ import br.com.usjt.ead.contato.ContatoBean;
 import br.com.usjt.ead.contato.EnderecoBean;
 import br.com.usjt.ead.contato.TelefoneBean;
 import br.com.usjt.ead.contato.TipoTelefoneBean;
-import br.com.usjt.ead.curso.DisciplinaBean;
 import br.com.usjt.ead.curso.ModuloBean;
+import br.com.usjt.ead.curso.SalaChatBean;
 import br.com.usjt.jaxrs.JSPAttr;
 import br.com.usjt.jaxrs.MediaTypeMore;
 import br.com.usjt.jaxrs.security.SecurityPrivate;
@@ -78,11 +81,11 @@ public class AlunoRest implements ICrud
 
     private void populaEditUpdate(JSPAttr j, AlunoBean aluno) {
         j.set("txtEmail", aluno.getEmail());
-        j.set("txtCPF", Utils.padding(aluno.getCpf(), 14, "0"));
+        j.set("txtCPF", Utils.padding(aluno.getCpf(), 11, "0"));
         j.set("txtCep", Utils.padding(aluno.getEndereco().getCep(), 8, "0"));
         j.set("txtEndereco", aluno.getEndereco().getLogradouro());
         j.set("txtBairro", aluno.getEndereco().getBairro());
-        j.set("txtNascimento", aluno.getContato().getData_nascimento());
+        j.set("txtNascimento", new SimpleDateFormat("dd/MM/yyyy").format(aluno.getContato().getData_nascimento()));
         j.set("txtRG", aluno.getContato().getRg());
         j.set("txtNome", aluno.getContato().getNome());
 
@@ -232,7 +235,7 @@ public class AlunoRest implements ICrud
     @Override
     @Path("alterar")
     @POST
-    @Stylesheet(href = "/read.jsp", type = MediaTypeMore.APP_JSP)
+    @Stylesheet(href = "login/login.jsp", type = MediaTypeMore.APP_JSP)
     @SecurityPrivate(role = { SecType.ADMIN, SecType.ALUNO })
     public void update() {
         Session session = HS.getSession();
@@ -465,24 +468,37 @@ public class AlunoRest implements ICrud
         JSPAttr j = new JSPAttr();
         Session session = HS.getSession();
         j.set("override", "curso/main.jsp");
+        Security sh = SecurityShiro.init();
         try {
-            MatriculaBean matricula = (MatriculaBean) session.get(MatriculaBean.class,Integer.parseInt(j.getParameter("id_matricula")));
+            MatriculaBean matricula = (MatriculaBean) session.get(MatriculaBean.class,
+                    Integer.parseInt(j.getParameter("id_matricula")));
             j.set("nomeCurso", matricula.getModulo().getDisciplina().getNome_disciplina());
             j.set("id_matricula", matricula.getId_matricula());
             j.set("id_modulo", matricula.getModulo().getId_modulo());
             j.set("fazProva", matricula.getDt_avaliacao().before(new Date()));
             j.set("dt_aval", matricula.getDt_avaliacao());
             String nivel = "Básico";
-            switch(matricula.getModulo().getNivel_modulo())
+            switch (matricula.getModulo().getNivel_modulo())
             {
             case 2:
                 nivel = "Intermediário";
-               break;
+                break;
             case 3:
                 nivel = "Avançado";
                 break;
             }
+            AlunoBean b = (AlunoBean) session.get(AlunoBean.class, sh.getUserId());
             j.set("nivel", nivel);
+            SalaChatBean sala = matricula.getModulo().getChat();
+            if (sala != null) {
+                if (isChatUp(sala)) {
+                    j.set("urlChat",
+                            matricula.getModulo().getChat().getUri() + "&nn=" + b.getContato().getNome().replaceAll(" ", "%20"));
+                }
+                else {
+                    j.set("urlChat", "#");
+                }
+            }
         }
         catch (Exception e) {
             LOG.error("Falha na operação", e);
@@ -493,5 +509,46 @@ public class AlunoRest implements ICrud
                 session.close();
             }
         }
+    }
+
+    private boolean isChatUp(SalaChatBean sala) {
+        Date d = new Date();
+        Time t = new Time(d.getTime());
+        Calendar cal = GregorianCalendar.getInstance();
+        int day = cal.get(Calendar.DAY_OF_WEEK);
+        String dias = sala.getDias();
+
+        boolean ok = true;
+
+        switch (day)
+        {
+        case 0:
+            ok = dias.contains("dom");
+            break;
+        case 1:
+            ok = dias.contains("seg");
+            break;
+        case 2:
+            ok = dias.contains("ter");
+            break;
+        case 3:
+            ok = dias.contains("qua");
+            break;
+        case 4:
+            ok = dias.contains("qui");
+            break;
+        case 5:
+            ok = dias.contains("sex");
+            break;
+        case 6:
+            ok = dias.contains("sab");
+            break;
+        }
+
+        if (!ok) {
+            return false;
+        }
+
+        return t.after(sala.getHorario()) && t.before(sala.getHorario_termino());
     }
 }
