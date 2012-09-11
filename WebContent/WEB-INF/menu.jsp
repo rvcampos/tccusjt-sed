@@ -92,6 +92,13 @@
 										Professor</a></li>
 <%-- 								<li><a href="${app_context}professor/solicitarCadastro">Solicitar Cadastro</a></li> --%>
 							</td>
+							<td class="td-divider"/>
+							<td valign="top">
+								<li class="nav-header">Administrador</li>
+								<li><a href="${app_context}login?src=admin">Login
+										Administrador</a></li>
+<%-- 								<li><a href="${app_context}professor/solicitarCadastro">Solicitar Cadastro</a></li> --%>
+							</td>
 						</tr>
 					</table>
 				</ul>
