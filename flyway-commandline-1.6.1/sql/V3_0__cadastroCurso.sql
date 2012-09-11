@@ -2,7 +2,7 @@ CREATE TABLE questao
 (
   id_questao bigint NOT NULL PRIMARY KEY,
   conteudo character varying(300) NOT NULL,
-  id_avaliacao integer NOT NULL REFERENCES avaliacao (id_avaliacao)
+  id_avaliacao integer NOT NULL REFERENCES avaliacao (id_avaliacao) on delete cascade
 );
 
 CREATE TABLE alternativa
@@ -10,7 +10,7 @@ CREATE TABLE alternativa
   id_alternativa bigint NOT NULL PRIMARY KEY,
   conteudo character varying(300) NOT NULL,
   correta boolean default false,
-  id_questao bigint NOT NULL REFERENCES questao (id_questao)
+  id_questao bigint NOT NULL REFERENCES questao (id_questao) on delete cascade
 );
 
 
