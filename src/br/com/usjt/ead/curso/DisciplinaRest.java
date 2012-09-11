@@ -11,6 +11,7 @@ import javax.ws.rs.Path;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
@@ -39,11 +40,10 @@ import br.com.usjt.util.Utils;
 public class DisciplinaRest implements ICrud
 {
 
-    private static final long   oneDay = 86400000L;
+    private static final long   oneDay  = 86400000L;
     private static final String CHATURI = "http://127.0.0.1:443/?0,%s,0,13,2";
-    
-    
-    private static final Logger LOG    = LoggerFactory.getLogger(DisciplinaRest.class);
+
+    private static final Logger LOG     = LoggerFactory.getLogger(DisciplinaRest.class);
 
     @Override
     @Path("listar")
@@ -171,6 +171,10 @@ public class DisciplinaRest implements ICrud
             objDisciplina.setProfessor((ProfessorBean) session.load(ProfessorBean.class, sh.getUserId()));
             objDisciplina = populaOsModulosCreate(j, objDisciplina);
             if (Utils.isValid(objDisciplina)) {
+                DefaultHttpClient httpclient = new DefaultHttpClient();
+                HttpGet get = new HttpGet("http://127.0.0.1:443/?api.SaveConfiguration");
+                HttpResponse resp = httpclient.execute(get);
+                HttpEntity entity = resp.getEntity();
                 session.save(objDisciplina);
                 tx.commit();
                 j.sucessMsg("Disciplina criada com sucesso");
@@ -211,7 +215,27 @@ public class DisciplinaRest implements ICrud
         }
     }
 
-    private DisciplinaBean populaOsModulosCreate(JSPAttr j, DisciplinaBean objDisciplina) throws Exception{
+    private ModuloBean criaChat(ModuloBean mod, HttpClient httpClient, String nivel) throws Exception {
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+        HttpGet get = new HttpGet("http://127.0.0.1:443/?api.AddRoom="
+                + mod.getDisciplina().getNome_disciplina().replaceAll(" ", "%20") + "," + nivel + ",,true");
+        HttpResponse resp = httpClient.execute(get);
+        HttpEntity entity = resp.getEntity();
+        SalaChatBean sala = new SalaChatBean();
+        String roomId = EntityUtils.toString(entity).replaceAll("ID: ", "").trim();
+        String uri = String.format(CHATURI, roomId);
+        sala.setModulo(mod);
+        sala.setId_chat(roomId);
+        sala.setUri(uri);
+        sala.setDias("seg, ter, qua, qui, sex, sab, dom");
+        sala.setHorario(new Time(sdf.parse("19:00:00").getTime()));
+        sala.setHorario_termino(new Time(sdf.parse("23:59:00").getTime()));
+        mod.setChat(sala);
+
+        return mod;
+    }
+
+    private DisciplinaBean populaOsModulosCreate(JSPAttr j, DisciplinaBean objDisciplina) throws Exception {
         Iterator<ModuloBean> it = objDisciplina.getModulos().iterator();
         ModuloBean basico = new ModuloBean();
         DefaultHttpClient httpclient = new DefaultHttpClient();
@@ -246,19 +270,7 @@ public class DisciplinaRest implements ICrud
             }
 
             basico.setAvaliacao(b);
-            HttpGet get = new HttpGet("http://127.0.0.1:443/?api.AddRoom="+objDisciplina.getNome_disciplina().replaceAll(" ", "%20")+",basico,,true");
-            HttpResponse resp = httpclient.execute(get);
-            HttpEntity entity = resp.getEntity();
-            SalaChatBean sala = new SalaChatBean();
-            String roomId = EntityUtils.toString(entity).replaceAll("ID: ", "").trim();
-            String uri = String.format(CHATURI, roomId);
-            sala.setModulo(basico);
-            sala.setId_chat(roomId);
-            sala.setUri(uri);
-            sala.setDias("seg, ter, qua, qui, sex, sab, dom");
-            sala.setHorario(new Time(sdf.parse("19:00:00").getTime()));
-            sala.setHorario_termino(new Time(sdf.parse("23:59:00").getTime()));
-            basico.setChat(sala);
+            basico = criaChat(basico, httpclient, "basico");
         }
 
         ModuloBean intermediario = new ModuloBean();
@@ -290,7 +302,7 @@ public class DisciplinaRest implements ICrud
                 }
                 inte.getQuestoes().add(questao);
             }
-
+            intermediario = criaChat(intermediario, httpclient, "Intermediário");
             intermediario.setAvaliacao(inte);
         }
         ModuloBean avancado = new ModuloBean();
@@ -322,7 +334,7 @@ public class DisciplinaRest implements ICrud
                 }
                 adv.getQuestoes().add(questao);
             }
-
+            avancado = criaChat(avancado, httpclient, "Avançado");
             avancado.setAvaliacao(adv);
         }
         objDisciplina.getModulos().add(basico);
@@ -566,8 +578,7 @@ public class DisciplinaRest implements ICrud
                 session.update(m);
                 tx.commit();
             }
-            else
-            {
+            else {
                 j.errorMsg("Não tente trapacear. Espere até o dia da prova =)");
             }
         }

@@ -39,7 +39,7 @@ insert into tp_telefone values(4,'Radio');
 create table TELEFONES
 (
  id_telefone integer PRIMARY KEY,
- id_contato integer references contato (id_contato),
+ id_contato integer references contato (id_contato) on delete cascade,
  tipo integer references tp_telefone (id_tipo),
  ddd integer,
  telefone numeric(9)
@@ -80,21 +80,21 @@ PRIMARY KEY(id_disciplina)
 
 CREATE TABLE MODULO (
 id_modulo integer PRIMARY KEY,
-id_disciplina integer references DISCIPLINA(id_disciplina),
+id_disciplina integer references DISCIPLINA(id_disciplina) on delete cascade,
 nivel_modulo integer,
 data_inicio date,
 data_termino date
 );
 CREATE TABLE AVALIACAO (
 id_avaliacao integer PRIMARY KEY,
-id_modulo integer REFERENCES MODULO(id_modulo),
+id_modulo integer REFERENCES MODULO(id_modulo) on delete cascade,
 data_inicio date,
 data_termino date
 );
 
 CREATE TABLE MATERIAL_DIDATICO (
 endereco_material varchar(60) PRIMARY KEY,
-id_modulo integer REFERENCES MODULO(id_modulo),
+id_modulo integer REFERENCES MODULO(id_modulo) on delete cascade,
 tipo_material integer
 );
 
@@ -109,8 +109,8 @@ cpf  numeric(12)
 
 CREATE TABLE MATRICULA (
 id_matricula bigint PRIMARY KEY,
-id_modulo integer REFERENCES MODULO(id_modulo),
-id_aluno integer REFERENCES ALUNO(id_aluno),
+id_modulo integer REFERENCES MODULO(id_modulo) on delete cascade,
+id_aluno integer REFERENCES ALUNO(id_aluno) on delete cascade,
 concluido boolean default false
 );
 

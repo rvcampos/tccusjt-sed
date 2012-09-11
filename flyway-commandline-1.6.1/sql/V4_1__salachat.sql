@@ -10,8 +10,8 @@ CREATE TABLE sala_chat
   CONSTRAINT sala_chat_pkey PRIMARY KEY (id_sala ),
   CONSTRAINT sala_chat_id_modulo_fkey FOREIGN KEY (id_modulo)
       REFERENCES modulo (id_modulo) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION
-)
+      ON UPDATE NO ACTION ON DELETE CASCADE
+);
 
   CREATE SEQUENCE seq_chat
   INCREMENT 1
