@@ -11,6 +11,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 
 import org.hibernate.Criteria;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Order;
@@ -179,7 +180,9 @@ public class AlunoRest implements ICrud
             if (!update) {
                 b.setEmail(j.getParameter("txtEmail"));
             }
-            b.setSenha(CryptoXFacade.crypt(j.getParameter("txtSenha")));
+            if (Utils.isEmpty(j.getParameter("txtSenha"))) {
+                b.setSenha(CryptoXFacade.crypt(j.getParameter("txtSenha")));
+            }
             b.setCpf(Long.parseLong(j.getParameter("txtCPF").replaceAll("[^0-9]", "")));
             EnderecoBean end = b.getEndereco();
             if (end == null) {
@@ -240,7 +243,7 @@ public class AlunoRest implements ICrud
     public void update() {
         Session session = HS.getSession();
         JSPAttr j = new JSPAttr();
-        AlunoBean b = new AlunoBean();
+        AlunoBean b = popula(j, session, true);
         try {
             if (Utils.isValid(b)) {
                 session.save(b);
@@ -451,6 +454,39 @@ public class AlunoRest implements ICrud
         }
         catch (Exception e) {
             LOG.error("Falha ao efetuar matricula cursos", e);
+            tx.rollback();
+        }
+        finally {
+            session.clear();
+            session.close();
+            meusCursos();
+        }
+    }
+
+    @Path("desmatricular")
+    @POST
+    @Stylesheet(href = "aluno/meuscursos.jsp", type = MediaTypeMore.APP_JSP)
+    @SecurityPrivate(role = SecType.ALUNO)
+    public void desmatricular() {
+        JSPAttr j = new JSPAttr();
+        Security sh = SecurityShiro.init();
+        Integer id = sh.getUserId();
+        Integer disciplinaId = null;
+        Session session = HS.getSession();
+        Transaction tx = session.beginTransaction();
+        try {
+            disciplinaId = Integer.parseInt(j.getParameter("id_disciplina"));
+            Query q = session
+                    .createQuery(
+                            "delete from " + MatriculaBean.class.getSimpleName()
+                                    + " m where m.modulo.disciplina.id_disciplina = :disciplina and m.aluno.id_aluno = :aluno")
+                    .setInteger("disciplina", disciplinaId).setInteger("aluno", id);
+            q.executeUpdate();
+            tx.commit();
+            j.sucessMsg("Sua desmatricula foi efetuada com sucesso");
+        }
+        catch (Exception e) {
+            LOG.error("Falha ao efetuar desmatricula", e);
             tx.rollback();
         }
         finally {
