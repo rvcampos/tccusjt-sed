@@ -16,6 +16,8 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 @Entity
 @Table(name = "MODULO")
@@ -29,6 +31,7 @@ public class ModuloBean
     @NotNull
     private Integer        nivel_modulo; // varchar(100),
     @ManyToOne
+    @Fetch(FetchMode.JOIN)
     @JoinColumn(name = "id_disciplina")
     private DisciplinaBean disciplina;  // integer references
     @Column
