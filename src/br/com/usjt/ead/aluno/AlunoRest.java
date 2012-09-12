@@ -15,6 +15,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.jboss.resteasy.annotations.providers.jaxb.Stylesheet;
 import org.slf4j.Logger;
@@ -180,7 +181,7 @@ public class AlunoRest implements ICrud
             if (!update) {
                 b.setEmail(j.getParameter("txtEmail"));
             }
-            if (Utils.isEmpty(j.getParameter("txtSenha"))) {
+            if (!Utils.isEmpty(j.getParameter("txtSenha"))) {
                 b.setSenha(CryptoXFacade.crypt(j.getParameter("txtSenha")));
             }
             b.setCpf(Long.parseLong(j.getParameter("txtCPF").replaceAll("[^0-9]", "")));
@@ -244,9 +245,12 @@ public class AlunoRest implements ICrud
         Session session = HS.getSession();
         JSPAttr j = new JSPAttr();
         AlunoBean b = popula(j, session, true);
+        Transaction tx = session.beginTransaction();
         try {
             if (Utils.isValid(b)) {
-                session.save(b);
+                session.update(b);
+                tx.commit();
+                j.sucessMsg("Dados cadastrais alterados com sucesso");
             }
             else {
                 j.repopular();
@@ -254,10 +258,11 @@ public class AlunoRest implements ICrud
         }
         catch (Exception e) {
             LOG.error("Falha ao alterar dados cadastrais de aluno", e);
+            tx.rollback();
             j.repopular();
         }
         finally {
-
+            session.close();
         }
     }
 
@@ -476,11 +481,13 @@ public class AlunoRest implements ICrud
         Transaction tx = session.beginTransaction();
         try {
             disciplinaId = Integer.parseInt(j.getParameter("id_disciplina"));
+            Criteria c = session.createCriteria(ModuloBean.class).add(Restrictions.eq("disciplina.id_disciplina", disciplinaId))
+                    .setProjection(Projections.id());
             Query q = session
                     .createQuery(
                             "delete from " + MatriculaBean.class.getSimpleName()
-                                    + " m where m.modulo.disciplina.id_disciplina = :disciplina and m.aluno.id_aluno = :aluno")
-                    .setInteger("disciplina", disciplinaId).setInteger("aluno", id);
+                                    + " m where m.modulo.id_modulo in (:modulo) and m.aluno.id_aluno = :aluno")
+                    .setParameterList("modulo", c.list()).setInteger("aluno", id);
             q.executeUpdate();
             tx.commit();
             j.sucessMsg("Sua desmatricula foi efetuada com sucesso");

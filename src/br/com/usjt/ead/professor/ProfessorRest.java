@@ -87,10 +87,10 @@ public class ProfessorRest implements ICrud
             session.close();
         }
     }
-    
+
     private void populaEditUpdate(JSPAttr j, ProfessorBean professor) {
         j.set("txtEmail", professor.getEmail());
-        j.set("txtCPF",  Utils.padding(professor.getCpf(),14,"0"));
+        j.set("txtCPF", Utils.padding(professor.getCpf(), 14, "0"));
         j.set("txtCep", Utils.padding(professor.getEndereco().getCep(), 8, "0"));
         j.set("txtEndereco", professor.getEndereco().getLogradouro());
         j.set("txtBairro", professor.getEndereco().getBairro());
@@ -157,7 +157,7 @@ public class ProfessorRest implements ICrud
             session.close();
         }
     }
-    
+
     @Path("deleteCurso")
     @POST
     @Stylesheet(href = "professor/meusCursos.jsp", type = MediaTypeMore.APP_JSP)
@@ -167,11 +167,12 @@ public class ProfessorRest implements ICrud
         Session session = HS.getSession();
         Transaction tx = session.beginTransaction();
         try {
-            DisciplinaBean bean = (DisciplinaBean) session.get(DisciplinaBean.class, Integer.parseInt(j.getParameter("id_disciplina")));
+            DisciplinaBean bean = (DisciplinaBean) session.get(DisciplinaBean.class,
+                    Integer.parseInt(j.getParameter("id_disciplina")));
             session.delete(bean);
             tx.commit();
-            
-            //Carrego os cursos novamente para atualizar a página
+
+            // Carrego os cursos novamente para atualizar a página
             meusCursos();
         }
         catch (Exception e) {
@@ -193,7 +194,7 @@ public class ProfessorRest implements ICrud
         Session session = HS.getSession();
         Transaction tx = session.beginTransaction();
         try {
-            b = popula(j, session);
+            b = popula(j, session, false);
             if (Utils.isValid(b)) {
                 session.save(b);
                 tx.commit();
@@ -217,12 +218,17 @@ public class ProfessorRest implements ICrud
         }
     }
 
-    private ProfessorBean popula(JSPAttr j, Session session) {
+    private ProfessorBean popula(JSPAttr j, Session session, boolean update) {
         ProfessorBean b = new ProfessorBean();
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         try {
-            b.setEmail(j.getParameter("txtEmail"));
-            b.setSenha(CryptoXFacade.crypt(j.getParameter("txtSenha")));
+            if (!update) {
+                b.setEmail(j.getParameter("txtEmail"));
+            }
+            if(!Utils.isEmpty(j.getParameter("txtSenha")))
+            {
+                b.setSenha(CryptoXFacade.crypt(j.getParameter("txtSenha")));
+            }
             b.setCpf(Long.parseLong(j.getParameter("txtCPF").replaceAll("[^0-9]", "")));
             EnderecoBean end = new EnderecoBean();
             end.setCep(Integer.parseInt(j.getParameter("txtCep").replaceAll("[^0-9]", "")));
@@ -263,27 +269,26 @@ public class ProfessorRest implements ICrud
     public void update() {
         Session session = HS.getSession();
         JSPAttr j = new JSPAttr();
-        ProfessorBean b = new ProfessorBean();
+        Transaction tx = session.beginTransaction();
+        ProfessorBean b = popula(j, session, true);
         try {
-            if(Utils.isValid(b))
-            {
-                session.save(b);
+            if (Utils.isValid(b)) {
+                session.update(b);
+                tx.commit();
+                j.sucessMsg("Dados Cadastrais alterados com sucesso!");
             }
-            else
-            {
+            else {
                 j.repopular();
             }
         }
         catch (Exception e) {
-            LOG.error("Falha ao alterar dados cadastrais de professor",e);
+            LOG.error("Falha ao alterar dados cadastrais de professor", e);
             j.repopular();
         }
-        finally
-        {
-            
+        finally {
+
         }
     }
-
 
     /**
      * Carrega Cidade
@@ -324,7 +329,7 @@ public class ProfessorRest implements ICrud
         }
 
     }
-    
+
     @Path("meusCursos")
     @GET
     @POST
@@ -337,9 +342,9 @@ public class ProfessorRest implements ICrud
         Session session = HS.getSession();
         EntityDAO dao = new EntityDAO();
         try {
-            Map<String,Object> map = new HashMap<String,Object>();
+            Map<String, Object> map = new HashMap<String, Object>();
             map.put("professor.id_professor", id);
-            
+
             j.set("cursos", dao.searchByValue(session, DisciplinaBean.class, map));
         }
         catch (Exception e) {
