@@ -1,6 +1,7 @@
 package br.com.usjt.ead.aluno;
 
 import java.sql.Time;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -554,11 +555,12 @@ public class AlunoRest implements ICrud
         }
     }
 
+    // XXX Arrumar esse método
     private boolean isChatUp(SalaChatBean sala) {
         Date d = new Date();
         Time t = new Time(d.getTime());
-        Calendar cal = GregorianCalendar.getInstance();
-        int day = cal.get(Calendar.DAY_OF_WEEK);
+        Calendar now = GregorianCalendar.getInstance();
+        int day = now.get(Calendar.DAY_OF_WEEK);
         String dias = sala.getDias();
 
         boolean ok = true;
@@ -591,7 +593,34 @@ public class AlunoRest implements ICrud
         if (!ok) {
             return false;
         }
-
-        return t.after(sala.getHorario()) && t.before(sala.getHorario_termino());
+        
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+        Time ini = new Time(System.currentTimeMillis());
+        Time end= new Time(System.currentTimeMillis());
+        try {
+            ini = new Time(sdf.parse(sdf.format(sala.getHorario())).getTime());
+            end = new Time(sdf.parse(sdf.format(sala.getHorario_termino())).getTime());
+        }
+        catch (ParseException e) {
+            e.printStackTrace();
+        }
+        
+        Calendar inic = Calendar.getInstance();
+        inic.setTimeInMillis(ini.getTime());
+        
+        Calendar endc = Calendar.getInstance();
+        endc.setTimeInMillis(end.getTime());
+        
+        Calendar inic2 = Calendar.getInstance();
+        inic2.set(Calendar.HOUR, inic.get(Calendar.HOUR));
+        inic2.set(Calendar.MINUTE, inic.get(Calendar.MINUTE));
+        inic2.set(Calendar.SECOND, inic.get(Calendar.SECOND));
+        
+        Calendar end2 = Calendar.getInstance();
+        end2.set(Calendar.HOUR, endc.get(Calendar.HOUR));
+        end2.set(Calendar.MINUTE, endc.get(Calendar.MINUTE));
+        end2.set(Calendar.SECOND, endc.get(Calendar.SECOND));
+        
+        return now.after(inic2) && now.before(end2);
     }
 }
