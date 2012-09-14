@@ -16,8 +16,6 @@
 	<jsp:include page="menu.jsp" />
 	<div class="container" style="padding-top: 60px;">
 
-				<a href="http://127.0.0.1:443/?0,2,0,0,13,0&nn=escobar" target="_blank">CHAT</a>
-
 				<c:if test="${not empty msgok }">
 					<div class="alert alert-success">
 						<strong>${msgok}</strong>
