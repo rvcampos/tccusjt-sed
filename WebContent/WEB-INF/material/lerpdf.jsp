@@ -1,4 +1,4 @@
-<script>
+	<script>
 	function getDocumentUrl(document) {
 		return "php/services/view.php?doc={doc}&format={format}&page={page}"
 				.replace("{doc}", document);
