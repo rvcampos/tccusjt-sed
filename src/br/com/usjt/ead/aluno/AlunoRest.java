@@ -33,6 +33,7 @@ import br.com.usjt.ead.contato.TelefoneBean;
 import br.com.usjt.ead.contato.TipoTelefoneBean;
 import br.com.usjt.ead.curso.ModuloBean;
 import br.com.usjt.ead.curso.SalaChatBean;
+import br.com.usjt.ead.professor.ProfessorBean;
 import br.com.usjt.jaxrs.JSPAttr;
 import br.com.usjt.jaxrs.MediaTypeMore;
 import br.com.usjt.jaxrs.security.SecurityPrivate;
@@ -51,13 +52,25 @@ public class AlunoRest implements ICrud
     private static final Logger LOG = LoggerFactory.getLogger(AlunoRest.class);
 
     @Override
-    @Path("")
+    @Path("listar")
     @POST
     @GET
-    @Stylesheet(href = "pag.jsp", type = MediaTypeMore.APP_JSP)
+    @Stylesheet(href = "aluno/listar.jsp", type = MediaTypeMore.APP_JSP)
     @SecurityPrivate(role = SecType.ADMIN)
     public void read() {
+        JSPAttr j = new JSPAttr();
+        Session session = HS.getSession();
+        try {
+            j.set("alunos", session.createCriteria(AlunoBean.class).list());
+        }
+        catch (Exception e) {
+            LOG.error("Erro ao listar alunos", e);
+        }
+        finally {
+            session.close();
+        }
     }
+
 
     @Override
     @Path("alterarDados")
@@ -132,10 +145,25 @@ public class AlunoRest implements ICrud
     @Override
     @Path("delete")
     @POST
-    @Stylesheet(href = "/read.jsp", type = MediaTypeMore.APP_JSP)
+    @Stylesheet(href = "aluno/listar.jsp", type = MediaTypeMore.APP_JSP)
     @SecurityPrivate(role = { SecType.ADMIN, SecType.ALUNO })
     public void delete() {
+        JSPAttr j = new JSPAttr("metodo", "delete");
+        Session session = HS.getSession();
+        Transaction tx = session.beginTransaction();
+        try {
+            AlunoBean bean = (AlunoBean) session.get(AlunoBean.class, Integer.parseInt(j.getParameter("id_aluno")));
+            session.delete(bean);
+            tx.commit();
+        }
+        catch (Exception e) {
+            tx.rollback();
+        }
+        finally {
+            session.close();
+        }
     }
+
 
     @Override
     @Path("create")

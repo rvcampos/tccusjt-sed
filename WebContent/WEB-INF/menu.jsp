@@ -9,15 +9,25 @@
 		<ul class="nav">
 		<shiro:authenticated>
 		<shiro:hasRole name="admin">
-		<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Cadastrar<b class="caret"></b></a>
+		<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-user"></i>Aluno<b class="caret"></b></a>
 			<ul class="dropdown-menu">
 				<table cellpadding="0" cellspacing="0" border="0">
 					<tr>
 						<td valign="top">
-							<li class="nav-header">Aluno</li>
 							<li><a href="${app_context}aluno/cadastrar">Cadastrar Aluno</a></li>
-							<li class="nav-header">Professor</li>
+							<li><a href="${app_context}aluno/listar">Listar Aluno</a></li>
+						</td>
+					</tr>
+				</table>
+			</ul>
+		</li>
+		<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-user"></i>Professor<b class="caret"></b></a>
+			<ul class="dropdown-menu">
+				<table cellpadding="0" cellspacing="0" border="0">
+					<tr>
+						<td valign="top">
 							<li><a href="${app_context}professor/cadastrar">Cadastrar Professor</a></li>
+							<li><a href="${app_context}professor/listar">Listar Professor</a></li>
 						</td>
 					</tr>
 				</table>

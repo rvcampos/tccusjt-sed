@@ -11,7 +11,7 @@ www.w3.org/TR/html4/loose.dtd">
 	<tr>
 		<th></th>
 		<th></th>
-		<th>Nome</th>
+		<th>Nome</th>  
 		<th>E-mail</th>
 	</tr>
 	<c:forEach var="prof" items="${profs}">
