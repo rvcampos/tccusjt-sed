@@ -9,6 +9,18 @@
 		<ul class="nav">
 		<shiro:authenticated>
 		<shiro:hasRole name="admin">
+		<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-user"></i>Administrador<b class="caret"></b></a>
+			<ul class="dropdown-menu">
+				<table cellpadding="0" cellspacing="0" border="0">
+					<tr>
+						<td valign="top">
+							<li><a href="${app_context}admin/cadastrar">Cadastrar Administrador</a></li>
+							<li><a href="${app_context}admin/listar">Listar Administrador</a></li>
+						</td>
+					</tr>
+				</table>
+			</ul>
+		</li>
 		<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-user"></i>Aluno<b class="caret"></b></a>
 			<ul class="dropdown-menu">
 				<table cellpadding="0" cellspacing="0" border="0">

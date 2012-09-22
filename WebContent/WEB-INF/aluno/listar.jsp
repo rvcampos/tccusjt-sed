@@ -21,7 +21,7 @@ www.w3.org/TR/html4/loose.dtd">
 		</tr>
 		<tr>
 			<td colspan="2"><input type="submit" name="btnFiltro"
-				value="Pesquisar" /></td>
+				value="Pesquisar" class="btn btn-primary"/></td>
 		</tr>
 	</table>
 	<br><br>
