@@ -75,7 +75,7 @@ public class JSPAttr
     public String getParameter(String key) {
         return this.request.getParameter(key);
     }
-    
+
     /**
      * GET Parameter
      */
@@ -94,6 +94,9 @@ public class JSPAttr
         Enumeration<String> en = request.getParameterNames();
         while (en.hasMoreElements()) {
             String x = en.nextElement();
+            if ("page".equals(x) || "qtdpag".equals(x)) {
+                continue;
+            }
             set(x, getParameter(x));
         }
     }
