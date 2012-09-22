@@ -19,7 +19,6 @@ import org.slf4j.LoggerFactory;
 
 import br.com.usjt.ICrud;
 import br.com.usjt.ead.EntityDAO;
-import br.com.usjt.ead.aluno.AlunoBean;
 import br.com.usjt.ead.cidadestado.CidadeBean;
 import br.com.usjt.ead.cidadestado.CidadeEstadoRest;
 import br.com.usjt.ead.cidadestado.EstadoUFBean;
@@ -31,9 +30,8 @@ import br.com.usjt.ead.curso.DisciplinaBean;
 import br.com.usjt.jaxrs.JSPAttr;
 import br.com.usjt.jaxrs.MediaTypeMore;
 import br.com.usjt.jaxrs.security.SecurityPrivate;
-import br.com.usjt.jaxrs.security.SecurityPublic;
-import br.com.usjt.jaxrs.security.SecurityPrivate.Entidade;
 import br.com.usjt.jaxrs.security.SecurityPrivate.SecType;
+import br.com.usjt.jaxrs.security.SecurityPublic;
 import br.com.usjt.shiro.Security;
 import br.com.usjt.shiro.SecurityShiro;
 import br.com.usjt.util.CryptoXFacade;

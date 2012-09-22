@@ -16,7 +16,6 @@ import javax.persistence.Table;
 import javax.validation.Valid;
 
 import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
 import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity

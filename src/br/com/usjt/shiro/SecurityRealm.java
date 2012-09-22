@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -15,7 +14,6 @@ import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.SimplePrincipalCollection;
-import org.apache.ws.security.components.crypto.Crypto;
 import org.hibernate.HibernateException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +21,6 @@ import org.slf4j.LoggerFactory;
 import br.com.usjt.ead.admin.AdminBean;
 import br.com.usjt.ead.aluno.AlunoBean;
 import br.com.usjt.ead.professor.ProfessorBean;
-import br.com.usjt.util.CryptoXFacade;
 import br.com.usjt.util.HS;
 
 /**
