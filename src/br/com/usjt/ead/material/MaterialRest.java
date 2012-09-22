@@ -9,7 +9,6 @@ import org.jboss.resteasy.annotations.providers.jaxb.Stylesheet;
 import br.com.usjt.ICrud;
 import br.com.usjt.jaxrs.MediaTypeMore;
 import br.com.usjt.jaxrs.security.SecurityPrivate;
-import br.com.usjt.jaxrs.security.SecurityPrivate.Entidade;
 import br.com.usjt.jaxrs.security.SecurityPrivate.SecType;
 
 @Path("/material")

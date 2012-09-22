@@ -6,7 +6,6 @@ import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.apache.shiro.subject.Subject;
 
 import br.com.usjt.jaxrs.JSPAttr;
-import br.com.usjt.jaxrs.security.SecurityDummy;
 
 /**
  * Implementacao de seguranca do JAXRS

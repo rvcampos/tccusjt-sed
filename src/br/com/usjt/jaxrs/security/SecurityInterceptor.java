@@ -16,7 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import br.com.usjt.jaxrs.JSPAttr;
-import br.com.usjt.jaxrs.security.SecurityPrivate.Entidade;
 import br.com.usjt.jaxrs.security.SecurityPrivate.SecType;
 import br.com.usjt.shiro.SecurityShiro;
 
