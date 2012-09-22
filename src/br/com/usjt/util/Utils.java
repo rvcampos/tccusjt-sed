@@ -1,5 +1,6 @@
 package br.com.usjt.util;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -13,7 +14,9 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
+import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
+import org.hibernate.criterion.Projections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,7 +24,7 @@ import br.com.usjt.ead.PropertiesBean;
 import br.com.usjt.jaxrs.JSPAttr;
 
 /**
- * Classe utilit�ria
+ * Classe utilitária
  */
 public final class Utils
 {
@@ -31,6 +34,7 @@ public final class Utils
                                                                              + "Acesse o link abaixo para ativar sua conta <br><br> <a href=\"http://localhost:8080/tccusjt-sed/aluno/ativar?key=%s\"> Ativação </a>";
 
     private static final Logger                LOG                   = LoggerFactory.getLogger(Utils.class);
+    private static final BigDecimal            registrosPagina       = BigDecimal.TEN;
 
     private Utils()
     {
@@ -197,6 +201,41 @@ public final class Utils
             b.insert(0, caracter);
         }
         return b.toString();
+    }
+
+    /**
+     * Metodo padrao para paginação
+     * 
+     * @param j
+     * @param criteria
+     */
+    public static void paginar(JSPAttr j, Criteria criteria) {
+        criteria.setProjection(Projections.rowCount());
+        Long qtd = (Long) criteria.uniqueResult();
+        int qtdpag = BigDecimal.valueOf(qtd).divide(registrosPagina, BigDecimal.ROUND_CEILING).intValue();
+        int pag = 1;
+
+        if (!isEmpty(j.getParameter("page"))) {
+            pag = Integer.parseInt(j.getParameter("page"));
+            if (pag < 1) {
+                pag = 1;
+            }
+
+            if (pag > qtdpag) {
+                pag = qtdpag;
+            }
+        }
+        int ini = 0;
+        if (pag > 1) {
+            ini = registrosPagina.intValue() * (pag - 1);
+        }
+
+        criteria.setProjection(null);
+        criteria.setResultTransformer(Criteria.ROOT_ENTITY);
+        criteria.setFirstResult(ini);
+        criteria.setMaxResults(registrosPagina.intValue());
+        j.set("page", pag);
+        j.set("qtdpag", qtdpag);
     }
 
 }

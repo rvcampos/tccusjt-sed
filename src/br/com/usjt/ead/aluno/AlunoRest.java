@@ -15,6 +15,7 @@ import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -33,7 +34,6 @@ import br.com.usjt.ead.contato.TelefoneBean;
 import br.com.usjt.ead.contato.TipoTelefoneBean;
 import br.com.usjt.ead.curso.ModuloBean;
 import br.com.usjt.ead.curso.SalaChatBean;
-import br.com.usjt.ead.professor.ProfessorBean;
 import br.com.usjt.jaxrs.JSPAttr;
 import br.com.usjt.jaxrs.MediaTypeMore;
 import br.com.usjt.jaxrs.security.SecurityPrivate;
@@ -60,17 +60,41 @@ public class AlunoRest implements ICrud
     public void read() {
         JSPAttr j = new JSPAttr();
         Session session = HS.getSession();
+        Criteria c = session.createCriteria(AlunoBean.class);
         try {
-            j.set("alunos", session.createCriteria(AlunoBean.class).list());
+            // Usar um método para receber e devolver um CRITERIA
+            c = filtrar(c, j);
+            // Usar como paginação padrão
+            Utils.paginar(j, c);
+            j.set("alunos", c.list());
         }
         catch (Exception e) {
             LOG.error("Erro ao listar alunos", e);
+            j.repopular();
         }
         finally {
             session.close();
+            j.repopular();
         }
     }
 
+    private Criteria filtrar(Criteria c, JSPAttr j) {
+        // Quando o parametro de filtro for de outro bean, no caso um
+        // relacionamento, utilizar 'createCriteria(nomeBean,alias)'
+        // Restrictions.like = like
+        // Restrictions.eq = igual
+        // PS: Prestar atenção no tipo de dado. Deve ser igual ao do bean. No
+        // caso, String com String, Integer com Integer
+        if (!Utils.isEmpty(j.getParameter("filtro_nome"))) {
+            c.createCriteria("contato", "contato").add(
+                    Restrictions.like("contato.nome", j.getParameter("filtro_nome"), MatchMode.ANYWHERE));
+        }
+
+        if (!Utils.isEmpty(j.getParameter("filtro_email"))) {
+            c.add(Restrictions.like("email", j.getParameter("filtro_email"), MatchMode.ANYWHERE));
+        }
+        return c;
+    }
 
     @Override
     @Path("alterarDados")
@@ -163,7 +187,6 @@ public class AlunoRest implements ICrud
             session.close();
         }
     }
-
 
     @Override
     @Path("create")
@@ -621,10 +644,10 @@ public class AlunoRest implements ICrud
         if (!ok) {
             return false;
         }
-        
+
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
         Time ini = new Time(System.currentTimeMillis());
-        Time end= new Time(System.currentTimeMillis());
+        Time end = new Time(System.currentTimeMillis());
         try {
             ini = new Time(sdf.parse(sdf.format(sala.getHorario())).getTime());
             end = new Time(sdf.parse(sdf.format(sala.getHorario_termino())).getTime());
@@ -632,23 +655,23 @@ public class AlunoRest implements ICrud
         catch (ParseException e) {
             e.printStackTrace();
         }
-        
+
         Calendar inic = Calendar.getInstance();
         inic.setTimeInMillis(ini.getTime());
-        
+
         Calendar endc = Calendar.getInstance();
         endc.setTimeInMillis(end.getTime());
-        
+
         Calendar inic2 = Calendar.getInstance();
         inic2.set(Calendar.HOUR, inic.get(Calendar.HOUR));
         inic2.set(Calendar.MINUTE, inic.get(Calendar.MINUTE));
         inic2.set(Calendar.SECOND, inic.get(Calendar.SECOND));
-        
+
         Calendar end2 = Calendar.getInstance();
         end2.set(Calendar.HOUR, endc.get(Calendar.HOUR));
         end2.set(Calendar.MINUTE, endc.get(Calendar.MINUTE));
         end2.set(Calendar.SECOND, endc.get(Calendar.SECOND));
-        
+
         return now.after(inic2) && now.before(end2);
     }
 }
