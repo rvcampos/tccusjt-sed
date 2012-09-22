@@ -7,6 +7,7 @@ import javax.ws.rs.Path;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.jboss.resteasy.annotations.providers.jaxb.Stylesheet;
@@ -15,6 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import br.com.usjt.ICrud;
 import br.com.usjt.ead.EntityDAO;
+import br.com.usjt.ead.aluno.AlunoBean;
 import br.com.usjt.ead.cidadestado.CidadeBean;
 import br.com.usjt.ead.cidadestado.CidadeEstadoRest;
 import br.com.usjt.ead.cidadestado.EstadoUFBean;
@@ -36,12 +38,48 @@ public class AdminRest implements ICrud
     private static final Logger LOG = LoggerFactory.getLogger(AdminRest.class);
 
     @Override
-    @Path("")
+    @Path("listar")
     @POST
     @GET
-    @Stylesheet(href = "pag.jsp", type = MediaTypeMore.APP_JSP)
+    @Stylesheet(href = "admin/listar.jsp", type = MediaTypeMore.APP_JSP)
     @SecurityPrivate(role = SecType.ADMIN)
     public void read() {
+        JSPAttr j = new JSPAttr();
+        Session session = HS.getSession();
+        Criteria c = session.createCriteria(AdminBean.class);
+        try {
+            // Usar um método para receber e devolver um CRITERIA
+            c = filtrar(c, j);
+            // Usar como paginação padrão
+            Utils.paginar(j, c);
+            j.set("admins", c.list());
+        }
+        catch (Exception e) {
+            LOG.error("Erro ao listar administradores", e);
+            j.repopular();
+        }
+        finally {
+            session.close();
+            j.repopular();
+        }
+    }
+
+    private Criteria filtrar(Criteria c, JSPAttr j) {
+        // Quando o parametro de filtro for de outro bean, no caso um
+        // relacionamento, utilizar 'createCriteria(nomeBean,alias)'
+        // Restrictions.like = like
+        // Restrictions.eq = igual
+        // PS: Prestar atenção no tipo de dado. Deve ser igual ao do bean. No
+        // caso, String com String, Integer com Integer
+        if (!Utils.isEmpty(j.getParameter("filtro_nome"))) {
+            c.createCriteria("contato", "contato").add(
+                    Restrictions.like("contato.nome", j.getParameter("filtro_nome"), MatchMode.ANYWHERE));
+        }
+
+        if (!Utils.isEmpty(j.getParameter("filtro_email"))) {
+            c.add(Restrictions.like("email", j.getParameter("filtro_email"), MatchMode.ANYWHERE));
+        }
+        return c;
     }
 
     @Override
@@ -187,7 +225,7 @@ public class AdminRest implements ICrud
      */
     @POST
     @Path("checaEmail")
-    @Stylesheet(href = "aluno/label.jsp", type = MediaTypeMore.APP_JSP)
+    @Stylesheet(href = "admin/label.jsp", type = MediaTypeMore.APP_JSP)
     @SecurityPublic
     public void validaEmail() {
         Session session = HS.getSession();

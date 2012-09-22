@@ -5,10 +5,10 @@ www.w3.org/TR/html4/loose.dtd">
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Listar Professor</title>
+<title>Listar Administrador</title>
 </head>
 
-<form action="${app_context }professor/listar" method="post">
+<form action="${app_context }admin/listar" method="post">
 	<table class="table table-condensed">
 		<tr>
 			<td>Nome:</td>
@@ -30,27 +30,13 @@ www.w3.org/TR/html4/loose.dtd">
 
 <table class="table">
 	<tr>
-		<th></th>
-		<th></th>
 		<th>Nome</th>  
-		<th>Data de Nascimento</th>  
 		<th>E-mail</th>
 	</tr>
-	<c:forEach var="prof" items="${profs}">
+	<c:forEach var="admin" items="${admins}">
 		<tr>
-			<td><form action="detalha" method="post" id="formProfessor${prof.id_professor}">
-					<input type="hidden" value=${prof.id_professor } name="id_prof" />
-					<a onclick="$('#formProfessor${prof.id_professor}').submit();"><i class="icon-pencil"></i></a>
-				</form></td>
-			<td><form action="delete" method="post"
-					id="formProfessorDelete${prof.id_professor}">
-					<input type="hidden" value=${prof.id_professor } name="id_prof" />
-					<a onclick="$('#formProfessorDelete${prof.id_professor}').submit();"><i
-						class="icon-remove"></i></a>
-				</form></td>
-			<td>${prof.cpf}</td>
-			<td>${prof.contato.data_nascimento}</td>
-			<td>${prof.email}</td>
+			<td>${admin.nome}</td>
+			<td>${admin.email}</td>
 		</tr>
 	</c:forEach>
 </table>
