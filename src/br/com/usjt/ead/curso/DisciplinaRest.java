@@ -171,10 +171,12 @@ public class DisciplinaRest implements ICrud
             objDisciplina.setProfessor((ProfessorBean) session.load(ProfessorBean.class, sh.getUserId()));
             objDisciplina = populaOsModulosCreate(j, objDisciplina);
             if (Utils.isValid(objDisciplina)) {
-                DefaultHttpClient httpclient = new DefaultHttpClient();
-                HttpGet get = new HttpGet("http://127.0.0.1:443/?api.SaveConfiguration");
-                HttpResponse resp = httpclient.execute(get);
-                HttpEntity entity = resp.getEntity();
+                // XXX Descomentar
+                // DefaultHttpClient httpclient = new DefaultHttpClient();
+                // HttpGet get = new
+                // HttpGet("http://127.0.0.1:443/?api.SaveConfiguration");
+                // HttpResponse resp = httpclient.execute(get);
+                // HttpEntity entity = resp.getEntity();
                 session.save(objDisciplina);
                 tx.commit();
                 j.sucessMsg("Disciplina criada com sucesso");
@@ -217,20 +219,22 @@ public class DisciplinaRest implements ICrud
 
     private ModuloBean criaChat(ModuloBean mod, HttpClient httpClient, String nivel) throws Exception {
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-        HttpGet get = new HttpGet("http://127.0.0.1:443/?api.AddRoom="
-                + mod.getDisciplina().getNome_disciplina().replaceAll(" ", "%20") + "," + nivel + ",,true");
-        HttpResponse resp = httpClient.execute(get);
-        HttpEntity entity = resp.getEntity();
-        SalaChatBean sala = new SalaChatBean();
-        String roomId = EntityUtils.toString(entity).replaceAll("ID: ", "").trim();
-        String uri = String.format(CHATURI, roomId);
-        sala.setModulo(mod);
-        sala.setId_chat(roomId);
-        sala.setUri(uri);
-        sala.setDias("seg, ter, qua, qui, sex, sab, dom");
-        sala.setHorario(new Time(sdf.parse("19:00:00").getTime()));
-        sala.setHorario_termino(new Time(sdf.parse("23:59:00").getTime()));
-        mod.setChat(sala);
+        // HttpGet get = new HttpGet("http://127.0.0.1:443/?api.AddRoom="
+        // + mod.getDisciplina().getNome_disciplina().replaceAll(" ", "%20") +
+        // "," + nivel + ",,true");
+        // HttpResponse resp = httpClient.execute(get);
+        // HttpEntity entity = resp.getEntity();
+        // SalaChatBean sala = new SalaChatBean();
+        // String roomId = EntityUtils.toString(entity).replaceAll("ID: ",
+        // "").trim();
+        // String uri = String.format(CHATURI, roomId);
+        // sala.setModulo(mod);
+        // sala.setId_chat(roomId);
+        // sala.setUri(uri);
+        // sala.setDias("seg, ter, qua, qui, sex, sab, dom");
+        // sala.setHorario(new Time(sdf.parse("19:00:00").getTime()));
+        // sala.setHorario_termino(new Time(sdf.parse("23:59:00").getTime()));
+        // mod.setChat(sala);
 
         return mod;
     }
