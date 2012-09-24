@@ -257,7 +257,7 @@ public class DisciplinaRest
 
                 // constructs upload file path
                 fileName = "/app/" + mod.getDisciplina().getNome_disciplina() + "/" + fileName;
-                MaterialDidaticoBean mat = writeFile(bytes, fileName);
+                MaterialDidaticoBean mat = writeFile(bytes, fileName, "/app/" + mod.getDisciplina().getNome_disciplina());
                 mat.setModulo(mod);
                 mod.getMaterial().add(mat);
             }
@@ -290,8 +290,13 @@ public class DisciplinaRest
     }
 
     // save to somewhere
-    private MaterialDidaticoBean writeFile(byte[] content, String filename) throws IOException {
+    private MaterialDidaticoBean writeFile(byte[] content, String filename, String folder) throws IOException {
         MaterialDidaticoBean b = new MaterialDidaticoBean();
+        File folderd = new File(folder);
+        if(!folderd.exists())
+        {
+            folderd.mkdir();
+        }
         File file = new File(filename);
 
         if (!file.exists()) {
