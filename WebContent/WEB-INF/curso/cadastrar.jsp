@@ -44,7 +44,7 @@ www.w3.org/TR/html4/loose.dtd">
 	</script>
 </head>
 <form action="${metodo}" class="form-horizontal" method="post"
-	id="formDisciplina">
+	id="formDisciplina" enctype="multipart/form-data">
 	<legend>
 		<b>Cadastro </b>
 	</legend>
