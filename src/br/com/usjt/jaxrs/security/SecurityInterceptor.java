@@ -9,6 +9,7 @@ import org.jboss.resteasy.annotations.interception.SecurityPrecedence;
 import org.jboss.resteasy.annotations.interception.ServerInterceptor;
 import org.jboss.resteasy.core.ResourceMethod;
 import org.jboss.resteasy.core.ServerResponse;
+import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.spi.Failure;
 import org.jboss.resteasy.spi.HttpRequest;
 import org.jboss.resteasy.spi.interception.PreProcessInterceptor;
@@ -34,6 +35,8 @@ public class SecurityInterceptor implements PreProcessInterceptor
     public ServerResponse preProcess(HttpRequest r, ResourceMethod m) throws Failure, WebApplicationException {
         // Security sh = SecurityShiro.init();
         br.com.usjt.shiro.Security sh = SecurityShiro.init();
+        r.setAttribute(InputPart.DEFAULT_CONTENT_TYPE_PROPERTY,
+                "*/*; charset=UTF-8");
         if (m.getMethod().isAnnotationPresent(SecurityPublic.class)) {
             SecurityInterceptor.LOG.info("Publico:" + m.getMethod());
         }

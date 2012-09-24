@@ -56,7 +56,7 @@ function gerarMaterial(id, qtd, label)
 	</script>
 </head>
 <form action="${metodo}" class="form-horizontal" method="post"
-	id="formDisciplina" enctype="multipart/form-data">
+	id="formDisciplina" enctype="multipart/form-data" accept-charset="UTF-8">
 	<legend>
 		<b>Cadastro </b>
 	</legend>
