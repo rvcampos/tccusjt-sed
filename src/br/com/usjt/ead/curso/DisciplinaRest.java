@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
@@ -18,12 +17,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.MultivaluedMap;
 
 import org.apache.cxf.helpers.IOUtils;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.jboss.resteasy.annotations.providers.jaxb.Stylesheet;
@@ -32,7 +27,6 @@ import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import br.com.usjt.ICrud;
 import br.com.usjt.ead.EntityDAO;
 import br.com.usjt.ead.aluno.AlunoRest;
 import br.com.usjt.ead.aluno.MatriculaBean;
@@ -50,16 +44,15 @@ import br.com.usjt.util.HS;
 import br.com.usjt.util.Utils;
 
 @Path("/curso")
-public class DisciplinaRest implements ICrud
+public class DisciplinaRest
 {
 
     private static final long   oneDay             = 86400000L;
     private static final String CHATURI            = "http://127.0.0.1:443/?0,%s,0,13,2";
-    private static final String UPLOADED_FILE_PATH = "C:\\";
+    private static final String UPLOADED_FILE_PATH = "/app";
 
     private static final Logger LOG                = LoggerFactory.getLogger(DisciplinaRest.class);
 
-    @Override
     @Path("listar")
     @POST
     @GET
@@ -81,7 +74,7 @@ public class DisciplinaRest implements ICrud
         }
     }
 
-    @Override
+   
     @Path("editar")
     @POST
     @Stylesheet(href = "curso/cadastrar.jsp", type = MediaTypeMore.APP_JSP)
@@ -129,7 +122,7 @@ public class DisciplinaRest implements ICrud
         }
     }
 
-    @Override
+   
     @Path("cadastrar")
     @GET
     @Stylesheet(href = "curso/cadastrar.jsp", type = MediaTypeMore.APP_JSP)
@@ -138,7 +131,7 @@ public class DisciplinaRest implements ICrud
         JSPAttr j = new JSPAttr("metodo", "create");
     }
 
-    @Override
+   
     @Path("delete")
     @POST
     @Stylesheet(href = "professor/meusCursos.jsp", type = MediaTypeMore.APP_JSP)
@@ -179,17 +172,18 @@ public class DisciplinaRest implements ICrud
         Security sh = SecurityShiro.init();
         Map<String, List<InputPart>> uploadForm = input.getFormDataMap();
         try {
-            objDisciplina.setNome_disciplina(uploadForm.get("txtNomeDisciplina").get(0).toString());
-            objDisciplina.setData_inicio(dtFormat.parse(uploadForm.get("txtDataInicio").get(0).toString()));
-            objDisciplina.setData_termino(dtFormat.parse(uploadForm.get("txtDataTermino").get(0).toString()));
-            objDisciplina.setDescricao(uploadForm.get("txtDesc").get(0).toString());
+            objDisciplina.setNome_disciplina(uploadForm.get("txtNomeDisciplina").get(0).getBodyAsString());
+            objDisciplina.setData_inicio(dtFormat.parse(uploadForm.get("txtDataInicio").get(0).getBodyAsString()));
+            objDisciplina.setData_termino(dtFormat.parse(uploadForm.get("txtDataTermino").get(0).getBodyAsString()));
+            objDisciplina.setDescricao(uploadForm.get("txtDesc").get(0).getBodyAsString());
             objDisciplina.setProfessor((ProfessorBean) session.load(ProfessorBean.class, sh.getUserId()));
             objDisciplina = populaOsModulosCreate(j, objDisciplina, uploadForm);
             if (Utils.isValid(objDisciplina)) {
-                DefaultHttpClient httpclient = new DefaultHttpClient();
-                HttpGet get = new HttpGet("http://127.0.0.1:443/?api.SaveConfiguration");
-                HttpResponse resp = httpclient.execute(get);
-                HttpEntity entity = resp.getEntity();
+                // DefaultHttpClient httpclient = new DefaultHttpClient();
+                // HttpGet get = new
+                // HttpGet("http://127.0.0.1:443/?api.SaveConfiguration");
+                // HttpResponse resp = httpclient.execute(get);
+                // HttpEntity entity = resp.getEntity();
                 session.save(objDisciplina);
                 tx.commit();
                 j.sucessMsg("Disciplina criada com sucesso");
@@ -232,20 +226,22 @@ public class DisciplinaRest implements ICrud
 
     private ModuloBean criaChat(ModuloBean mod, HttpClient httpClient, String nivel) throws Exception {
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-        HttpGet get = new HttpGet("http://127.0.0.1:443/?api.AddRoom="
-                + mod.getDisciplina().getNome_disciplina().replaceAll(" ", "%20") + "," + nivel + ",,true");
-        HttpResponse resp = httpClient.execute(get);
-        HttpEntity entity = resp.getEntity();
-        SalaChatBean sala = new SalaChatBean();
-        String roomId = EntityUtils.toString(entity).replaceAll("ID: ", "").trim();
-        String uri = String.format(CHATURI, roomId);
-        sala.setModulo(mod);
-        sala.setId_chat(roomId);
-        sala.setUri(uri);
-        sala.setDias("seg, ter, qua, qui, sex, sab, dom");
-        sala.setHorario(new Time(sdf.parse("19:00:00").getTime()));
-        sala.setHorario_termino(new Time(sdf.parse("23:59:00").getTime()));
-        mod.setChat(sala);
+        // HttpGet get = new HttpGet("http://127.0.0.1:443/?api.AddRoom="
+        // + mod.getDisciplina().getNome_disciplina().replaceAll(" ", "%20") +
+        // "," + nivel + ",,true");
+        // HttpResponse resp = httpClient.execute(get);
+        // HttpEntity entity = resp.getEntity();
+        // SalaChatBean sala = new SalaChatBean();
+        // String roomId = EntityUtils.toString(entity).replaceAll("ID: ",
+        // "").trim();
+        // String uri = String.format(CHATURI, roomId);
+        // sala.setModulo(mod);
+        // sala.setId_chat(roomId);
+        // sala.setUri(uri);
+        // sala.setDias("seg, ter, qua, qui, sex, sab, dom");
+        // sala.setHorario(new Time(sdf.parse("19:00:00").getTime()));
+        // sala.setHorario_termino(new Time(sdf.parse("23:59:00").getTime()));
+        // mod.setChat(sala);
 
         return mod;
     }
@@ -263,7 +259,7 @@ public class DisciplinaRest implements ICrud
                 byte[] bytes = IOUtils.readBytesFromStream(inputStream);
 
                 // constructs upload file path
-                fileName = UPLOADED_FILE_PATH + fileName;
+                fileName = "/app/" + fileName;
 
                 mod.getMaterial().add(writeFile(bytes, fileName));
             }
@@ -353,18 +349,18 @@ public class DisciplinaRest implements ICrud
             basico.setData_inicio(objDisciplina.getData_inicio());
             basico.setData_termino(objDisciplina.getData_termino());
         }
-        if (((!Utils.isEmpty(uploadForm.get("qtdquestoesBas").get(0).toString()) && !Utils.isEmpty(uploadForm.get("qtdaltBas")
-                .get(0).toString())))) {
+        if (((!Utils.isEmpty(uploadForm.get("qtdquestoesBas").get(0).getBodyAsString()) && !Utils.isEmpty(uploadForm.get("qtdaltBas")
+                .get(0).getBodyAsString())))) {
             AvaliacaoBean b = new AvaliacaoBean();
             b.setModulo(basico);
-            for (int i = 1; i <= Integer.parseInt(uploadForm.get("qtdquestoesBas").get(0).toString()); i++) {
+            for (int i = 1; i <= Integer.parseInt(uploadForm.get("qtdquestoesBas").get(0).getBodyAsString()); i++) {
                 QuestaoBean questao = new QuestaoBean();
                 questao.setAvaliacao(b);
-                questao.setConteudo(uploadForm.get("txtquestoesBasicoquest" + i).get(0).toString());
-                int certa = Integer.parseInt(uploadForm.get("optquestoesBasico" + i).get(0).toString());
-                for (int k = 1; k <= Integer.parseInt(uploadForm.get("qtdaltBas").get(0).toString()); k++) {
+                questao.setConteudo(uploadForm.get("txtquestoesBasicoquest" + i).get(0).getBodyAsString());
+                int certa = Integer.parseInt(uploadForm.get("optquestoesBasico" + i).get(0).getBodyAsString());
+                for (int k = 1; k <= Integer.parseInt(uploadForm.get("qtdaltBas").get(0).getBodyAsString()); k++) {
                     AlternativaBean alternativa = new AlternativaBean();
-                    alternativa.setConteudo(uploadForm.get("txtquestoesBasicoquest" + i + "alt" + k).get(0).toString());
+                    alternativa.setConteudo(uploadForm.get("txtquestoesBasicoquest" + i + "alt" + k).get(0).getBodyAsString());
                     alternativa.setQuestao(questao);
                     if (k == certa) {
                         alternativa.setCorreta(true);
@@ -373,7 +369,7 @@ public class DisciplinaRest implements ICrud
                 }
                 b.getQuestoes().add(questao);
             }
-            adicionaMaterial(basico, uploadForm.get("materialBasico"));
+            adicionaMaterial(basico, uploadForm.get("matBasico"));
 
             basico.setAvaliacao(b);
             basico = criaChat(basico, httpclient, "basico");
@@ -389,18 +385,18 @@ public class DisciplinaRest implements ICrud
             intermediario.setData_inicio(objDisciplina.getData_inicio());
             intermediario.setData_termino(objDisciplina.getData_termino());
         }
-        if (((!Utils.isEmpty(uploadForm.get("qtdquestoesInt").get(0).toString()) && !Utils.isEmpty(uploadForm.get("qtdaltInt")
-                .get(0).toString())))) {
+        if (((!Utils.isEmpty(uploadForm.get("qtdquestoesInt").get(0).getBodyAsString()) && !Utils.isEmpty(uploadForm.get("qtdaltInt")
+                .get(0).getBodyAsString())))) {
             AvaliacaoBean inte = new AvaliacaoBean();
             inte.setModulo(intermediario);
-            for (int i = 1; i <= Integer.parseInt(uploadForm.get("qtdquestoesInt").get(0).toString()); i++) {
+            for (int i = 1; i <= Integer.parseInt(uploadForm.get("qtdquestoesInt").get(0).getBodyAsString()); i++) {
                 QuestaoBean questao = new QuestaoBean();
                 questao.setAvaliacao(inte);
-                questao.setConteudo(uploadForm.get("txtquestoesIntermediarioquest" + i).get(0).toString());
-                int certa = Integer.parseInt(uploadForm.get("optquestoesIntermediario" + i).get(0).toString());
-                for (int k = 1; k <= Integer.parseInt(uploadForm.get("qtdaltInt").get(0).toString()); k++) {
+                questao.setConteudo(uploadForm.get("txtquestoesIntermediarioquest" + i).get(0).getBodyAsString());
+                int certa = Integer.parseInt(uploadForm.get("optquestoesIntermediario" + i).get(0).getBodyAsString());
+                for (int k = 1; k <= Integer.parseInt(uploadForm.get("qtdaltInt").get(0).getBodyAsString()); k++) {
                     AlternativaBean alternativa = new AlternativaBean();
-                    alternativa.setConteudo(uploadForm.get("txtquestoesIntermediarioquest" + i + "alt" + k).get(0).toString());
+                    alternativa.setConteudo(uploadForm.get("txtquestoesIntermediarioquest" + i + "alt" + k).get(0).getBodyAsString());
                     alternativa.setQuestao(questao);
                     if (k == certa) {
                         alternativa.setCorreta(true);
@@ -409,6 +405,7 @@ public class DisciplinaRest implements ICrud
                 }
                 inte.getQuestoes().add(questao);
             }
+            adicionaMaterial(intermediario, uploadForm.get("matIntermediario"));
             intermediario = criaChat(intermediario, httpclient, "Intermediário");
             intermediario.setAvaliacao(inte);
         }
@@ -422,18 +419,18 @@ public class DisciplinaRest implements ICrud
             avancado.setData_inicio(objDisciplina.getData_inicio());
             avancado.setData_termino(objDisciplina.getData_termino());
         }
-        if (((!Utils.isEmpty(uploadForm.get("qtdquestoesAdv").get(0).toString()) && !Utils.isEmpty(uploadForm.get("qtdaltAdv")
-                .get(0).toString())))) {
+        if (((!Utils.isEmpty(uploadForm.get("qtdquestoesAdv").get(0).getBodyAsString()) && !Utils.isEmpty(uploadForm.get("qtdaltAdv")
+                .get(0).getBodyAsString())))) {
             AvaliacaoBean adv = new AvaliacaoBean();
             adv.setModulo(avancado);
-            for (int i = 1; i <= Integer.parseInt(uploadForm.get("qtdquestoesAdv").get(0).toString()); i++) {
+            for (int i = 1; i <= Integer.parseInt(uploadForm.get("qtdquestoesAdv").get(0).getBodyAsString()); i++) {
                 QuestaoBean questao = new QuestaoBean();
                 questao.setAvaliacao(adv);
-                questao.setConteudo(uploadForm.get("txtquestoesAvancadoquest" + i).get(0).toString());
-                int certa = Integer.parseInt(uploadForm.get("optquestoesAvancado" + i).get(0).toString());
-                for (int k = 1; k <= Integer.parseInt(uploadForm.get("qtdaltInt").get(0).toString()); k++) {
+                questao.setConteudo(uploadForm.get("txtquestoesAvancadoquest" + i).get(0).getBodyAsString());
+                int certa = Integer.parseInt(uploadForm.get("optquestoesAvancado" + i).get(0).getBodyAsString());
+                for (int k = 1; k <= Integer.parseInt(uploadForm.get("qtdaltInt").get(0).getBodyAsString()); k++) {
                     AlternativaBean alternativa = new AlternativaBean();
-                    alternativa.setConteudo(uploadForm.get("txtquestoesAvancadoquest" + i + "alt" + k).get(0).toString());
+                    alternativa.setConteudo(uploadForm.get("txtquestoesAvancadoquest" + i + "alt" + k).get(0).getBodyAsString());
                     alternativa.setQuestao(questao);
                     if (k == certa) {
                         alternativa.setCorreta(true);
@@ -442,6 +439,7 @@ public class DisciplinaRest implements ICrud
                 }
                 adv.getQuestoes().add(questao);
             }
+            adicionaMaterial(avancado, uploadForm.get("matAvancado"));
             avancado = criaChat(avancado, httpclient, "Avançado");
             avancado.setAvaliacao(adv);
         }
@@ -558,7 +556,7 @@ public class DisciplinaRest implements ICrud
         return objDisciplina;
     }
 
-    @Override
+   
     @Path("update")
     @POST
     @Stylesheet(href = "professor/meusCursos.jsp", type = MediaTypeMore.APP_JSP)
@@ -700,12 +698,6 @@ public class DisciplinaRest implements ICrud
             }
             new AlunoRest().meusCursos();
         }
-    }
-
-    @Override
-    public void create() {
-        // TODO Auto-generated method stub
-
     }
 
 }
