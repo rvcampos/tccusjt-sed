@@ -21,10 +21,9 @@
 				<div class="well sidebar-nav">
             <ul class="nav nav-list">
               <li class="nav-header">Material</li>
-              <li class="active"><a href="#">Link</a></li>
+              <c:forEach var="material" items="${materiais}">
               <li><a href="#">Link</a></li>
-              <li><a href="#">Link</a></li>
-              <li><a href="#">Link</a></li>
+              </c:forEach>
               <li class="nav-header">Avaliação</li>
               <c:if test="${fazProva}">
               <li><form action="${app_context}curso/realizaAvaliacao" id="frmAval" method="POST"><input type="hidden" name="matricula" value="${id_matricula}" /><a href="#" onclick="$('#frmAval').submit();">Fazer Prova</form></li>

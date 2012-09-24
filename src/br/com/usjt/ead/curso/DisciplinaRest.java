@@ -74,7 +74,6 @@ public class DisciplinaRest
         }
     }
 
-   
     @Path("editar")
     @POST
     @Stylesheet(href = "curso/cadastrar.jsp", type = MediaTypeMore.APP_JSP)
@@ -122,7 +121,6 @@ public class DisciplinaRest
         }
     }
 
-   
     @Path("cadastrar")
     @GET
     @Stylesheet(href = "curso/cadastrar.jsp", type = MediaTypeMore.APP_JSP)
@@ -131,7 +129,6 @@ public class DisciplinaRest
         JSPAttr j = new JSPAttr("metodo", "create");
     }
 
-   
     @Path("delete")
     @POST
     @Stylesheet(href = "professor/meusCursos.jsp", type = MediaTypeMore.APP_JSP)
@@ -259,9 +256,10 @@ public class DisciplinaRest
                 byte[] bytes = IOUtils.readBytesFromStream(inputStream);
 
                 // constructs upload file path
-                fileName = "/app/" + fileName;
-
-                mod.getMaterial().add(writeFile(bytes, fileName));
+                fileName = "/app/" + mod.getDisciplina().getNome_disciplina() + "/" + fileName;
+                MaterialDidaticoBean mat = writeFile(bytes, fileName);
+                mat.setModulo(mod);
+                mod.getMaterial().add(mat);
             }
             catch (IOException e) {
                 LOG.error("Falha ao salvar arquivo", e);
@@ -307,6 +305,7 @@ public class DisciplinaRest
         fop.close();
 
         b.setEndereco_material(file.getAbsolutePath());
+        b.setNome(file.getName());
         return b;
     }
 
@@ -349,8 +348,8 @@ public class DisciplinaRest
             basico.setData_inicio(objDisciplina.getData_inicio());
             basico.setData_termino(objDisciplina.getData_termino());
         }
-        if (((!Utils.isEmpty(uploadForm.get("qtdquestoesBas").get(0).getBodyAsString()) && !Utils.isEmpty(uploadForm.get("qtdaltBas")
-                .get(0).getBodyAsString())))) {
+        if (((!Utils.isEmpty(uploadForm.get("qtdquestoesBas").get(0).getBodyAsString()) && !Utils.isEmpty(uploadForm
+                .get("qtdaltBas").get(0).getBodyAsString())))) {
             AvaliacaoBean b = new AvaliacaoBean();
             b.setModulo(basico);
             for (int i = 1; i <= Integer.parseInt(uploadForm.get("qtdquestoesBas").get(0).getBodyAsString()); i++) {
@@ -385,8 +384,8 @@ public class DisciplinaRest
             intermediario.setData_inicio(objDisciplina.getData_inicio());
             intermediario.setData_termino(objDisciplina.getData_termino());
         }
-        if (((!Utils.isEmpty(uploadForm.get("qtdquestoesInt").get(0).getBodyAsString()) && !Utils.isEmpty(uploadForm.get("qtdaltInt")
-                .get(0).getBodyAsString())))) {
+        if (((!Utils.isEmpty(uploadForm.get("qtdquestoesInt").get(0).getBodyAsString()) && !Utils.isEmpty(uploadForm
+                .get("qtdaltInt").get(0).getBodyAsString())))) {
             AvaliacaoBean inte = new AvaliacaoBean();
             inte.setModulo(intermediario);
             for (int i = 1; i <= Integer.parseInt(uploadForm.get("qtdquestoesInt").get(0).getBodyAsString()); i++) {
@@ -396,7 +395,8 @@ public class DisciplinaRest
                 int certa = Integer.parseInt(uploadForm.get("optquestoesIntermediario" + i).get(0).getBodyAsString());
                 for (int k = 1; k <= Integer.parseInt(uploadForm.get("qtdaltInt").get(0).getBodyAsString()); k++) {
                     AlternativaBean alternativa = new AlternativaBean();
-                    alternativa.setConteudo(uploadForm.get("txtquestoesIntermediarioquest" + i + "alt" + k).get(0).getBodyAsString());
+                    alternativa.setConteudo(uploadForm.get("txtquestoesIntermediarioquest" + i + "alt" + k).get(0)
+                            .getBodyAsString());
                     alternativa.setQuestao(questao);
                     if (k == certa) {
                         alternativa.setCorreta(true);
@@ -419,8 +419,8 @@ public class DisciplinaRest
             avancado.setData_inicio(objDisciplina.getData_inicio());
             avancado.setData_termino(objDisciplina.getData_termino());
         }
-        if (((!Utils.isEmpty(uploadForm.get("qtdquestoesAdv").get(0).getBodyAsString()) && !Utils.isEmpty(uploadForm.get("qtdaltAdv")
-                .get(0).getBodyAsString())))) {
+        if (((!Utils.isEmpty(uploadForm.get("qtdquestoesAdv").get(0).getBodyAsString()) && !Utils.isEmpty(uploadForm
+                .get("qtdaltAdv").get(0).getBodyAsString())))) {
             AvaliacaoBean adv = new AvaliacaoBean();
             adv.setModulo(avancado);
             for (int i = 1; i <= Integer.parseInt(uploadForm.get("qtdquestoesAdv").get(0).getBodyAsString()); i++) {
@@ -556,7 +556,6 @@ public class DisciplinaRest
         return objDisciplina;
     }
 
-   
     @Path("update")
     @POST
     @Stylesheet(href = "professor/meusCursos.jsp", type = MediaTypeMore.APP_JSP)
