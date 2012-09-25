@@ -264,7 +264,6 @@ public class DisciplinaRest
             catch (IOException e) {
                 LOG.error("Falha ao salvar arquivo", e);
             }
-
         }
     }
 
