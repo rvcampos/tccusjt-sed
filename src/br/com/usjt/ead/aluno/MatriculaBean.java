@@ -34,6 +34,16 @@ public class MatriculaBean
     private Date       dt_avaliacao;
     @Column
     private Boolean    certificado = new Boolean(false);
+    @Column
+    private int qtde_falha;
+
+    public int getQtde_falha() {
+        return qtde_falha;
+    }
+
+    public void setQtde_falha(int qtde_falha) {
+        this.qtde_falha = qtde_falha;
+    }
 
     /**
      * @return the dt_avaliacao
