@@ -64,154 +64,176 @@ www.w3.org/TR/html4/loose.dtd">
 		return true;
 	}
 </script>
-<form action="${metodo}" method="post" id="formProfessor">
+<form class="form-horizontal" action="${metodo}" method="post" id="formProfessor">
 	<legend>
 		<b>Cadastro de Professor</b>
 	</legend>
-	<table>
-		<tr>
-			<td>
-				<div class="tabbable">
-					<ul class="nav nav-tabs">
-						<li class="active"><a href="#1" data-toggle="tab">Dados
-								cadastrais</a></li>
-						<li class=""><a href="#2" data-toggle="tab">Usuario</a></li>
-						<li class=""><a href="#3" data-toggle="tab">Endereco</a></li>
-					</ul>
-					<div class="tab-content">
-						<div class="tab-pane active" id="1">
-							<table class="table">
-								<tr>
-									<td><label>Nome Completo </label></td>
-									<td><input type="text" id="txtNome" name="txtNome"
-										value="${txtNome}" maxlength="50" size="50" /></td>
-								</tr>
+	<div class="tabbable">
+	<ul class="nav nav-tabs">
+			<li class="active"><a href="#1" data-toggle="tab">Dados
+					principais</a></li>
+			<li class=""><a href="#2" data-toggle="tab">Contato</a></li>
+			<li class=""><a href="#3" data-toggle="tab">Endereco</a></li>
+		</ul>
+		<div class="tab-content">
+			<div class="tab-pane active" id="1">
+				<div class="control-group">
+					<label class="control-label" for="txtNome">Nome Completo </label>
+					<div class="controls">
+						<input type="text" id="txtNome" name="txtNome" value="${txtNome}"
+							placeholder="Nome Completo" maxlength="50">
+					</div>
+				</div>
 
-								<tr>
+				<div class="control-group">
+					<label class="control-label" for="txtEmail">Email</label>
+					<div class="controls">
+						<input type="text" id="txtEmail" name="txtEmail"
+							value="${txtEmail}" maxlength="50" onchange="validaEmail();"><span
+							id="infoEmail"><input type="hidden" id="canPost"
+							value="false" /></span>
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="txtSenha">Senha</label>
+					<div class="controls">
+						<input type="password" id="txtSenha" name="txtSenha"
+							placeholder="Senha" maxlength="8">
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="txtCsenha">Confirma Senha</label>
+					<div class="controls">
+						<input type="password" id="txtCsenha" name="txtCsenha"
+							placeholder="Confirmação de Senha" maxlength="8">
+					</div>
+				</div>
+			</div>
+			<div class="tab-pane" id="2">
+				<div class="control-group">
+					<label class="control-label" for="txtTelefone">Telefone</label>
+					<div class="controls">
+						<input type="text" id="txtTelefoneDDD" name="txtTelefoneDDD"
+							placeholder="xx" maxlength="2" style="width: 15px;" alt="99"
+							value="${txtTelefoneDDD}"> <input type="text"
+							id="txtTelefone" name="txtTelefone" placeholder="9999-9999"
+							maxlength="9" alt="9999-9999" value="${txtTelefone}">
+					</div>
+				</div>
 
-									<td><label>RG</label></td>
-									<td><input name="txtRG" id="txtRG" name="txtRG"
-										value="${txtRG}" maxlength="10" size="12" /></td>
-								</tr>
+				<div class="control-group">
+					<label class="control-label" for="txtTelefone">Celular</label>
+					<div class="controls">
+						<input type="text" id="txtCelularDDD" name="txtCelularDDD"
+							placeholder="xx" maxlength="2" style="width: 15px;" alt="99"
+							value="${txtCelularDDD}"> <input type="text"
+							id="txtCelular" name="txtCelular" placeholder="9999-9999"
+							maxlength="9" alt="9999-9999" value="${txtCelular}">
+					</div>
+				</div>
 
-								<tr>
-									<td><label>CPF</label></td>
-									<td><input id="txtCPF" name="txtCPF" type="text" alt="cpf"
-										maxlength="11" value="${txtCPF}" size="12" /></td>
-								</tr>
+				<div class="control-group">
+					<label class="control-label" for="txtRG">RG </label>
+					<div class="controls">
+						<input type="text" id="txtRG" name="txtRG" value="${txtRG}"
+							placeholder="RG" maxlength="10">
+					</div>
+				</div>
 
-								<tr>
-									<td><label> Sexo </label></td>
-									<td><input type="radio" name="sexo" value="0"
-										checked="checked">Masculino <input type="radio"
-										name="sexo" value="1" />Feminino</td>
-								</tr>
+				<div class="control-group">
+					<label class="control-label" for="txtCPF">CPF </label>
+					<div class="controls">
+						<input type="text" id="txtCPF" name="txtCPF" value="${txtRG}"
+							placeholder="CPF" alt="cpf">
+					</div>
+				</div>
 
-								<tr>
-									<td><label> Data de Nascimento </label></td>
-									<td><input name="txtNascimento" id="txtNascimento"
-										type="text" maxlength="10" size="12" alt="39/19/2999" /></td>
-								</tr>
-							</table>
-						</div>
-						<div class="tab-pane" id="2">
-							<table class="table">
-								<tr>
-									<td><label>Telefone</label></td>
-									<td><input type="text" id="txtTelefoneDDD"
-										name="txtTelefoneDDD" maxlength="2" size="2"
-										style="width: 15px;" alt="99" /> <input type="text"
-										id="txtTelefone" name="txtTelefone" maxlength="9"
-										alt="9999-9999" /></td>
-								</tr>
-
-								<tr>
-									<td><label>Celular</label></td>
-									<td><input type="text" id="txtCelularDDD"
-										name="txtCelularDDD" maxlength="2" size="2"
-										style="width: 15px;" alt="99" /> <input type="text"
-										id="txtCelular" name="txtCelular" maxlength="9"
-										alt="9999-9999" /></td>
-								</tr>
-
-								<tr>
-									<td><label>Email</label></td>
-									<td><input type="text" id="txtEmail" value="${txtEmail}"
-										name="txtEmail" maxlength="50" size="50"  onchange="validaEmail();" /><span id="infoEmail"><input type="hidden" id="canPost" value="false" /></span></td>
-								</tr>
-
-								<tr>
-									<td><label>Senha</label></td>
-									<td><input id="txtSenha" name="txtSenha" type="password"
-										maxlength="8" size="8" value="${txtSenha}" /></td>
-								</tr>
-								<tr>
-									<td><label>Confirma Senha</label></td>
-									<td><input id="txtCsenha" name="txtCsenha" type="password"
-										maxlength="8" size="8" /></td>
-								</tr>
-							</table>
-						</div>
-						<div class="tab-pane" id="3">
-							<table class="table">
-								<tr>
-									<td><label>Endereço</label></td>
-									<td><input type="text" id="txtEndereco" name="txtEndereco"
-										maxlength="50" size="50" value="${txtEndereco}" /></td>
-								</tr>
-
-								<tr>
-
-									<td><label>Bairro</label></td>
-									<td><input type="text" id="txtBairro" name="txtBairro"
-										value="${txtBairro}" maxlength="50" size="50" /></td>
-								</tr>
-
-								<tr>
-									<td><label>UF</label></td>
-									<td><select style="width: 60px;" id="CboUF" name="CboUF"
-										onchange="changeUF($(this).val());">
-											<option></option>
-											<c:forEach var="estado" items="${lista_uf}">
-												<option id="${estado.id_estado}" value="${estado.id_estado}"
-													<c:if test="${estado.id_estado eq uf_id}">selected="selected"</c:if>>${estado.uf}</option>
-											</c:forEach>
-									</select></td>
-								</tr>
-								<tr>
-									<td><label>Cidade</label></td>
-									<td id="ufcidade">
-										<div class="ui-widget" id="widget_combobox_city"
-											style="float: left; margin-right: 10px">
-											<select name="cidade" id="combobox_city">
-												<option></option>
-												<c:forEach var="cities" items="${list_city}">
-													<option value="${cities.id_cidade}"
-														id="${cities.id_cidade}"
-														<c:if test="${cidade eq cities.id_cidade}">selected="selected"</c:if>>${cities.nome}</option>
-												</c:forEach>
-											</select>
-										</div> <script>
-											$('#combobox_city').combobox();
-										</script>
-									</td>
-								</tr>
-								<tr>
-									<td><label>Cep</label></td>
-									<td><input type="text" id="txtCep" name="txtCep" alt='cep'
-										maxlength="8" size="8" /></td>
-								</tr>
-							</table>
+				<div class="control-group">
+					<label class="control-label" for="txtCPF"> Data de
+						Nascimento</label>
+					<div class="controls">
+						<div class="input-append date datepicker" data-date=""
+							data-date-format="dd/mm/yyyy" style="float: left">
+							<input class="span2" size="16" type="text" name="txtNascimento"
+								value="${txtNascimento}" alt="39/19/9999"> <span class="add-on"><i
+								class="icon-calendar"></i> </span>
 						</div>
 					</div>
 				</div>
-		<div class="row-fluid">
-				<div class="span2">
-					<input class="btn btn-primary" value="Salvar" type="button" name="btnSalvar" onclick="if(validaSenhaForm()){$('#formProfessor').submit();}"/>
-				</div>
+			</div>
+			<div class="tab-pane" id="3">
 
-				<div class="span2">
-					<a href="./read" class="btn">Cancelar</a>
+				<div class="control-group">
+					<label class="control-label" for="txtEndereco">Endereço</label>
+					<div class="controls">
+						<input type="text" id="txtEndereco" name="txtEndereco"
+							value="${txtEndereco}"
+							placeholder="Logradouro, número, apto, bloco" maxlength="50">
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="txtBairro">Bairro</label>
+					<div class="controls">
+						<input type="text" id="txtBairro" name="txtBairro"
+							value="${txtBairro}" placeholder="Bairro" maxlength="50">
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="CboUF">UF</label>
+					<div class="controls">
+						<select style="width: 60px;" id="CboUF" name="CboUF"
+							onchange="changeUF($(this).val());">
+							<option></option>
+							<c:forEach var="estado" items="${lista_uf}">
+								<option id="${estado.id_estado}" value="${estado.id_estado}"
+									<c:if test="${estado.id_estado eq uf_id}">selected="selected"</c:if>>${estado.uf}</option>
+							</c:forEach>
+						</select>
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="CboUF">Cidade</label>
+					<div class="controls" id="ufcidade">
+						<div class="ui-widget" id="widget_combobox_city"
+							style="float: left; margin-right: 10px">
+							<select name="cidade" id="combobox_city">
+								<option></option>
+								<c:forEach var="cities" items="${list_city}">
+									<c:set var="selected" value="" />
+									<c:if test="${cidade eq cities.id_cidade}">
+										<c:set var="selected" value="selected=\"selected\"" />
+									</c:if>
+									<option value="${cities.id_cidade}" id="${cities.id_cidade}"
+										${selected}>${cities.nome}</option>
+								</c:forEach>
+							</select>
+						</div>
+						<script>
+							$('#combobox_city').combobox();
+						</script>
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="txtCep">Cep</label>
+					<div class="controls">
+						<input type="text" id="txtCep" name="txtCep" value="${txtCep}"
+							placeholder="99999-999" maxlength="8" alt="99999-999">
+					</div>
 				</div>
 			</div>
+		</div>
+	</div>
+	<div class="row-fluid">
+		<div class="span2">
+			<input class="btn btn-primary" value="Salvar" type="button"
+				name="btnSalvar"
+				onclick="if(validaSenhaForm()){$('#formProfessor').submit();}" />
+		</div>
+
+		<div class="span2">
+			<a href="./read" class="btn">Cancelar</a>
+		</div>
+
+	</div>
+
 </form>
