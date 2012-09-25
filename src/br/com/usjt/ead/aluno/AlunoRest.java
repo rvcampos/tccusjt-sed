@@ -556,7 +556,6 @@ public class AlunoRest implements ICrud
                     .setParameterList("modulo", c.list()).setInteger("aluno", id);
             q.executeUpdate();
             tx.commit();
-            j.sucessMsg("Sua desmatricula foi efetuada com sucesso");
         }
         catch (Exception e) {
             LOG.error("Falha ao efetuar desmatricula", e);
