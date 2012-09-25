@@ -576,8 +576,23 @@ public class DisciplinaRest implements ICrud
                 }
                 else {
                     m.setDt_avaliacao(new Date(new Date().getTime() + 2 * oneDay));
-                    j.errorMsg("Você falhou em obter a porcentagem mínima de acerto(" + pctNec
-                            + "%). Não se desanime, estude mais e tente novamente em 48 horas");
+                    
+                    int qtde_falha = m.getQtde_falha();
+                    if (qtde_falha >= 3)
+                    {
+                        AlunoRest aluno = new AlunoRest();
+                        aluno.desmatricular(m.getModulo().getDisciplina().getId_disciplina());
+
+                        j.errorMsg("Você falhou em obter a porcentagem mínima de acerto por 3 vezes, você será desmatrículado do curso");
+                    }
+                    else
+                    {
+                        qtde_falha += 1;
+                        m.setQtde_falha(qtde_falha);   
+                        
+                        j.errorMsg("Você falhou em obter a porcentagem mínima de acerto(" + pctNec
+                                + "%). Não se desanime, estude mais e tente novamente em 48 horas");
+                    }
                 }
                 session.update(m);
                 tx.commit();

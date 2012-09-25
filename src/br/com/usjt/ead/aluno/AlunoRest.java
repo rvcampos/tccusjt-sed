@@ -526,14 +526,28 @@ public class AlunoRest implements ICrud
     @SecurityPrivate(role = SecType.ALUNO)
     public void desmatricular() {
         JSPAttr j = new JSPAttr();
+        Integer disciplinaId = null;
+        
+        try {
+            disciplinaId = Integer.parseInt(j.getParameter("id_disciplina"));
+            
+            desmatricular(disciplinaId);
+            
+            j.sucessMsg("Sua desmatricula foi efetuada com sucesso");
+        }
+        catch (Exception e) {
+            LOG.error("Falha ao efetuar desmatricula", e);
+        }
+    }
+    
+    @SecurityPrivate(role = SecType.ALUNO)
+    public void desmatricular(int id_disciplina) throws Exception {
         Security sh = SecurityShiro.init();
         Integer id = sh.getUserId();
-        Integer disciplinaId = null;
         Session session = HS.getSession();
         Transaction tx = session.beginTransaction();
         try {
-            disciplinaId = Integer.parseInt(j.getParameter("id_disciplina"));
-            Criteria c = session.createCriteria(ModuloBean.class).add(Restrictions.eq("disciplina.id_disciplina", disciplinaId))
+            Criteria c = session.createCriteria(ModuloBean.class).add(Restrictions.eq("disciplina.id_disciplina", id_disciplina))
                     .setProjection(Projections.id());
             Query q = session
                     .createQuery(
@@ -542,10 +556,8 @@ public class AlunoRest implements ICrud
                     .setParameterList("modulo", c.list()).setInteger("aluno", id);
             q.executeUpdate();
             tx.commit();
-            j.sucessMsg("Sua desmatricula foi efetuada com sucesso");
         }
         catch (Exception e) {
-            LOG.error("Falha ao efetuar desmatricula", e);
             tx.rollback();
         }
         finally {
