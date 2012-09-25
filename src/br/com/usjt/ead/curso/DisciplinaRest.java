@@ -49,7 +49,7 @@ public class DisciplinaRest
 
     private static final long   oneDay             = 86400000L;
     private static final String CHATURI            = "http://127.0.0.1:443/?0,%s,0,13,2";
-    private static final String UPLOADED_FILE_PATH = "/app";
+    private static final String UPLOADED_FILE_PATH = "C:"+File.separator+"Users"+File.separator+"Renan"+File.separator+"Documents"+File.separator+"tcc"+File.separator;
 
     private static final Logger LOG                = LoggerFactory.getLogger(DisciplinaRest.class);
 
@@ -256,8 +256,8 @@ public class DisciplinaRest
                 byte[] bytes = IOUtils.readBytesFromStream(inputStream);
 
                 // constructs upload file path
-                fileName = "/app/" + mod.getDisciplina().getNome_disciplina() + "/" + fileName;
-                MaterialDidaticoBean mat = writeFile(bytes, fileName, "/app/" + mod.getDisciplina().getNome_disciplina());
+                fileName = UPLOADED_FILE_PATH + mod.getDisciplina().getNome_disciplina() + File.separator + fileName;
+                MaterialDidaticoBean mat = writeFile(bytes, fileName, UPLOADED_FILE_PATH + mod.getDisciplina().getNome_disciplina());
                 mat.setModulo(mod);
                 mod.getMaterial().add(mat);
             }
@@ -292,12 +292,12 @@ public class DisciplinaRest
     // save to somewhere
     private MaterialDidaticoBean writeFile(byte[] content, String filename, String folder) throws IOException {
         MaterialDidaticoBean b = new MaterialDidaticoBean();
-        File folderd = new File(folder);
+        File folderd = new File(folder.replaceAll(" ", ""));
         if(!folderd.exists())
         {
             folderd.mkdir();
         }
-        File file = new File(filename);
+        File file = new File(filename.replaceAll(" ", ""));
 
         if (!file.exists()) {
             file.createNewFile();
