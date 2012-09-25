@@ -556,8 +556,10 @@ public class AlunoRest implements ICrud
                     .setParameterList("modulo", c.list()).setInteger("aluno", id);
             q.executeUpdate();
             tx.commit();
+            j.sucessMsg("Sua desmatricula foi efetuada com sucesso");
         }
         catch (Exception e) {
+            LOG.error("Falha ao efetuar desmatricula", e);
             tx.rollback();
         }
         finally {
@@ -584,6 +586,7 @@ public class AlunoRest implements ICrud
             j.set("id_modulo", matricula.getModulo().getId_modulo());
             j.set("fazProva", matricula.getDt_avaliacao().before(new Date()));
             j.set("dt_aval", matricula.getDt_avaliacao());
+            j.set("materiais", matricula.getModulo().getMaterial());
             String nivel = "Básico";
             switch (matricula.getModulo().getNivel_modulo())
             {

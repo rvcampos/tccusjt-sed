@@ -11,7 +11,14 @@
 <meta http-equiv="X-UA-Compatible" content="IE=7" />
 <meta charset="UTF-8" />
 <jsp:include page="../header.jsp" />
+<script>
 
+	function loadMaterial(id, name)
+	{
+		$('#materialPage').empty();
+		$('#materialPage').html('<form method="post" action="${app_context}material/download"id="mat"><input type="hidden" name="material"value="'+id+'" /><a href="javascript:$(\'#mat\').submit();" target="_blank">'+name+'</a></form>');
+	}
+</script>
 </head>
 <body>
 	<jsp:include page="../menu.jsp" />
@@ -19,30 +26,31 @@
 		<div class="row-fluid">
 			<div class="span2">
 				<div class="well sidebar-nav">
-            <ul class="nav nav-list">
-              <li class="nav-header">Material</li>
-              <li class="active"><a href="#">Link</a></li>
-              <li><a href="#">Link</a></li>
-              <li><a href="#">Link</a></li>
-              <li><a href="#">Link</a></li>
-              <li class="nav-header">Avaliação</li>
-              <c:if test="${fazProva}">
-              <li><form action="${app_context}curso/realizaAvaliacao" id="frmAval" method="POST"><input type="hidden" name="matricula" value="${id_matricula}" /><a href="#" onclick="$('#frmAval').submit();">Fazer Prova</form></li>
-              </c:if>
-              <c:if test="${not fazProva}">
-              <f:formatDate value="${dt_aval}" var="dt" pattern="dd/MM/yyyy"/>
-              <li>Disponível em - ${dt}</li>
-              </c:if>
-              <li class="nav-header">Contato</li>
-              <li><a href="${urlChat}" target="_blank">Chat</a></li>
-              <li><a href="#">E-mail</a></li>
-            </ul>
-          </div>
+					<ul class="nav nav-list">
+						<li class="nav-header">Material</li>
+						<c:forEach var="material" items="${materiais}">
+							<li><a
+								href="javascript:loadMaterial(${material.id_material},'${material.nome}');">${material.nome}</a></li>
+						</c:forEach>
+						<li class="nav-header">Avaliação</li>
+						<c:if test="${fazProva}">
+							<li><form action="${app_context}curso/realizaAvaliacao"
+									id="frmAval" method="POST">
+									<input type="hidden" name="matricula" value="${id_matricula}" /><a
+										href="#" onclick="$('#frmAval').submit();">Fazer Prova</a>
+								</form></li>
+						</c:if>
+						<c:if test="${not fazProva}">
+							<f:formatDate value="${dt_aval}" var="dt" pattern="dd/MM/yyyy" />
+							<li>Disponível em - ${dt}</li>
+						</c:if>
+						<li class="nav-header">Contato</li>
+						<li><a href="${urlChat}" target="_blank">Chat</a></li>
+						<li><a href="#">E-mail</a></li>
+					</ul>
+				</div>
 			</div>
-			<div class="span10">
-				<a href="${urlChat}"
-					target="_blank">CHAT</a>
-
+			<div class="span10" style="min-height: 50%;">
 				<c:if test="${not empty msgok }">
 					<div class="alert alert-success">
 						<strong>${msgok}</strong>
@@ -53,10 +61,11 @@
 						<strong>${msgerro}</strong>
 					</div>
 				</c:if>
-				<jsp:include page="${pagina}"></jsp:include>
+				<center>
+				<div id="materialPage"></div>
+				</center>
 			</div>
 		</div>
 	</div>
-
 </body>
 </html>

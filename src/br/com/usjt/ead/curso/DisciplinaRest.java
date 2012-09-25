@@ -1,51 +1,58 @@
 package br.com.usjt.ead.curso;
 
-import java.sql.Time;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.core.MultivaluedMap;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
+import org.apache.cxf.helpers.IOUtils;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.jboss.resteasy.annotations.providers.jaxb.Stylesheet;
+import org.jboss.resteasy.plugins.providers.multipart.InputPart;
+import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import br.com.usjt.ICrud;
 import br.com.usjt.ead.EntityDAO;
 import br.com.usjt.ead.aluno.AlunoRest;
 import br.com.usjt.ead.aluno.MatriculaBean;
+import br.com.usjt.ead.material.MaterialDidaticoBean;
 import br.com.usjt.ead.professor.ProfessorBean;
 import br.com.usjt.ead.professor.ProfessorRest;
 import br.com.usjt.jaxrs.JSPAttr;
 import br.com.usjt.jaxrs.MediaTypeMore;
 import br.com.usjt.jaxrs.security.SecurityPrivate;
 import br.com.usjt.jaxrs.security.SecurityPrivate.SecType;
+import br.com.usjt.jaxrs.security.SecurityPublic;
 import br.com.usjt.shiro.Security;
 import br.com.usjt.shiro.SecurityShiro;
 import br.com.usjt.util.HS;
 import br.com.usjt.util.Utils;
 
 @Path("/curso")
-public class DisciplinaRest implements ICrud
+public class DisciplinaRest
 {
 
-    private static final long   oneDay  = 86400000L;
-    private static final String CHATURI = "http://127.0.0.1:443/?0,%s,0,13,2";
+    private static final long   oneDay             = 86400000L;
+    private static final String CHATURI            = "http://127.0.0.1:443/?0,%s,0,13,2";
+    private static final String UPLOADED_FILE_PATH = "C:"+File.separator+"Users"+File.separator+"Public"+File.separator+"Documents"+File.separator+"tcc"+File.separator;
 
-    private static final Logger LOG     = LoggerFactory.getLogger(DisciplinaRest.class);
+    private static final Logger LOG                = LoggerFactory.getLogger(DisciplinaRest.class);
 
-    @Override
     @Path("listar")
     @POST
     @GET
@@ -67,7 +74,7 @@ public class DisciplinaRest implements ICrud
         }
     }
 
-    @Override
+    
     @Path("editar")
     @POST
     @Stylesheet(href = "curso/cadastrar.jsp", type = MediaTypeMore.APP_JSP)
@@ -115,7 +122,7 @@ public class DisciplinaRest implements ICrud
         }
     }
 
-    @Override
+    
     @Path("cadastrar")
     @GET
     @Stylesheet(href = "curso/cadastrar.jsp", type = MediaTypeMore.APP_JSP)
@@ -124,7 +131,7 @@ public class DisciplinaRest implements ICrud
         JSPAttr j = new JSPAttr("metodo", "create");
     }
 
-    @Override
+    
     @Path("delete")
     @POST
     @Stylesheet(href = "professor/meusCursos.jsp", type = MediaTypeMore.APP_JSP)
@@ -151,25 +158,26 @@ public class DisciplinaRest implements ICrud
         }
     }
 
-    @Override
     @Path("create")
     @POST
     @Stylesheet(href = "curso/cadastrar.jsp", type = MediaTypeMore.APP_JSP)
     @SecurityPrivate(role = { SecType.ADMIN, SecType.PROFESSOR })
-    public void create() {
+    @Consumes("multipart/form-data")
+    public void create(MultipartFormDataInput input) {
         JSPAttr j = new JSPAttr();
         DisciplinaBean objDisciplina = new DisciplinaBean();
         Session session = HS.getSession();
         Transaction tx = session.beginTransaction();
         SimpleDateFormat dtFormat = new SimpleDateFormat("dd/MM/yyyy");
         Security sh = SecurityShiro.init();
+        Map<String, List<InputPart>> uploadForm = input.getFormDataMap();
         try {
-            objDisciplina.setNome_disciplina(j.getParameter("txtNomeDisciplina").toString());
-            objDisciplina.setData_inicio(dtFormat.parse(j.getParameter("txtDataInicio").toString()));
-            objDisciplina.setData_termino(dtFormat.parse(j.getParameter("txtDataTermino").toString()));
-            objDisciplina.setDescricao(j.getParameter("txtDesc"));
+            objDisciplina.setNome_disciplina(uploadForm.get("txtNomeDisciplina").get(0).getBodyAsString());
+            objDisciplina.setData_inicio(dtFormat.parse(uploadForm.get("txtDataInicio").get(0).getBodyAsString()));
+            objDisciplina.setData_termino(dtFormat.parse(uploadForm.get("txtDataTermino").get(0).getBodyAsString()));
+            objDisciplina.setDescricao(uploadForm.get("txtDesc").get(0).getBodyAsString());
             objDisciplina.setProfessor((ProfessorBean) session.load(ProfessorBean.class, sh.getUserId()));
-            objDisciplina = populaOsModulosCreate(j, objDisciplina);
+            objDisciplina = populaOsModulosCreate(j, objDisciplina, uploadForm);
             if (Utils.isValid(objDisciplina)) {
                 // XXX Descomentar
                 // DefaultHttpClient httpclient = new DefaultHttpClient();
@@ -239,7 +247,102 @@ public class DisciplinaRest implements ICrud
         return mod;
     }
 
-    private DisciplinaBean populaOsModulosCreate(JSPAttr j, DisciplinaBean objDisciplina) throws Exception {
+    private void adicionaMaterial(ModuloBean mod, List<InputPart> inputParts) {
+        for (InputPart inputPart : inputParts) {
+            try {
+
+                MultivaluedMap<String, String> header = inputPart.getHeaders();
+                String fileName = getFileName(header);
+
+                // convert the uploaded file to inputstream
+                InputStream inputStream = inputPart.getBody(InputStream.class, null);
+
+                byte[] bytes = IOUtils.readBytesFromStream(inputStream);
+
+                // constructs upload file path
+                fileName = UPLOADED_FILE_PATH + mod.getDisciplina().getNome_disciplina() + File.separator + fileName;
+                MaterialDidaticoBean mat = writeFile(bytes, fileName, UPLOADED_FILE_PATH + mod.getDisciplina().getNome_disciplina());
+                mat.setModulo(mod);
+                mod.getMaterial().add(mat);
+            }
+            catch (IOException e) {
+                LOG.error("Falha ao salvar arquivo", e);
+            }
+        }
+    }
+
+    /**
+     * header sample { Content-Type=[image/png], Content-Disposition=[form-data;
+     * name="file"; filename="filename.extension"] }
+     **/
+    // get uploaded filename, is there a easy way in RESTEasy?
+    private String getFileName(MultivaluedMap<String, String> header) {
+
+        String[] contentDisposition = header.getFirst("Content-Disposition").split(";");
+
+        for (String filename : contentDisposition) {
+            if ((filename.trim().startsWith("filename"))) {
+
+                String[] name = filename.split("=");
+
+                String finalFileName = name[1].trim().replaceAll("\"", "");
+                return finalFileName;
+            }
+        }
+        return "unknown";
+    }
+
+    // save to somewhere
+    private MaterialDidaticoBean writeFile(byte[] content, String filename, String folder) throws IOException {
+        MaterialDidaticoBean b = new MaterialDidaticoBean();
+        File folderd = new File(folder);
+        if(!folderd.exists())
+        {
+            folderd.mkdir();
+        }
+        File file = new File(filename);
+
+        if (!file.exists()) {
+            file.createNewFile();
+        }
+
+        FileOutputStream fop = new FileOutputStream(file);
+
+        fop.write(content);
+        fop.flush();
+        fop.close();
+
+        b.setEndereco_material(file.getAbsolutePath());
+        b.setNome(file.getName());
+        return b;
+    }
+
+    @SecurityPublic
+    @GET
+    @POST
+    @Stylesheet(href = "curso/video.jsp", type = MediaTypeMore.APP_JSP)
+    @Path("video")
+    public void video() {
+        JSPAttr j = new JSPAttr();
+        j.set("video", "C:\\Usuários\\Renan\\Vídeos\\sample_mpeg4.mp4");
+        File v = new File("C:\\Usuários\\Renan\\Vídeos\\sample_mpeg4.mp4");
+    }
+
+    private int tipoArquivo(String filename) {
+        if (filename.endsWith("pdf")) {
+
+        }
+        else if (filename.endsWith("doc") || filename.endsWith("docx") || filename.endsWith("odf")) {
+
+        }
+        else if (filename.endsWith("ogv") || filename.endsWith("webm") || filename.endsWith("mp4")) {
+
+        }
+        return 0;
+    }
+
+    private DisciplinaBean populaOsModulosCreate(JSPAttr j, DisciplinaBean objDisciplina, Map<String, List<InputPart>> uploadForm)
+            throws Exception {
         Iterator<ModuloBean> it = objDisciplina.getModulos().iterator();
         ModuloBean basico = new ModuloBean();
         DefaultHttpClient httpclient = new DefaultHttpClient();
@@ -253,17 +356,18 @@ public class DisciplinaRest implements ICrud
             basico.setData_inicio(objDisciplina.getData_inicio());
             basico.setData_termino(objDisciplina.getData_termino());
         }
-        if (((!Utils.isEmpty(j.getParameter("qtdquestoesBas")) && !Utils.isEmpty(j.getParameter("qtdaltBas"))))) {
+        if (((!Utils.isEmpty(uploadForm.get("qtdquestoesBas").get(0).getBodyAsString()) && !Utils.isEmpty(uploadForm
+                .get("qtdaltBas").get(0).getBodyAsString())))) {
             AvaliacaoBean b = new AvaliacaoBean();
             b.setModulo(basico);
-            for (int i = 1; i <= Integer.parseInt(j.getParameter("qtdquestoesBas")); i++) {
+            for (int i = 1; i <= Integer.parseInt(uploadForm.get("qtdquestoesBas").get(0).getBodyAsString()); i++) {
                 QuestaoBean questao = new QuestaoBean();
                 questao.setAvaliacao(b);
-                questao.setConteudo(j.getParameter("txtquestoesBasicoquest" + i));
-                int certa = Integer.parseInt(j.getParameter("optquestoesBasico" + i));
-                for (int k = 1; k <= Integer.parseInt(j.getParameter("qtdaltBas")); k++) {
+                questao.setConteudo(uploadForm.get("txtquestoesBasicoquest" + i).get(0).getBodyAsString());
+                int certa = Integer.parseInt(uploadForm.get("optquestoesBasico" + i).get(0).getBodyAsString());
+                for (int k = 1; k <= Integer.parseInt(uploadForm.get("qtdaltBas").get(0).getBodyAsString()); k++) {
                     AlternativaBean alternativa = new AlternativaBean();
-                    alternativa.setConteudo(j.getParameter("txtquestoesBasicoquest" + i + "alt" + k));
+                    alternativa.setConteudo(uploadForm.get("txtquestoesBasicoquest" + i + "alt" + k).get(0).getBodyAsString());
                     alternativa.setQuestao(questao);
                     if (k == certa) {
                         alternativa.setCorreta(true);
@@ -272,6 +376,7 @@ public class DisciplinaRest implements ICrud
                 }
                 b.getQuestoes().add(questao);
             }
+            adicionaMaterial(basico, uploadForm.get("matBasico"));
 
             basico.setAvaliacao(b);
             basico = criaChat(basico, httpclient, "basico");
@@ -287,17 +392,19 @@ public class DisciplinaRest implements ICrud
             intermediario.setData_inicio(objDisciplina.getData_inicio());
             intermediario.setData_termino(objDisciplina.getData_termino());
         }
-        if (((!Utils.isEmpty(j.getParameter("qtdquestoesInt")) && !Utils.isEmpty(j.getParameter("qtdaltInt"))))) {
+        if (((!Utils.isEmpty(uploadForm.get("qtdquestoesInt").get(0).getBodyAsString()) && !Utils.isEmpty(uploadForm
+                .get("qtdaltInt").get(0).getBodyAsString())))) {
             AvaliacaoBean inte = new AvaliacaoBean();
             inte.setModulo(intermediario);
-            for (int i = 1; i <= Integer.parseInt(j.getParameter("qtdquestoesInt")); i++) {
+            for (int i = 1; i <= Integer.parseInt(uploadForm.get("qtdquestoesInt").get(0).getBodyAsString()); i++) {
                 QuestaoBean questao = new QuestaoBean();
                 questao.setAvaliacao(inte);
-                questao.setConteudo(j.getParameter("txtquestoesIntermediarioquest" + i));
-                int certa = Integer.parseInt(j.getParameter("optquestoesIntermediario" + i));
-                for (int k = 1; k <= Integer.parseInt(j.getParameter("qtdaltInt")); k++) {
+                questao.setConteudo(uploadForm.get("txtquestoesIntermediarioquest" + i).get(0).getBodyAsString());
+                int certa = Integer.parseInt(uploadForm.get("optquestoesIntermediario" + i).get(0).getBodyAsString());
+                for (int k = 1; k <= Integer.parseInt(uploadForm.get("qtdaltInt").get(0).getBodyAsString()); k++) {
                     AlternativaBean alternativa = new AlternativaBean();
-                    alternativa.setConteudo(j.getParameter("txtquestoesIntermediarioquest" + i + "alt" + k));
+                    alternativa.setConteudo(uploadForm.get("txtquestoesIntermediarioquest" + i + "alt" + k).get(0)
+                            .getBodyAsString());
                     alternativa.setQuestao(questao);
                     if (k == certa) {
                         alternativa.setCorreta(true);
@@ -306,6 +413,7 @@ public class DisciplinaRest implements ICrud
                 }
                 inte.getQuestoes().add(questao);
             }
+            adicionaMaterial(intermediario, uploadForm.get("matIntermediario"));
             intermediario = criaChat(intermediario, httpclient, "Intermediário");
             intermediario.setAvaliacao(inte);
         }
@@ -319,17 +427,18 @@ public class DisciplinaRest implements ICrud
             avancado.setData_inicio(objDisciplina.getData_inicio());
             avancado.setData_termino(objDisciplina.getData_termino());
         }
-        if (((!Utils.isEmpty(j.getParameter("qtdquestoesAdv")) && !Utils.isEmpty(j.getParameter("qtdaltAdv"))))) {
+        if (((!Utils.isEmpty(uploadForm.get("qtdquestoesAdv").get(0).getBodyAsString()) && !Utils.isEmpty(uploadForm
+                .get("qtdaltAdv").get(0).getBodyAsString())))) {
             AvaliacaoBean adv = new AvaliacaoBean();
             adv.setModulo(avancado);
-            for (int i = 1; i <= Integer.parseInt(j.getParameter("qtdquestoesAdv")); i++) {
+            for (int i = 1; i <= Integer.parseInt(uploadForm.get("qtdquestoesAdv").get(0).getBodyAsString()); i++) {
                 QuestaoBean questao = new QuestaoBean();
                 questao.setAvaliacao(adv);
-                questao.setConteudo(j.getParameter("txtquestoesAvancadoquest" + i));
-                int certa = Integer.parseInt(j.getParameter("optquestoesAvancado" + i));
-                for (int k = 1; k <= Integer.parseInt(j.getParameter("qtdaltInt")); k++) {
+                questao.setConteudo(uploadForm.get("txtquestoesAvancadoquest" + i).get(0).getBodyAsString());
+                int certa = Integer.parseInt(uploadForm.get("optquestoesAvancado" + i).get(0).getBodyAsString());
+                for (int k = 1; k <= Integer.parseInt(uploadForm.get("qtdaltInt").get(0).getBodyAsString()); k++) {
                     AlternativaBean alternativa = new AlternativaBean();
-                    alternativa.setConteudo(j.getParameter("txtquestoesAvancadoquest" + i + "alt" + k));
+                    alternativa.setConteudo(uploadForm.get("txtquestoesAvancadoquest" + i + "alt" + k).get(0).getBodyAsString());
                     alternativa.setQuestao(questao);
                     if (k == certa) {
                         alternativa.setCorreta(true);
@@ -338,6 +447,7 @@ public class DisciplinaRest implements ICrud
                 }
                 adv.getQuestoes().add(questao);
             }
+            adicionaMaterial(avancado, uploadForm.get("matAvancado"));
             avancado = criaChat(avancado, httpclient, "Avançado");
             avancado.setAvaliacao(adv);
         }
@@ -454,7 +564,6 @@ public class DisciplinaRest implements ICrud
         return objDisciplina;
     }
 
-    @Override
     @Path("update")
     @POST
     @Stylesheet(href = "professor/meusCursos.jsp", type = MediaTypeMore.APP_JSP)

@@ -21,11 +21,12 @@ public class MaterialDidaticoBean
     @GeneratedValue(generator = "gen", strategy = GenerationType.AUTO)
     private Integer    id_material;      // integer,
     @Column
+    private String     nome;
+    @Column
     private String     endereco_material; // varchar(100),
     @OneToOne
     @JoinColumn(name = "id_modulo")
     private ModuloBean modulo;           // integer references
-
     @Column
     private Integer    tipo_material;
 
@@ -33,6 +34,14 @@ public class MaterialDidaticoBean
     public String toString() {
         return "MaterialDidaticoBean [id_material=" + id_material + ", endereco_material=" + endereco_material + ", modulo="
                 + modulo + ", tipo_material=" + tipo_material + "]";
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 
     public Integer getId_material() {
