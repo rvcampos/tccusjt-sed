@@ -48,7 +48,7 @@ www.w3.org/TR/html4/loose.dtd">
 					<a onclick="$('#formProfessorDelete${prof.id_professor}').submit();"><i
 						class="icon-remove"></i></a>
 				</form></td>
-			<td>${prof.cpf}</td>
+			<td>${prof.contato.nome}</td>
 			<td>${prof.contato.data_nascimento}</td>
 			<td>${prof.email}</td>
 		</tr>
