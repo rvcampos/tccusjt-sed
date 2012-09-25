@@ -1,6 +1,8 @@
 package br.com.usjt.ead.curso;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -18,6 +21,8 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+
+import br.com.usjt.ead.material.MaterialDidaticoBean;
 
 @Entity
 @Table(name = "MODULO")
@@ -47,7 +52,11 @@ public class ModuloBean
     @OneToOne(mappedBy = "modulo", orphanRemoval = true)
     @Cascade(value = org.hibernate.annotations.CascadeType.ALL)
     private SalaChatBean   chat;
-
+    
+    @OneToMany(mappedBy="modulo", orphanRemoval=true)
+    @Cascade(value = org.hibernate.annotations.CascadeType.ALL)
+    private Set<MaterialDidaticoBean> material = new HashSet<MaterialDidaticoBean>();
+    
     @Override
     public String toString() {
         return "ModuloBean [id_modulo=" + id_modulo + ", nivel_modulo=" + nivel_modulo + ", disciplina="
@@ -109,6 +118,14 @@ public class ModuloBean
 
     public void setChat(SalaChatBean chat) {
         this.chat = chat;
+    }
+
+    public Set<MaterialDidaticoBean> getMaterial() {
+        return material;
+    }
+
+    public void setMaterial(Set<MaterialDidaticoBean> material) {
+        this.material = material;
     }
 
 }

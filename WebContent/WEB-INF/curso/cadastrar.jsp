@@ -41,10 +41,22 @@ www.w3.org/TR/html4/loose.dtd">
 	}
 	$('#'+id).html(html);
 }
+
+function gerarMaterial(id, qtd, label)
+	{
+		var i,j;
+		var html = "";
+		var defcontrol = '<div class="control-group"><label class="control-label" for="{txtname}">{lbl}</label><div class="controls"><input type="file" name="{txtname}" value="upload" /></div></div>';
+		for(i = 1; i <= qtd; i++)
+		{
+			html = html + defcontrol.format({ txtname: ''+label, lbl: 'Material: ' + i});
+		}
+		$('#'+id).html(html);
+	}
 	</script>
 </head>
 <form action="${metodo}" class="form-horizontal" method="post"
-	id="formDisciplina">
+	id="formDisciplina" enctype="multipart/form-data" accept-charset="UTF-8">
 	<legend>
 		<b>Cadastro </b>
 	</legend>
@@ -108,11 +120,20 @@ www.w3.org/TR/html4/loose.dtd">
 					<div class="tab-content">
 						<div class="tab-pane" id="basicmat">
 							<div class="control-group">
-								<label class="control-label" for="txtQtd1">Material</label>
+								<label class="control-label" for="qtdMatBas">Quantidade
+									Material</label>
 								<div class="controls">
-									<input type="file" name="txtmaterial" value="upload" />
+									<input type="text" name="qtdMatBas" id="qtdMatBas" value="${qtdMatBas}" />
 								</div>
 							</div>
+							<div class="control-group">
+								<div class="controls">
+									<input type="button"
+										onclick="gerarMaterial('materialBasico', $('#qtdMatBas').val(), 'matBasico');"
+										value="gerar" />
+								</div>
+							</div>
+							<div id="materialBasico"> </div>
 						</div>
 						<div class="tab-pane" id="basicqst">
 							<div class="control-group">
@@ -181,11 +202,20 @@ www.w3.org/TR/html4/loose.dtd">
 					<div class="tab-content">
 						<div class="tab-pane" id="intmat">
 							<div class="control-group">
-								<label class="control-label" for="txtQtd2">Material</label>
+								<label class="control-label" for="qtdMatInt">Quantidade
+									Material</label>
 								<div class="controls">
-									<input type="file" name="txtmaterial" value="upload" />
+									<input type="text" name="qtdMatInt" id="qtdMatInt" value="${qtdMatInt}" />
 								</div>
 							</div>
+							<div class="control-group">
+								<div class="controls">
+									<input type="button"
+										onclick="gerarMaterial('materialIntermediario', $('#qtdMatInt').val(), 'matIntermediario');"
+										value="gerar" />
+								</div>
+							</div>
+							<div id="materialIntermediario"> </div>
 						</div>
 						<div class="tab-pane" id="intqst">
 							<div class="control-group">
@@ -254,11 +284,20 @@ www.w3.org/TR/html4/loose.dtd">
 					<div class="tab-content">
 						<div class="tab-pane" id="advmat">
 							<div class="control-group">
-								<label class="control-label" for="txtQtd1">Material</label>
+								<label class="control-label" for="qtdMatAdv">Quantidade
+									Material</label>
 								<div class="controls">
-									<input type="file" name="txtmaterial" value="upload" />
+									<input type="text" name="qtdMatAdv" id="qtdMatAdv" value="${qtdMatAdv}" />
 								</div>
 							</div>
+							<div class="control-group">
+								<div class="controls">
+									<input type="button"
+										onclick="gerarMaterial('materialAvancado', $('#qtdMatAdv').val(), 'matAvancado');"
+										value="gerar" />
+								</div>
+							</div>
+							<div id="materialAvancado"> </div>
 						</div>
 						<div class="tab-pane" id="advqst">
 							<div class="control-group">
@@ -320,7 +359,6 @@ www.w3.org/TR/html4/loose.dtd">
 			</div>
 		</div>
 	</div>
-	<x
 	<div class="row-fluid">
 		<div class="span2">
 			<input class="btn btn-primary" value="Salvar" type="submit"

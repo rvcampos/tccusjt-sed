@@ -93,7 +93,9 @@ data_termino date
 );
 
 CREATE TABLE MATERIAL_DIDATICO (
-endereco_material varchar(60) PRIMARY KEY,
+id_material bigint  PRIMARY KEY,
+nome varchar(200),
+endereco_material varchar(200),
 id_modulo integer REFERENCES MODULO(id_modulo) on delete cascade,
 tipo_material integer
 );
@@ -162,3 +164,12 @@ CREATE SEQUENCE seq_aluno
   MAXVALUE 9999999999999999
   START 1
   CACHE 1;
+  
+  CREATE SEQUENCE seq_matdidatico
+  INCREMENT 1
+  MINVALUE 0
+  MAXVALUE 9999999999999999
+  START 1
+  CACHE 1;
+  
+  
