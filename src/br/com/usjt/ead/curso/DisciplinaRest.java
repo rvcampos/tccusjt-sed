@@ -292,12 +292,12 @@ public class DisciplinaRest
     // save to somewhere
     private MaterialDidaticoBean writeFile(byte[] content, String filename, String folder) throws IOException {
         MaterialDidaticoBean b = new MaterialDidaticoBean();
-        File folderd = new File(folder.replaceAll(" ", ""));
+        File folderd = new File(folder);
         if(!folderd.exists())
         {
             folderd.mkdir();
         }
-        File file = new File(filename.replaceAll(" ", ""));
+        File file = new File(filename);
 
         if (!file.exists()) {
             file.createNewFile();
