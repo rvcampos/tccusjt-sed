@@ -13,6 +13,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.MapKey;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -26,6 +27,7 @@ import org.hibernate.validator.constraints.Email;
 
 import br.com.usjt.ead.contato.ContatoBean;
 import br.com.usjt.ead.contato.EnderecoBean;
+import br.com.usjt.ead.curso.BloqueioBean;
 import br.com.usjt.ead.curso.ModuloBean;
 
 @Entity
@@ -63,6 +65,9 @@ public class AlunoBean
     @JoinColumn(name="id_aluno")
     @MapKey(name="modulo")
     private Map<ModuloBean,MatriculaBean> matriculas = new HashMap<ModuloBean,MatriculaBean>();
+    @ManyToOne
+    @JoinColumn(name = "id_aluno")
+    private BloqueioBean bloqueio;
 
     @Override
     public String toString() {
@@ -132,6 +137,14 @@ public class AlunoBean
 
     public void setMatriculas(Map<ModuloBean, MatriculaBean> matriculas) {
         this.matriculas = matriculas;
+    }
+    
+    public BloqueioBean getBloqueio() {
+        return bloqueio;
+    }
+
+    public void setBloqueio(BloqueioBean bloqueio) {
+        this.bloqueio = bloqueio;
     }
 
 }
