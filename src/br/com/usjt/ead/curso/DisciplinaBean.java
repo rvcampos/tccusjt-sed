@@ -44,11 +44,22 @@ public class DisciplinaBean
     @Valid
     @OrderBy(clause="nivel_modulo asc")
     private Set<ModuloBean> modulos = new HashSet<ModuloBean>();
+    @ManyToOne
+    @JoinColumn(name = "id_disciplina")
+    private BloqueioBean bloqueio;
 
     @Override
     public String toString() {
         return "DisciplinaBean [id_disciplina=" + id_disciplina + ", nome_disciplina=" + nome_disciplina + ", professor="
                 + professor.getContato().getNome() + ", data_inicio=" + data_inicio + ", data_termino=" + data_termino + "]";
+    }
+
+    public BloqueioBean getBloqueio() {
+        return bloqueio;
+    }
+
+    public void setBloqueio(BloqueioBean bloqueio) {
+        this.bloqueio = bloqueio;
     }
 
     public Integer getId_disciplina() {
