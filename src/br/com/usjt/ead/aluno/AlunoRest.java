@@ -23,6 +23,8 @@ import org.jboss.resteasy.annotations.providers.jaxb.Stylesheet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.sun.mail.iap.Response;
+
 import br.com.usjt.ICrud;
 import br.com.usjt.ead.EntityDAO;
 import br.com.usjt.ead.cidadestado.CidadeBean;
@@ -32,6 +34,8 @@ import br.com.usjt.ead.contato.ContatoBean;
 import br.com.usjt.ead.contato.EnderecoBean;
 import br.com.usjt.ead.contato.TelefoneBean;
 import br.com.usjt.ead.contato.TipoTelefoneBean;
+import br.com.usjt.ead.curso.BloqueioBean;
+import br.com.usjt.ead.curso.DisciplinaRest;
 import br.com.usjt.ead.curso.ModuloBean;
 import br.com.usjt.ead.curso.SalaChatBean;
 import br.com.usjt.jaxrs.JSPAttr;
@@ -475,6 +479,43 @@ public class AlunoRest implements ICrud
         }
     }
 
+    @Path("bloqueio")
+    @POST
+    @Stylesheet(href = "aluno/listarCursos.jsp", type = MediaTypeMore.APP_JSP)
+    @SecurityPrivate(role = SecType.ALUNO)
+    public boolean VerificaBloqueio() {
+        JSPAttr j = new JSPAttr();
+        Security sh = SecurityShiro.init();
+        Integer id = sh.getUserId();
+        Integer disciplinaId = null;
+        Session session = HS.getSession();
+        Transaction tx = session.beginTransaction();
+        try {
+            disciplinaId = Integer.parseInt(j.getParameter("id_disciplina"));
+            
+            Criteria c = session.createCriteria(BloqueioBean.class);
+            c.add(Restrictions.eq("disciplina.id_disciplina", disciplinaId));
+            c.add(Restrictions.eq("aluno.id_aluno", id));
+            
+            if(c.list().size() > 0)
+            {
+                j.errorMsg("Você já está bloqueado no curso, solicite o desbloqueio ao Administrador");
+                return true; 
+            }
+        }
+        catch (Exception e) {
+            LOG.error("Falha ao verificar o bloqueio", e);
+            tx.rollback();
+        }
+        finally {
+            session.clear();
+            session.close();
+            meusCursos();
+        }
+        return false;
+    }
+    
+    
     @Path("matricular")
     @POST
     @Stylesheet(href = "aluno/meuscursos.jsp", type = MediaTypeMore.APP_JSP)
@@ -490,6 +531,16 @@ public class AlunoRest implements ICrud
         try {
             disciplinaId = Integer.parseInt(j.getParameter("id_disciplina"));
             AlunoBean aluno = dao.searchID(id, session, AlunoBean.class);
+            
+            if(VerificaBloqueio())
+            {
+                j.errorMsg("Você já está bloqueado no curso, solicite o desbloqueio ao Administrador");
+                //j.set("override", "curso/listarCursos.jsp");
+                //DisciplinaRest disciplina = new DisciplinaRest();
+                //disciplina.read();
+                return; 
+            }
+            
             ModuloBean modulo = (ModuloBean) session
                     .createQuery(
                             " from " + ModuloBean.class.getSimpleName()

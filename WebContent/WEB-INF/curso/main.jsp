@@ -28,10 +28,12 @@
 				<div class="well sidebar-nav">
 					<ul class="nav nav-list">
 						<li class="nav-header">Material</li>
+						<c:if test="${not empty materiais }">
 						<c:forEach var="material" items="${materiais}">
 							<li><a
 								href="javascript:loadMaterial(${material.id_material},'${material.nome}');">${material.nome}</a></li>
 						</c:forEach>
+						</c:if>
 						<li class="nav-header">Avaliação</li>
 						<c:if test="${fazProva}">
 							<li><form action="${app_context}curso/realizaAvaliacao"

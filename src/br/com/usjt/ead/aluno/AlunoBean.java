@@ -65,9 +65,8 @@ public class AlunoBean
     @JoinColumn(name="id_aluno")
     @MapKey(name="modulo")
     private Map<ModuloBean,MatriculaBean> matriculas = new HashMap<ModuloBean,MatriculaBean>();
-    @ManyToOne
-    @JoinColumn(name = "id_aluno")
-    private BloqueioBean bloqueio;
+    @OneToMany(mappedBy="aluno")
+    private Set<BloqueioBean> bloqueio = new HashSet<BloqueioBean>();
 
     @Override
     public String toString() {
@@ -139,11 +138,11 @@ public class AlunoBean
         this.matriculas = matriculas;
     }
     
-    public BloqueioBean getBloqueio() {
+    public Set<BloqueioBean> getBloqueio() {
         return bloqueio;
     }
 
-    public void setBloqueio(BloqueioBean bloqueio) {
+    public void setBloqueio(Set<BloqueioBean> bloqueio) {
         this.bloqueio = bloqueio;
     }
 

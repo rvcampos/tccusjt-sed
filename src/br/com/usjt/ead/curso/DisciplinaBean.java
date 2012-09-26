@@ -44,9 +44,9 @@ public class DisciplinaBean
     @Valid
     @OrderBy(clause="nivel_modulo asc")
     private Set<ModuloBean> modulos = new HashSet<ModuloBean>();
-    @ManyToOne
-    @JoinColumn(name = "id_disciplina")
-    private BloqueioBean bloqueio;
+   
+    @OneToMany(mappedBy="disciplina")
+    private Set<BloqueioBean> bloqueio = new HashSet<BloqueioBean>();
 
     @Override
     public String toString() {
@@ -54,11 +54,11 @@ public class DisciplinaBean
                 + professor.getContato().getNome() + ", data_inicio=" + data_inicio + ", data_termino=" + data_termino + "]";
     }
 
-    public BloqueioBean getBloqueio() {
+    public Set<BloqueioBean> getBloqueio() {
         return bloqueio;
     }
 
-    public void setBloqueio(BloqueioBean bloqueio) {
+    public void setBloqueio(Set<BloqueioBean> bloqueio) {
         this.bloqueio = bloqueio;
     }
 
