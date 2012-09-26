@@ -324,8 +324,8 @@ public class DisciplinaRest
     @Path("video")
     public void video() {
         JSPAttr j = new JSPAttr();
-        j.set("video", "C:\\Usuários\\Renan\\Vídeos\\sample_mpeg4.mp4");
-        File v = new File("C:\\Usuários\\Renan\\Vídeos\\sample_mpeg4.mp4");
+        j.set("video", "C:\\Users\\Jeferson\\Desktop\\sample_mpeg4.mp4");
+        File v = new File("C:\\Users\\Jeferson\\Desktop\\sample_mpeg4.mp4");
     }
 
     private int tipoArquivo(String filename) {
@@ -618,6 +618,37 @@ public class DisciplinaRest
             }
         }
     }
+    
+    @Path("bloquear")
+    @POST
+    @Stylesheet(href = "curso/avaliacao.jsp", type = MediaTypeMore.APP_JSP)
+    @SecurityPrivate(role = { SecType.ALUNO })
+    public void BloquearAluno() {
+        JSPAttr j = new JSPAttr();
+        Session session = HS.getSession();
+        Transaction tx = session.beginTransaction();
+        try {
+            MatriculaBean m = (MatriculaBean) session.get(MatriculaBean.class, Integer.parseInt(j.getParameter("matricula")));
+            
+            BloqueioBean bloqueio = new BloqueioBean();
+            
+            bloqueio.setAluno(m.getAluno());
+            bloqueio.setDisciplina(m.getModulo().getDisciplina());
+            
+            session.save(bloqueio);
+            tx.commit();
+        }
+        catch (Exception e) {
+            LOG.error("Falha na operação", e);
+            tx.rollback();
+        }
+        finally {
+            if (session.isOpen()) {
+                session.clear();
+                session.close();
+            }
+        }
+    }
 
     @Path("corrigeProva")
     @POST
@@ -690,6 +721,9 @@ public class DisciplinaRest
                     if (qtde_falha >= 3)
                     {
                         AlunoRest aluno = new AlunoRest();
+                        
+                        BloquearAluno();
+                        
                         aluno.desmatricular(m.getModulo().getDisciplina().getId_disciplina());
 
                         j.errorMsg("Você falhou em obter a porcentagem mínima de acerto por 3 vezes, você será desmatrículado do curso");
