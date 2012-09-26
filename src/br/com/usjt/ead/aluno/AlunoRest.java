@@ -534,7 +534,7 @@ public class AlunoRest implements ICrud
             
             if(VerificaBloqueio())
             {
-                j.errorMsg("Você já está bloqueado no curso, solicite o desbloqueio ao Administrador");
+                j.errorMsg("Você está bloqueado no curso, solicite o desbloqueio ao Administrador");
                 //j.set("override", "curso/listarCursos.jsp");
                 //DisciplinaRest disciplina = new DisciplinaRest();
                 //disciplina.read();
