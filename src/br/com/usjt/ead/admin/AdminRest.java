@@ -20,6 +20,7 @@ import br.com.usjt.ead.aluno.AlunoBean;
 import br.com.usjt.ead.cidadestado.CidadeBean;
 import br.com.usjt.ead.cidadestado.CidadeEstadoRest;
 import br.com.usjt.ead.cidadestado.EstadoUFBean;
+import br.com.usjt.ead.professor.ProfessorBean;
 import br.com.usjt.jaxrs.JSPAttr;
 import br.com.usjt.jaxrs.MediaTypeMore;
 import br.com.usjt.jaxrs.security.SecurityPrivate;
@@ -259,6 +260,45 @@ public class AdminRest implements ICrud
         finally {
             session.clear();
             session.close();
+        }
+    }
+    
+    @Path("esqueciminhasenha")
+    @GET
+    @Stylesheet(href = "admin/esqueciminhasenha.jsp", type = MediaTypeMore.APP_JSP)
+    @SecurityPublic
+    public void esqueciMinhaSenha() {
+    }
+    
+    @Path("esqueciminhasenha")
+    @POST
+    @Stylesheet(href = "admin/esqueciminhasenha.jsp", type = MediaTypeMore.APP_JSP)
+    @SecurityPublic
+    public void esqueciMinhaSenhaConfirma() {
+        JSPAttr j = new JSPAttr();
+        Session session = HS.getSession();
+        try {
+            String email = j.getParameter("txtEmail");
+            AdminBean admin = (AdminBean) session.createCriteria(AdminBean.class).add(Restrictions.eq("email", email))
+                    .uniqueResult();
+            if (admin == null) {
+                j.errorMsg("Nenhum cadastro encontrado para o e-mail: " + email);
+                throw new Exception();
+            }
+            else
+            {
+                Utils.sendMailEsqueceuSenha(admin.getEmail(), admin.getNome(), admin.getSenha());
+                j.sucessMsg("Email enviado com sucesso para o e-mail: " + email);
+            }
+        }
+        catch (Exception e) {
+            LOG.error("Falha na operação", e);
+        }
+        finally {
+            if (session.isOpen()) {
+                session.clear();
+                session.close();
+            }
         }
     }
 }

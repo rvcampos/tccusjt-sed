@@ -103,7 +103,7 @@
 						    	<li class="nav-header">Aluno</li>
 								<li><a href="${app_context}login?src=aluno">Login Aluno</a></li>
 								<li><a href="${app_context}aluno/cadastrar">Cadastrar</a></li>
-								<li><a href="${app_context}aluno/cadastrar">Esqueci
+								<li><a href="${app_context}aluno/esqueciminhasenha">Esqueci
 										Minha senha</a></li>
 								<li><a href="${app_context}aluno/reenviaAtivacao">Re-enviar ativação</a></li>
 							</td>
@@ -112,14 +112,16 @@
 								<li class="nav-header">Professor</li>
 								<li><a href="${app_context}login?src=professor">Login
 										Professor</a></li>
-<%-- 								<li><a href="${app_context}professor/solicitarCadastro">Solicitar Cadastro</a></li> --%>
+								<li><a href="${app_context}professor/esqueciminhasenha">Esqueci
+										Minha senha</a></li>
 							</td>
 							<td class="td-divider"/>
 							<td valign="top">
 								<li class="nav-header">Administrador</li>
 								<li><a href="${app_context}login?src=admin">Login
 										Administrador</a></li>
-<%-- 								<li><a href="${app_context}professor/solicitarCadastro">Solicitar Cadastro</a></li> --%>
+								<li><a href="${app_context}admin/esqueciminhasenha">Esqueci
+										Minha senha</a></li>
 							</td>
 						</tr>
 					</table>

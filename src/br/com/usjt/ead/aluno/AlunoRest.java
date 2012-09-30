@@ -396,6 +396,45 @@ public class AlunoRest implements ICrud
             }
         }
     }
+    
+    @Path("esqueciminhasenha")
+    @GET
+    @Stylesheet(href = "aluno/esqueciminhasenha.jsp", type = MediaTypeMore.APP_JSP)
+    @SecurityPublic
+    public void esqueciMinhaSenha() {
+    }
+    
+    @Path("esqueciminhasenha")
+    @POST
+    @Stylesheet(href = "aluno/esqueciminhasenha.jsp", type = MediaTypeMore.APP_JSP)
+    @SecurityPublic
+    public void esqueciMinhaSenhaConfirma() {
+        JSPAttr j = new JSPAttr();
+        Session session = HS.getSession();
+        try {
+            String email = j.getParameter("txtEmail");
+            AlunoBean aluno = (AlunoBean) session.createCriteria(AlunoBean.class).add(Restrictions.eq("email", email))
+                    .uniqueResult();
+            if (aluno == null) {
+                j.errorMsg("Nenhum cadastro encontrado para o e-mail: " + email);
+                throw new Exception();
+            }
+            else
+            {
+                Utils.sendMailEsqueceuSenha(aluno.getEmail(), aluno.getContato().getNome(), aluno.getSenha());
+                j.sucessMsg("Email enviado com sucesso para o e-mail: " + email);
+            }
+        }
+        catch (Exception e) {
+            LOG.error("Falha na operação", e);
+        }
+        finally {
+            if (session.isOpen()) {
+                session.clear();
+                session.close();
+            }
+        }
+    }
 
     /**
      * Carrega Cidade
