@@ -28,6 +28,7 @@
 						<td valign="top">
 							<li><a href="${app_context}aluno/cadastrar">Cadastrar Aluno</a></li>
 							<li><a href="${app_context}aluno/listar">Listar Aluno</a></li>
+							<li><a href="${app_context}admin/listarBloqueios">Listar Bloqueios</a></li>
 						</td>
 					</tr>
 				</table>

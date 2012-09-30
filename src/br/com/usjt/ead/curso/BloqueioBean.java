@@ -20,6 +20,7 @@ public class BloqueioBean
     @GeneratedValue(generator = "gen", strategy = GenerationType.AUTO)
     private Integer         id_bloqueio;                      // integer,
     
+
     @ManyToOne
     @JoinColumn(name = "id_aluno")
     private AlunoBean aluno;
@@ -52,5 +53,14 @@ public class BloqueioBean
 
     public void setDisciplina(DisciplinaBean disciplina) {
         this.disciplina = disciplina;
+    }
+    
+    public Integer getId_bloqueio() {
+        return id_bloqueio;
+    }
+
+
+    public void setId_bloqueio(Integer id_bloqueio) {
+        this.id_bloqueio = id_bloqueio;
     }
 }
