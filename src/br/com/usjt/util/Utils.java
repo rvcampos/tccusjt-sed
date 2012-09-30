@@ -33,6 +33,8 @@ public final class Utils
     private static final String                MSG_ATIVACAO_CADASTRO = "Prezado(a) %s, <br><br>Seja bem-vindo(a) ao sistema de ensino à distância SYSCOM<br><br>"
                                                                              + "Acesse o link abaixo para ativar sua conta <br><br> <a href=\"http://localhost:8080/tccusjt-sed/aluno/ativar?key=%s\"> Ativação </a>";
 
+    private static final String                MSG_ESQUECI_SENHA = "Prezado(a) %s, <br><br>Foi solicitado o reenvio da senha de acesso ao sistema de ensino à distância SYSCOM<br><br>"
+            + "Acesse o sistema com a senha abaixo para utilizar o sistema: <br><br> %s";
     private static final Logger                LOG                   = LoggerFactory.getLogger(Utils.class);
     private static final BigDecimal            registrosPagina       = BigDecimal.TEN;
 
@@ -164,6 +166,16 @@ public final class Utils
         }
         catch (MessagingException e) {
             LOG.error("Falha ao enviar e-mail de ativação", e);
+        }
+    }
+    
+    public static void sendMailEsqueceuSenha(String to, String nome, String senha) {
+        try {
+            SendMail.enviarEmail("[EAD] Esqueci Minha Senha",
+                    String.format(MSG_ESQUECI_SENHA, nome, CryptoXFacade.decrypt(senha)), to);
+        }
+        catch (MessagingException e) {
+            LOG.error("Falha ao enviar e-mail de esqueci senha", e);
         }
     }
 

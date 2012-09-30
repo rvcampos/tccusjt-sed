@@ -380,4 +380,43 @@ public class ProfessorRest implements ICrud
             session.close();
         }
     }
+    
+    @Path("esqueciminhasenha")
+    @GET
+    @Stylesheet(href = "professor/esqueciminhasenha.jsp", type = MediaTypeMore.APP_JSP)
+    @SecurityPublic
+    public void esqueciMinhaSenha() {
+    }
+    
+    @Path("esqueciminhasenha")
+    @POST
+    @Stylesheet(href = "professor/esqueciminhasenha.jsp", type = MediaTypeMore.APP_JSP)
+    @SecurityPublic
+    public void esqueciMinhaSenhaConfirma() {
+        JSPAttr j = new JSPAttr();
+        Session session = HS.getSession();
+        try {
+            String email = j.getParameter("txtEmail");
+            ProfessorBean professor = (ProfessorBean) session.createCriteria(ProfessorBean.class).add(Restrictions.eq("email", email))
+                    .uniqueResult();
+            if (professor == null) {
+                j.errorMsg("Nenhum cadastro encontrado para o e-mail: " + email);
+                throw new Exception();
+            }
+            else
+            {
+                Utils.sendMailEsqueceuSenha(professor.getEmail(), professor.getContato().getNome(), professor.getSenha());
+                j.sucessMsg("Email enviado com sucesso para o e-mail: " + email);
+            }
+        }
+        catch (Exception e) {
+            LOG.error("Falha na operação", e);
+        }
+        finally {
+            if (session.isOpen()) {
+                session.clear();
+                session.close();
+            }
+        }
+    }
 }
