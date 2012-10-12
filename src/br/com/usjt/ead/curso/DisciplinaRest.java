@@ -13,18 +13,15 @@ import java.util.List;
 import java.util.Map;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.Response;
 
 import org.apache.cxf.helpers.IOUtils;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.shiro.io.ResourceUtils;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.jboss.resteasy.annotations.providers.jaxb.Stylesheet;
@@ -34,7 +31,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import br.com.usjt.ead.EntityDAO;
-import br.com.usjt.ead.aluno.AlunoBean;
 import br.com.usjt.ead.aluno.AlunoRest;
 import br.com.usjt.ead.aluno.MatriculaBean;
 import br.com.usjt.ead.material.MaterialDidaticoBean;
@@ -49,8 +45,6 @@ import br.com.usjt.shiro.Security;
 import br.com.usjt.shiro.SecurityShiro;
 import br.com.usjt.util.HS;
 import br.com.usjt.util.Utils;
-
-import com.aspose.pdf.kit.PdfContentEditor;
 
 @Path("/curso")
 public class DisciplinaRest
@@ -171,22 +165,20 @@ public class DisciplinaRest
     @POST
     @Stylesheet(href = "curso/cadastrar.jsp", type = MediaTypeMore.APP_JSP)
     @SecurityPrivate(role = { SecType.ADMIN, SecType.PROFESSOR })
-    @Consumes("multipart/form-data")
-    public void create(MultipartFormDataInput input) {
+    public void create() {
         JSPAttr j = new JSPAttr();
         DisciplinaBean objDisciplina = new DisciplinaBean();
         Session session = HS.getSession();
         Transaction tx = session.beginTransaction();
         SimpleDateFormat dtFormat = new SimpleDateFormat("dd/MM/yyyy");
         Security sh = SecurityShiro.init();
-        Map<String, List<InputPart>> uploadForm = input.getFormDataMap();
         try {
-            objDisciplina.setNome_disciplina(uploadForm.get("txtNomeDisciplina").get(0).getBodyAsString());
-            objDisciplina.setData_inicio(dtFormat.parse(uploadForm.get("txtDataInicio").get(0).getBodyAsString()));
-            objDisciplina.setData_termino(dtFormat.parse(uploadForm.get("txtDataTermino").get(0).getBodyAsString()));
-            objDisciplina.setDescricao(uploadForm.get("txtDesc").get(0).getBodyAsString());
+            objDisciplina.setNome_disciplina(j.getParameter("txtNomeDisciplina"));
+            objDisciplina.setData_inicio(dtFormat.parse(j.getParameter("txtDataInicio")));
+            objDisciplina.setData_termino(dtFormat.parse(j.getParameter("txtDataTermino")));
+            objDisciplina.setDescricao(j.getParameter("txtDesc"));
             objDisciplina.setProfessor((ProfessorBean) session.load(ProfessorBean.class, sh.getUserId()));
-            objDisciplina = populaOsModulosCreate(j, objDisciplina, uploadForm);
+            objDisciplina = populaOsModulosCreate(j, objDisciplina);
             if (Utils.isValid(objDisciplina)) {
                 // XXX Descomentar
                 // DefaultHttpClient httpclient = new DefaultHttpClient();
@@ -259,7 +251,6 @@ public class DisciplinaRest
     private void adicionaMaterial(ModuloBean mod, List<InputPart> inputParts) {
         for (InputPart inputPart : inputParts) {
             try {
-
                 MultivaluedMap<String, String> header = inputPart.getHeaders();
                 String fileName = getFileName(header);
 
@@ -349,7 +340,7 @@ public class DisciplinaRest
         return 0;
     }
 
-    private DisciplinaBean populaOsModulosCreate(JSPAttr j, DisciplinaBean objDisciplina, Map<String, List<InputPart>> uploadForm)
+    private DisciplinaBean populaOsModulosCreate(JSPAttr j, DisciplinaBean objDisciplina)
             throws Exception {
         Iterator<ModuloBean> it = objDisciplina.getModulos().iterator();
         ModuloBean basico = new ModuloBean();
@@ -364,18 +355,18 @@ public class DisciplinaRest
             basico.setData_inicio(objDisciplina.getData_inicio());
             basico.setData_termino(objDisciplina.getData_termino());
         }
-        if (((!Utils.isEmpty(uploadForm.get("qtdquestoesBas").get(0).getBodyAsString()) && !Utils.isEmpty(uploadForm
-                .get("qtdaltBas").get(0).getBodyAsString())))) {
+        if (((!Utils.isEmpty(j.getParameter("qtdquestoesBas")) && !Utils.isEmpty(j
+                .get("qtdaltBas"))))) {
             AvaliacaoBean b = new AvaliacaoBean();
             b.setModulo(basico);
-            for (int i = 1; i <= Integer.parseInt(uploadForm.get("qtdquestoesBas").get(0).getBodyAsString()); i++) {
+            for (int i = 1; i <= Integer.parseInt(j.getParameter("qtdquestoesBas")); i++) {
                 QuestaoBean questao = new QuestaoBean();
                 questao.setAvaliacao(b);
-                questao.setConteudo(uploadForm.get("txtquestoesBasicoquest" + i).get(0).getBodyAsString());
-                int certa = Integer.parseInt(uploadForm.get("optquestoesBasico" + i).get(0).getBodyAsString());
-                for (int k = 1; k <= Integer.parseInt(uploadForm.get("qtdaltBas").get(0).getBodyAsString()); k++) {
+                questao.setConteudo(j.getParameter("txtquestoesBasicoquest" + i));
+                int certa = Integer.parseInt(j.getParameter("optquestoesBasico" + i));
+                for (int k = 1; k <= Integer.parseInt(j.getParameter("qtdaltBas")); k++) {
                     AlternativaBean alternativa = new AlternativaBean();
-                    alternativa.setConteudo(uploadForm.get("txtquestoesBasicoquest" + i + "alt" + k).get(0).getBodyAsString());
+                    alternativa.setConteudo(j.getParameter("txtquestoesBasicoquest" + i + "alt" + k));
                     alternativa.setQuestao(questao);
                     if (k == certa) {
                         alternativa.setCorreta(true);
@@ -384,11 +375,11 @@ public class DisciplinaRest
                 }
                 b.getQuestoes().add(questao);
             }
-            adicionaMaterial(basico, uploadForm.get("matBasico"));
+//            adicionaMaterial(basico, j.getParameter("matBasico"));
 
-            //Setando a quantidade de questoes que serão exibidas na avaliação
-            b.setQtde_questoes(Integer.parseInt(uploadForm.get("txtQtdQuestoesExibidas").get(0).getBodyAsString()));
-            
+            // Setando a quantidade de questoes que serão exibidas na avaliação
+            b.setQtde_questoes(Integer.parseInt(j.getParameter("txtQtdQuestoesExibidas")));
+
             basico.setAvaliacao(b);
             basico = criaChat(basico, httpclient, "basico");
         }
@@ -403,19 +394,18 @@ public class DisciplinaRest
             intermediario.setData_inicio(objDisciplina.getData_inicio());
             intermediario.setData_termino(objDisciplina.getData_termino());
         }
-        if (((!Utils.isEmpty(uploadForm.get("qtdquestoesInt").get(0).getBodyAsString()) && !Utils.isEmpty(uploadForm
-                .get("qtdaltInt").get(0).getBodyAsString())))) {
+        if (((!Utils.isEmpty(j.getParameter("qtdquestoesInt")) && !Utils.isEmpty(j
+                .get("qtdaltInt"))))) {
             AvaliacaoBean inte = new AvaliacaoBean();
             inte.setModulo(intermediario);
-            for (int i = 1; i <= Integer.parseInt(uploadForm.get("qtdquestoesInt").get(0).getBodyAsString()); i++) {
+            for (int i = 1; i <= Integer.parseInt(j.getParameter("qtdquestoesInt")); i++) {
                 QuestaoBean questao = new QuestaoBean();
                 questao.setAvaliacao(inte);
-                questao.setConteudo(uploadForm.get("txtquestoesIntermediarioquest" + i).get(0).getBodyAsString());
-                int certa = Integer.parseInt(uploadForm.get("optquestoesIntermediario" + i).get(0).getBodyAsString());
-                for (int k = 1; k <= Integer.parseInt(uploadForm.get("qtdaltInt").get(0).getBodyAsString()); k++) {
+                questao.setConteudo(j.getParameter("txtquestoesIntermediarioquest" + i));
+                int certa = Integer.parseInt(j.getParameter("optquestoesIntermediario" + i));
+                for (int k = 1; k <= Integer.parseInt(j.getParameter("qtdaltInt")); k++) {
                     AlternativaBean alternativa = new AlternativaBean();
-                    alternativa.setConteudo(uploadForm.get("txtquestoesIntermediarioquest" + i + "alt" + k).get(0)
-                            .getBodyAsString());
+                    alternativa.setConteudo(j.getParameter("txtquestoesIntermediarioquest" + i + "alt" + k));
                     alternativa.setQuestao(questao);
                     if (k == certa) {
                         alternativa.setCorreta(true);
@@ -424,12 +414,12 @@ public class DisciplinaRest
                 }
                 inte.getQuestoes().add(questao);
             }
-            adicionaMaterial(intermediario, uploadForm.get("matIntermediario"));
+//            adicionaMaterial(intermediario, j.getParameter("matIntermediario"));
             intermediario = criaChat(intermediario, httpclient, "Intermediário");
-            
-            //Setando a quantidade de questoes que serão exibidas na avaliação
-            inte.setQtde_questoes(Integer.parseInt(uploadForm.get("txtQtdQuestoesExibidas").get(0).getBodyAsString()));
-            
+
+            // Setando a quantidade de questoes que serão exibidas na avaliação
+            inte.setQtde_questoes(Integer.parseInt(j.getParameter("txtQtdQuestoesExibidas")));
+
             intermediario.setAvaliacao(inte);
         }
         ModuloBean avancado = new ModuloBean();
@@ -442,18 +432,18 @@ public class DisciplinaRest
             avancado.setData_inicio(objDisciplina.getData_inicio());
             avancado.setData_termino(objDisciplina.getData_termino());
         }
-        if (((!Utils.isEmpty(uploadForm.get("qtdquestoesAdv").get(0).getBodyAsString()) && !Utils.isEmpty(uploadForm
-                .get("qtdaltAdv").get(0).getBodyAsString())))) {
+        if (((!Utils.isEmpty(j.getParameter("qtdquestoesAdv")) && !Utils.isEmpty(j
+                .get("qtdaltAdv"))))) {
             AvaliacaoBean adv = new AvaliacaoBean();
             adv.setModulo(avancado);
-            for (int i = 1; i <= Integer.parseInt(uploadForm.get("qtdquestoesAdv").get(0).getBodyAsString()); i++) {
+            for (int i = 1; i <= Integer.parseInt(j.getParameter("qtdquestoesAdv")); i++) {
                 QuestaoBean questao = new QuestaoBean();
                 questao.setAvaliacao(adv);
-                questao.setConteudo(uploadForm.get("txtquestoesAvancadoquest" + i).get(0).getBodyAsString());
-                int certa = Integer.parseInt(uploadForm.get("optquestoesAvancado" + i).get(0).getBodyAsString());
-                for (int k = 1; k <= Integer.parseInt(uploadForm.get("qtdaltInt").get(0).getBodyAsString()); k++) {
+                questao.setConteudo(j.getParameter("txtquestoesAvancadoquest" + i));
+                int certa = Integer.parseInt(j.getParameter("optquestoesAvancado" + i));
+                for (int k = 1; k <= Integer.parseInt(j.getParameter("qtdaltInt")); k++) {
                     AlternativaBean alternativa = new AlternativaBean();
-                    alternativa.setConteudo(uploadForm.get("txtquestoesAvancadoquest" + i + "alt" + k).get(0).getBodyAsString());
+                    alternativa.setConteudo(j.getParameter("txtquestoesAvancadoquest" + i + "alt" + k));
                     alternativa.setQuestao(questao);
                     if (k == certa) {
                         alternativa.setCorreta(true);
@@ -462,13 +452,12 @@ public class DisciplinaRest
                 }
                 adv.getQuestoes().add(questao);
             }
-            adicionaMaterial(avancado, uploadForm.get("matAvancado"));
+//            adicionaMaterial(avancado, j.getParameter("matAvancado"));
             avancado = criaChat(avancado, httpclient, "Avançado");
-            
-            
-            //Setando a quantidade de questoes que serão exibidas na avaliação
-            adv.setQtde_questoes(Integer.parseInt(uploadForm.get("txtQtdQuestoesExibidas").get(0).getBodyAsString()));
-            
+
+            // Setando a quantidade de questoes que serão exibidas na avaliação
+            adv.setQtde_questoes(Integer.parseInt(j.getParameter("txtQtdQuestoesExibidas")));
+
             avancado.setAvaliacao(adv);
         }
         objDisciplina.getModulos().add(basico);
@@ -795,11 +784,66 @@ public class DisciplinaRest
         }
     }
 
-    public static void main(String[] args) throws Exception{
-        PdfContentEditor editor = new PdfContentEditor();
-        editor.bindPdf(ResourceUtils.getInputStreamForPath("Template.pdf"));
-        editor.replaceText("[Nome]", "Renan");
-        editor.replaceText("[Nome do Curso]", "Java");
-        editor.save(CERTIFICADO_URL + "replace.pdf");
+    @Path("materiais")
+    @POST
+    @Stylesheet(href = "curso/adicionarMateriais.jsp", type = MediaTypeMore.APP_JSP)
+    @SecurityPrivate(role = { SecType.ADMIN, SecType.PROFESSOR })
+    public void materiais(@FormParam("id_disciplina") Integer id) {
+        Session session = HS.getSession();
+        JSPAttr j = new JSPAttr();
+        try {
+            DisciplinaBean d = (DisciplinaBean) session.get(DisciplinaBean.class, id);
+            j.set("disciplina", d);
+            j.set("basico", d.getModuloByLevel(1).getMaterial());
+            j.set("intermediario", d.getModuloByLevel(2).getMaterial());
+            j.set("avancado", d.getModuloByLevel(3).getMaterial());
+        }
+        catch (Exception e) {
+            LOG.error("Falha ao deletar curso", e);
+            j.errorMsg();
+        }
+        finally {
+            session.close();
+        }
+    }
+
+    @Path("upload")
+    @POST
+    @Stylesheet(href = "curso/adicionarMateriais.jsp", type = MediaTypeMore.APP_JSP)
+    @SecurityPrivate(role = { SecType.ADMIN, SecType.PROFESSOR })
+    @Consumes("multipart/form-data")
+    public void uploadMaterial(MultipartFormDataInput input) {
+        Session session = HS.getSession();
+        Map<String, List<InputPart>> uploadForm = input.getFormDataMap();
+        Transaction tx = session.beginTransaction();
+        try {
+            DisciplinaBean b = new DisciplinaBean();
+            for (ModuloBean mod : b.getModulos()) {
+                switch (mod.getNivel_modulo())
+                {
+                case 1:
+                    adicionaMaterial(mod, uploadForm.get("matBasico"));
+                    break;
+                case 2:
+                    adicionaMaterial(mod, uploadForm.get("matIntermediario"));
+                    break;
+                case 3:
+                    adicionaMaterial(mod, uploadForm.get("matAvancado"));
+                    break;
+                default:
+                    break;
+                }
+            }
+            session.update(b);
+            tx.commit();
+        }
+        catch (Exception e) {
+            tx.rollback();
+            LOG.error("Falha na operação", e);
+        }
+        finally {
+            session.close();
+            
+        }
     }
 }
