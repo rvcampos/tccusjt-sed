@@ -38,7 +38,7 @@ www.w3.org/TR/html4/loose.dtd">
 			<td><form action="delete" method="post"
 					id="formDelete${bloqueio.id_bloqueio}">
 					<input type="hidden" value=${bloqueio.id_bloqueio } name="id_bloqueio" />
-					<a onclick="$('#formDelete${bloqueio.id_bloqueio}').submit();"><i
+					<a onclick="if (confirm('Deseja remover o bloqueio do aluno selecionado?'))$('#formDelete${bloqueio.id_bloqueio}').submit();"><i
 						class="icon-remove"></i></a>
 				</form></td>
 			<td>${bloqueio.aluno.contato.nome}</td>

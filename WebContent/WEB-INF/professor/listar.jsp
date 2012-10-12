@@ -45,7 +45,7 @@ www.w3.org/TR/html4/loose.dtd">
 			<td><form action="delete" method="post"
 					id="formProfessorDelete${prof.id_professor}">
 					<input type="hidden" value=${prof.id_professor } name="id_prof" />
-					<a onclick="$('#formProfessorDelete${prof.id_professor}').submit();"><i
+					<a onclick="if (confirm('Deseja remover o professor selecionado?'))$('#formProfessorDelete${prof.id_professor}').submit();"><i
 						class="icon-remove"></i></a>
 				</form></td>
 			<td>${prof.contato.nome}</td>

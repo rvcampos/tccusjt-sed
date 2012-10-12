@@ -32,7 +32,7 @@ www.w3.org/TR/html4/loose.dtd">
 			<a onclick="$('#frmCursar${curso.id_matricula}').submit();"><i class="icon-book"></i></a></form></c:if></td>
 			<td><c:if test="${not curso.certificado}"><form action="${app_context}aluno/desmatricular" method="POST" id="frmDisciplina${curso.modulo.disciplina.id_disciplina}">
 			<input type="hidden" name="id_disciplina" value="${curso.modulo.disciplina.id_disciplina }"/>
-			<a onclick="$('#frmDisciplina${curso.modulo.disciplina.id_disciplina}').submit();"><i class="icon-remove"></i></a></form></c:if></td>
+			<a onclick="if(confirm('Deseja se desmatricular do curso selecionado?'))$('#frmDisciplina${curso.modulo.disciplina.id_disciplina}').submit();"><i class="icon-remove"></i></a></form></c:if></td>
 			<td><c:if test="${curso.certificado}"><form action="${app_context}aluno/certificado" method="POST" id="frmCertificado${curso.modulo.disciplina.id_disciplina}">
 			<input type="hidden" name="id_disciplina" value="${curso.modulo.disciplina.id_disciplina }"/>
 			<a onclick="$('#frmCertificado${curso.modulo.disciplina.id_disciplina}').submit();"><i class="icon-print"></i></a></form></c:if></td>

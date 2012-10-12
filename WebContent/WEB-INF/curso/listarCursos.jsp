@@ -22,9 +22,13 @@ www.w3.org/TR/html4/loose.dtd">
 		<td>${disciplina.data_termino}</td>
 		<td>${disciplina.professor.contato.nome}</td>
 		<td>
-		<form action="${app_context}aluno/matricular" method="POST" id="frmDisciplina${disciplina.id_disciplina}">
-		<input type="hidden" name="id_disciplina" value="${disciplina.id_disciplina }"/>
-		<a onclick="$('#frmDisciplina${disciplina.id_disciplina}').submit();"><i class="icon-hand-up"></i></a></form></td>
+			<form action="${app_context}aluno/matricular" method="POST" id="frmDisciplina${disciplina.id_disciplina}">
+			<input type="hidden" name="id_disciplina" value="${disciplina.id_disciplina }"/>
+		<shiro:hasRole name="aluno">
+			<a onclick="if (confirm('Deseja efetuar a matricula no curso selecionado?'))$('#frmDisciplina${disciplina.id_disciplina}').submit();"><i class="icon-hand-up"></i></a>
+		</shiro:hasRole>
+			</form>
+		</td>
 	</tr>
 	</c:forEach>
 </table>
