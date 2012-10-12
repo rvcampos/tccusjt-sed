@@ -639,6 +639,9 @@ public class DisciplinaRest
             j.set("questoes", listQuestoesRandomizadas);
             j.set("modulo", m.getModulo());
             j.set("matricula", m);
+            
+            //Salvo na sessão para quando for corrigir a prova utilizar a mesma lista
+            j.setInSession("questoes", listQuestoesRandomizadas);
         }
         catch (Exception e) {
             LOG.error("Falha na operação", e);
@@ -692,10 +695,14 @@ public class DisciplinaRest
         Transaction tx = session.beginTransaction();
         boolean last = false;
         try {
+            List<QuestaoBean> listQuestoes = new ArrayList<QuestaoBean>();
+            listQuestoes = (List<QuestaoBean>) j.getFromSession("questoes");
+            
             MatriculaBean m = (MatriculaBean) session.get(MatriculaBean.class, Integer.parseInt(j.getParameter("matricula")));
+            
             if (m.getDt_avaliacao().before(new Date())) {
                 int acertos = 0;
-                int qtdAlt = m.getModulo().getAvaliacao().getQuestoes().size();
+                int qtdAlt = listQuestoes.size();
                 double pctNec = 100.00d;
                 String mod = "Intermediário";
                 switch (m.getModulo().getNivel_modulo())
@@ -713,7 +720,8 @@ public class DisciplinaRest
                     last = true;
                     break;
                 }
-                for (QuestaoBean questao : m.getModulo().getAvaliacao().getQuestoes()) {
+                                   
+                for (QuestaoBean questao : listQuestoes) {
                     String selecionada = j.getParameter("questao" + questao.getId_questao());
                     if (!Utils.isEmpty(selecionada)) {
                         if (questao.isCorrectAlternativa(Long.parseLong(selecionada))) {
@@ -781,6 +789,7 @@ public class DisciplinaRest
             if (session.isOpen()) {
                 session.clear();
                 session.close();
+                j.removeFromSession("questoes");
             }
             new AlunoRest().meusCursos();
         }
