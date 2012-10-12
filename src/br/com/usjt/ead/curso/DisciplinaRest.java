@@ -14,11 +14,15 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.Response;
 
 import org.apache.cxf.helpers.IOUtils;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.shiro.io.ResourceUtils;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.jboss.resteasy.annotations.providers.jaxb.Stylesheet;
@@ -28,6 +32,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import br.com.usjt.ead.EntityDAO;
+import br.com.usjt.ead.aluno.AlunoBean;
 import br.com.usjt.ead.aluno.AlunoRest;
 import br.com.usjt.ead.aluno.MatriculaBean;
 import br.com.usjt.ead.material.MaterialDidaticoBean;
@@ -43,14 +48,19 @@ import br.com.usjt.shiro.SecurityShiro;
 import br.com.usjt.util.HS;
 import br.com.usjt.util.Utils;
 
+import com.aspose.pdf.kit.PdfContentEditor;
+
 @Path("/curso")
 public class DisciplinaRest
 {
 
     private static final long   oneDay             = 86400000L;
     private static final String CHATURI            = "http://127.0.0.1:443/?0,%s,0,13,2";
-    private static final String UPLOADED_FILE_PATH = "C:"+File.separator+"Users"+File.separator+"Public"+File.separator+"Documents"+File.separator+"tcc"+File.separator;
-
+    private static final String UPLOADED_FILE_PATH = "C:" + File.separator + "Users" + File.separator + "Public" + File.separator
+                                                           + "Documents" + File.separator + "tcc" + File.separator;
+    private static final String CERTIFICADO_URL    = "C:" + File.separator + "Users" + File.separator + "Public" + File.separator
+                                                           + "Documents" + File.separator + "tcc" + File.separator
+                                                           + "certificados" + File.separator;
     private static final Logger LOG                = LoggerFactory.getLogger(DisciplinaRest.class);
 
     @Path("listar")
@@ -74,7 +84,6 @@ public class DisciplinaRest
         }
     }
 
-    
     @Path("editar")
     @POST
     @Stylesheet(href = "curso/cadastrar.jsp", type = MediaTypeMore.APP_JSP)
@@ -122,7 +131,6 @@ public class DisciplinaRest
         }
     }
 
-    
     @Path("cadastrar")
     @GET
     @Stylesheet(href = "curso/cadastrar.jsp", type = MediaTypeMore.APP_JSP)
@@ -131,7 +139,6 @@ public class DisciplinaRest
         JSPAttr j = new JSPAttr("metodo", "create");
     }
 
-    
     @Path("delete")
     @POST
     @Stylesheet(href = "professor/meusCursos.jsp", type = MediaTypeMore.APP_JSP)
@@ -261,7 +268,8 @@ public class DisciplinaRest
 
                 // constructs upload file path
                 fileName = UPLOADED_FILE_PATH + mod.getDisciplina().getNome_disciplina() + File.separator + fileName;
-                MaterialDidaticoBean mat = writeFile(bytes, fileName, UPLOADED_FILE_PATH + mod.getDisciplina().getNome_disciplina());
+                MaterialDidaticoBean mat = writeFile(bytes, fileName, UPLOADED_FILE_PATH
+                        + mod.getDisciplina().getNome_disciplina());
                 mat.setModulo(mod);
                 mod.getMaterial().add(mat);
             }
@@ -296,8 +304,7 @@ public class DisciplinaRest
     private MaterialDidaticoBean writeFile(byte[] content, String filename, String folder) throws IOException {
         MaterialDidaticoBean b = new MaterialDidaticoBean();
         File folderd = new File(folder);
-        if(!folderd.exists())
-        {
+        if (!folderd.exists()) {
             folderd.mkdir();
         }
         File file = new File(filename);
@@ -324,8 +331,7 @@ public class DisciplinaRest
     @Path("video")
     public void video() {
         JSPAttr j = new JSPAttr();
-        j.set("video", "C:\\Users\\Jeferson\\Desktop\\sample_mpeg4.mp4");
-        File v = new File("C:\\Users\\Jeferson\\Desktop\\sample_mpeg4.mp4");
+        j.set("video", "http://flightpass.higherplaneproductions.com/gallery2/g2data/albums/FreeAll/freewmv/JoeNall10_3DH-_W.wmv");
     }
 
     private int tipoArquivo(String filename) {
@@ -618,7 +624,7 @@ public class DisciplinaRest
             }
         }
     }
-    
+
     @Path("bloquear")
     @POST
     @Stylesheet(href = "curso/avaliacao.jsp", type = MediaTypeMore.APP_JSP)
@@ -629,12 +635,12 @@ public class DisciplinaRest
         Transaction tx = session.beginTransaction();
         try {
             MatriculaBean m = (MatriculaBean) session.get(MatriculaBean.class, Integer.parseInt(j.getParameter("matricula")));
-            
+
             BloqueioBean bloqueio = new BloqueioBean();
-            
+
             bloqueio.setAluno(m.getAluno());
             bloqueio.setDisciplina(m.getModulo().getDisciplina());
-            
+
             session.save(bloqueio);
             tx.commit();
         }
@@ -716,23 +722,21 @@ public class DisciplinaRest
                 }
                 else {
                     m.setDt_avaliacao(new Date(new Date().getTime() + 2 * oneDay));
-                    
+
                     int qtde_falha = m.getQtde_falha();
-                    if (qtde_falha >= 3)
-                    {
+                    if (qtde_falha >= 3) {
                         AlunoRest aluno = new AlunoRest();
-                        
+
                         BloquearAluno();
-                        
+
                         aluno.desmatricular(m.getModulo().getDisciplina().getId_disciplina());
 
                         j.errorMsg("Você falhou em obter a porcentagem mínima de acerto por 3 vezes, você será desmatrículado do curso");
                     }
-                    else
-                    {
+                    else {
                         qtde_falha += 1;
-                        m.setQtde_falha(qtde_falha);   
-                        
+                        m.setQtde_falha(qtde_falha);
+
                         j.errorMsg("Você falhou em obter a porcentagem mínima de acerto(" + pctNec
                                 + "%). Não se desanime, estude mais e tente novamente em 48 horas");
                     }
@@ -756,4 +760,11 @@ public class DisciplinaRest
         }
     }
 
+    public static void main(String[] args) throws Exception{
+        PdfContentEditor editor = new PdfContentEditor();
+        editor.bindPdf(ResourceUtils.getInputStreamForPath("Template.pdf"));
+        editor.replaceText("[Nome]", "Renan");
+        editor.replaceText("[Nome do Curso]", "Java");
+        editor.save(CERTIFICADO_URL + "replace.pdf");
+    }
 }

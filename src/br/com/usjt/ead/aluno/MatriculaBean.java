@@ -35,7 +35,11 @@ public class MatriculaBean
     @Column
     private Boolean    certificado = new Boolean(false);
     @Column
-    private int qtde_falha;
+    private int        qtde_falha;
+    @Column
+    private Date       dt_matricula;
+    @Column
+    private Date       dt_termino;
 
     public int getQtde_falha() {
         return qtde_falha;
@@ -110,6 +114,22 @@ public class MatriculaBean
 
     public void setConcluido(Boolean concluido) {
         this.concluido = concluido;
+    }
+
+    public Date getDt_matricula() {
+        return dt_matricula;
+    }
+
+    public void setDt_matricula(Date dt_matricula) {
+        this.dt_matricula = dt_matricula;
+    }
+
+    public Date getDt_termino() {
+        return dt_termino;
+    }
+
+    public void setDt_termino(Date dt_termino) {
+        this.dt_termino = dt_termino;
     }
 
 }

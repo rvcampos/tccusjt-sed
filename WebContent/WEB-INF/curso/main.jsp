@@ -2,7 +2,6 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="f"%>
-<%@ taglib uri="/WEB-INF/rssutils.tld" prefix="rss"%>
 <!-- <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd"> -->
 <!DOCTYPE html>
 <html>
@@ -16,7 +15,7 @@
 	function loadMaterial(id, name)
 	{
 		$('#materialPage').empty();
-		$('#materialPage').html('<form method="post" action="${app_context}material/download"id="mat"><input type="hidden" name="material"value="'+id+'" /><a href="javascript:$(\'#mat\').submit();" target="_blank">'+name+'</a></form>');
+		$('#materialPage').html('<table><tr><td><form method="post" action="${app_context}material/download"id="mat"><input type="hidden" name="material"value="'+id+'" /><a href="javascript:$(\'#mat\').submit();" target="_blank">Download</a></form></td><td><form method="post" action="${app_context}file/getFile" id="mat2"><input type="hidden" name="material"value="'+id+'" /><a href="javascript:$(\'#mat2\').submit();" target="_blank">Visualizar</a></form></td>');
 	}
 </script>
 </head>
