@@ -1,10 +1,12 @@
 package br.com.usjt.jaxrs;
 
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.util.Enumeration;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.jboss.resteasy.spi.ResteasyProviderFactory;
 import org.slf4j.Logger;
@@ -18,6 +20,7 @@ public class JSPAttr
 
     private static Logger      LOG = LoggerFactory.getLogger(JSPAttr.class);
     private HttpServletRequest request;
+    private HttpServletResponse response;
 
     /**
      * Construtor padrao
@@ -25,6 +28,7 @@ public class JSPAttr
     public JSPAttr()
     {
         this.request = ResteasyProviderFactory.getContextData(HttpServletRequest.class);
+        this.response = ResteasyProviderFactory.getContextData(HttpServletResponse.class);
         try {
             request.setCharacterEncoding("UTF-8");
         }
@@ -116,5 +120,10 @@ public class JSPAttr
     public void sucessMsg(String msg) {
         set("msgok", msg);
     }
-
+    
+    public void loadFile(File file)
+    {
+        response.addHeader("Content-Disposition", "inline; filename=" + file.getName());
+        response.setContentLength((int) file.length());
+    }
 }

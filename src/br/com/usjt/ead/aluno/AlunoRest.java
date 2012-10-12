@@ -1,5 +1,6 @@
 package br.com.usjt.ead.aluno;
 
+import java.io.File;
 import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -10,7 +11,12 @@ import java.util.GregorianCalendar;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
 
+import org.apache.shiro.io.ResourceUtils;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -23,8 +29,6 @@ import org.jboss.resteasy.annotations.providers.jaxb.Stylesheet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.sun.mail.iap.Response;
-
 import br.com.usjt.ICrud;
 import br.com.usjt.ead.EntityDAO;
 import br.com.usjt.ead.cidadestado.CidadeBean;
@@ -35,7 +39,7 @@ import br.com.usjt.ead.contato.EnderecoBean;
 import br.com.usjt.ead.contato.TelefoneBean;
 import br.com.usjt.ead.contato.TipoTelefoneBean;
 import br.com.usjt.ead.curso.BloqueioBean;
-import br.com.usjt.ead.curso.DisciplinaRest;
+import br.com.usjt.ead.curso.DisciplinaBean;
 import br.com.usjt.ead.curso.ModuloBean;
 import br.com.usjt.ead.curso.SalaChatBean;
 import br.com.usjt.jaxrs.JSPAttr;
@@ -49,11 +53,18 @@ import br.com.usjt.util.CryptoXFacade;
 import br.com.usjt.util.HS;
 import br.com.usjt.util.Utils;
 
+import com.aspose.pdf.kit.PdfContentEditor;
+
 @Path("/aluno")
 public class AlunoRest implements ICrud
 {
 
     private static final Logger LOG = LoggerFactory.getLogger(AlunoRest.class);
+    
+    private static final String CERTIFICADO_URL    = "C:" + File.separator + "Users" + File.separator + "Public" + File.separator
+            + "Documents" + File.separator + "tcc" + File.separator
+            + "certificados" + File.separator;
+
 
     @Override
     @Path("listar")
@@ -778,4 +789,44 @@ public class AlunoRest implements ICrud
 
         return now.after(inic2) && now.before(end2);
     }
+    
+    @Path("certificado")
+    @POST
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    @SecurityPrivate(role = SecType.ALUNO)
+    public Response emitirCertificado() {
+        Security sh = SecurityShiro.init();
+        Integer id = sh.getUserId();
+        Session session = HS.getSession();
+        JSPAttr j = new JSPAttr();
+        File f = null;
+        String fileName="Certificado.pdf";
+        try {
+            AlunoBean aluno = (AlunoBean) session.get(AlunoBean.class, id);
+            Integer id_curso = Integer.parseInt(j.getParameter("id_disciplina"));
+            DisciplinaBean b = (DisciplinaBean) session.get(DisciplinaBean.class, id_curso);
+            f = new File(CERTIFICADO_URL + aluno.getEmail());
+            if(!f.exists())
+            {
+                f.mkdirs();
+            }
+            File certificado = new File(CERTIFICADO_URL + aluno.getEmail() + File.separator + b.getId_disciplina() + ".pdf");
+            if(!certificado.exists())
+            {
+                PdfContentEditor editor = new PdfContentEditor();
+                editor.bindPdf(ResourceUtils.getInputStreamForPath(ResourceUtils.CLASSPATH_PREFIX + "Template.pdf"));
+                editor.replaceText("[Nome do aluno]", aluno.getContato().getNome());
+                editor.replaceText("[Nome do Curso]", b.getNome_disciplina());
+                editor.save(certificado.getCanonicalPath());
+            }
+            f = certificado;
+        }
+        catch (Exception e) {
+            LOG.error("Falha ao emitir certificado",e);
+        }
+        ResponseBuilder response = Response.ok((Object) f);
+        response.header("Content-Disposition", "attachment; filename=" + fileName);
+        return response.build();
+    }
+    
 }
