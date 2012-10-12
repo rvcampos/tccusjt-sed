@@ -8,7 +8,9 @@ import java.util.Enumeration;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.shiro.SecurityUtils;
 import org.jboss.resteasy.spi.ResteasyProviderFactory;
+import org.jboss.security.SecurityUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -125,5 +127,20 @@ public class JSPAttr
     {
         response.addHeader("Content-Disposition", "inline; filename=" + file.getName());
         response.setContentLength((int) file.length());
+    }
+    
+    public void setInSession(String name, Object attr)
+    {
+        SecurityUtils.getSubject().getSession().setAttribute(name, attr);
+    }
+    
+    public Object getFromSession(String name)
+    {
+        return SecurityUtils.getSubject().getSession().getAttribute(name);
+    }
+    
+    public void removeFromSession(String name)
+    {
+        SecurityUtils.getSubject().getSession().removeAttribute(name);
     }
 }
