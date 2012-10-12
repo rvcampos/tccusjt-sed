@@ -67,7 +67,7 @@ public class SecurityShiro implements Security
             this.currentUser.login(newlogin);
         }
         catch (Exception e) {
-            new JSPAttr().errorMsg(e.getMessage());
+            new JSPAttr().errorMsg("Usuário e/ou senha inválidos");
             return false;
         }
         if (this.currentUser.isAuthenticated()) {
