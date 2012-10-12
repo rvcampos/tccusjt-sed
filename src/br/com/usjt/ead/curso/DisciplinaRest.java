@@ -5,6 +5,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -384,6 +386,9 @@ public class DisciplinaRest
             }
             adicionaMaterial(basico, uploadForm.get("matBasico"));
 
+            //Setando a quantidade de questoes que serão exibidas na avaliação
+            b.setQtde_questoes(Integer.parseInt(uploadForm.get("txtQtdQuestoesExibidas").get(0).getBodyAsString()));
+            
             basico.setAvaliacao(b);
             basico = criaChat(basico, httpclient, "basico");
         }
@@ -421,6 +426,10 @@ public class DisciplinaRest
             }
             adicionaMaterial(intermediario, uploadForm.get("matIntermediario"));
             intermediario = criaChat(intermediario, httpclient, "Intermediário");
+            
+            //Setando a quantidade de questoes que serão exibidas na avaliação
+            inte.setQtde_questoes(Integer.parseInt(uploadForm.get("txtQtdQuestoesExibidas").get(0).getBodyAsString()));
+            
             intermediario.setAvaliacao(inte);
         }
         ModuloBean avancado = new ModuloBean();
@@ -455,6 +464,11 @@ public class DisciplinaRest
             }
             adicionaMaterial(avancado, uploadForm.get("matAvancado"));
             avancado = criaChat(avancado, httpclient, "Avançado");
+            
+            
+            //Setando a quantidade de questoes que serão exibidas na avaliação
+            adv.setQtde_questoes(Integer.parseInt(uploadForm.get("txtQtdQuestoesExibidas").get(0).getBodyAsString()));
+            
             avancado.setAvaliacao(adv);
         }
         objDisciplina.getModulos().add(basico);
@@ -611,6 +625,18 @@ public class DisciplinaRest
         Session session = HS.getSession();
         try {
             MatriculaBean m = (MatriculaBean) session.get(MatriculaBean.class, Integer.parseInt(j.getParameter("matricula")));
+            
+            List<QuestaoBean> listQuestoes = m.getModulo().getAvaliacao().getQuestoes();
+            Collections.shuffle(listQuestoes);
+            
+            List<QuestaoBean> listQuestoesRandomizadas = new ArrayList<QuestaoBean>();
+
+            for (int questoesAdicionadas = 0; questoesAdicionadas < m.getModulo().getAvaliacao().getQtde_questoes(); questoesAdicionadas++)
+            {
+                listQuestoesRandomizadas.add(listQuestoes.get(questoesAdicionadas));
+            }
+            
+            j.set("questoes", listQuestoesRandomizadas);
             j.set("modulo", m.getModulo());
             j.set("matricula", m);
         }

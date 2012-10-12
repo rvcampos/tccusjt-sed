@@ -9,13 +9,20 @@ www.w3.org/TR/html4/loose.dtd">
 <title>Cadastro de Disciplina</title>
 
 <script type="text/javascript" charset="UTF-8">
-	function gerar(id, qtdquest, qtdalt)
+	function gerar(id, qtdquest, qtdalt, qtdquestprova)
 {
 	if(qtdquest == '' || qtdalt == '')
 	{
 		alert('Preencha a quantiade de Questões e alternativas');
 		return false;
 	}
+
+	if(qtdquestprova > qtdquest)
+	{
+		alert('A quantidade de questões a serem exibidas na prova deve ser menor ou igual a quantidade de questões cadastradas');
+		return false;
+	}
+	
 	var i,j;
 	var html = "";
 	var defcontrol = '<div class="control-group"><label class="control-label" for="{txtname}">{label}</label><div class="controls"><input name="{txtname}" class="input-xxlarge" id="{txtname}" type="text" maxlength="300" value="{valor}"/></div></div>';
@@ -137,6 +144,13 @@ function gerarMaterial(id, qtd, label)
 						</div>
 						<div class="tab-pane" id="basicqst">
 							<div class="control-group">
+								<label class="control-label" for="lblQtdQuestoesExibidas">Quantidade de
+									Questões Exibidas</label>
+								<div class="controls">
+									<input type="text" name="txtQtdQuestoesExibidas" id="txtQtdQuestoesExibidas" />
+								</div>
+							</div>
+							<div class="control-group">
 								<label class="control-label" for="txtQtd1">Quantidade de
 									Questões</label>
 								<div class="controls">
@@ -154,7 +168,7 @@ function gerarMaterial(id, qtd, label)
 							<div class="control-group">
 								<div class="controls">
 									<input type="button"
-										onclick="gerar('questoesBasico', $('#qtdquestbasico').val(), $('#qtdaltbasico').val());"
+										onclick="gerar('questoesBasico', $('#qtdquestbasico').val(), $('#qtdaltbasico').val(), $('#txtQtdQuestoesExibidas').val());"
 										value="gerar" />
 								</div>
 							</div>
@@ -219,6 +233,13 @@ function gerarMaterial(id, qtd, label)
 						</div>
 						<div class="tab-pane" id="intqst">
 							<div class="control-group">
+								<label class="control-label" for="lblQtdQuestoesExibidas">Quantidade de
+									Questões Exibidas</label>
+								<div class="controls">
+									<input type="text" name="txtQtdQuestoesExibidas" id="txtQtdQuestoesExibidas" />
+								</div>
+							</div>
+							<div class="control-group">
 								<label class="control-label" for="qtdquestoesInt">Quantidade de
 									Questões</label>
 								<div class="controls">
@@ -236,7 +257,7 @@ function gerarMaterial(id, qtd, label)
 							<div class="control-group">
 								<div class="controls">
 									<input type="button"
-										onclick="gerar('questoesIntermediario', $('#qtdquestintermediario').val(), $('#qtdaltintermediario').val());"
+										onclick="gerar('questoesIntermediario', $('#qtdquestintermediario').val(), $('#qtdaltintermediario').val(), $('#txtQtdQuestoesExibidas').val());"
 										value="gerar" />
 								</div>
 							</div>
@@ -301,6 +322,13 @@ function gerarMaterial(id, qtd, label)
 						</div>
 						<div class="tab-pane" id="advqst">
 							<div class="control-group">
+								<label class="control-label" for="lblQtdQuestoesExibidas">Quantidade de
+									Questões Exibidas</label>
+								<div class="controls">
+									<input type="text" name="txtQtdQuestoesExibidas" id="txtQtdQuestoesExibidas" />
+								</div>
+							</div>
+							<div class="control-group">
 								<label class="control-label" for="qtdquestoesAdv">Quantidade de
 									Questões</label>
 								<div class="controls">
@@ -318,7 +346,7 @@ function gerarMaterial(id, qtd, label)
 							<div class="control-group">
 								<div class="controls">
 									<input type="button"
-										onclick="gerar('questoesAvancado', $('#qtdquestavancado').val(), $('#qtdaltavancado').val());"
+										onclick="gerar('questoesAvancado', $('#qtdquestavancado').val(), $('#qtdaltavancado').val(), $('#txtQtdQuestoesExibidas').val());"
 										value="gerar" />
 								</div>
 							</div>
