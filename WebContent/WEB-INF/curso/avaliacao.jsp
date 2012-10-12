@@ -16,7 +16,7 @@ www.w3.org/TR/html4/loose.dtd">
 	</legend>
 
 	<c:set var="countQuest" value="${1}" />
-	<c:forEach var="quest" items="${modulo.avaliacao.questoes}">
+	<c:forEach var="quest" items="${questoes}">
 		<input type="hidden" name="matricula" value="${matricula.id_matricula}"/>
 		<table>
 			<tr>

@@ -3,6 +3,7 @@ package br.com.usjt.ead.curso;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -33,6 +34,9 @@ public class AvaliacaoBean
     @NotEmpty(message = "As questões devem ser preenchidas")
     @Valid
     private List<QuestaoBean> questoes = new ArrayList<QuestaoBean>();
+    @Column
+    @NotEmpty(message = "A quantidade de questões deve ser preenchida")
+    private Integer qtde_questoes;
 
     @Override
     public String toString() {
@@ -61,6 +65,14 @@ public class AvaliacaoBean
 
     public void setQuestoes(List<QuestaoBean> questoes) {
         this.questoes = questoes;
+    }
+    
+    public Integer getQtde_questoes() {
+        return qtde_questoes;
+    }
+
+    public void setQtde_questoes(Integer qtde_questoes) {
+        this.qtde_questoes = qtde_questoes;
     }
 
 }
