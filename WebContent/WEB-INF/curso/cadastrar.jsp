@@ -48,22 +48,10 @@ www.w3.org/TR/html4/loose.dtd">
 	}
 	$('#'+id).html(html);
 }
-
-function gerarMaterial(id, qtd, label)
-	{
-		var i,j;
-		var html = "";
-		var defcontrol = '<div class="control-group"><label class="control-label" for="{txtname}">{lbl}</label><div class="controls"><input type="file" name="{txtname}" value="upload" /></div></div>';
-		for(i = 1; i <= qtd; i++)
-		{
-			html = html + defcontrol.format({ txtname: ''+label, lbl: 'Material: ' + i});
-		}
-		$('#'+id).html(html);
-	}
 	</script>
 </head>
 <form action="${metodo}" class="form-horizontal" method="post"
-	id="formDisciplina" enctype="multipart/form-data" accept-charset="UTF-8">
+	id="formDisciplina">
 	<legend>
 		<b>Cadastro </b>
 	</legend>
@@ -121,26 +109,22 @@ function gerarMaterial(id, qtd, label)
 			<div class="tab-pane" id="2">
 				<div class="tabbable">
 					<ul class="nav nav-pills">
-						<li><a href="#basicmat" data-toggle="tab">Material</a></li>
+						<li><a href="#basicChat" data-toggle="tab">Chat</a></li>
 						<li><a href="#basicqst" data-toggle="tab">Questões</a></li>
 					</ul>
 					<div class="tab-content">
-						<div class="tab-pane" id="basicmat">
+						<div class="tab-pane" id="basicChat">
 							<div class="control-group">
-								<label class="control-label" for="qtdMatBas">Quantidade
-									Material</label>
+								<label class="control-label" for="qtdMatBas">Dias da Semana</label>
 								<div class="controls">
 									<input type="text" name="qtdMatBas" id="qtdMatBas" value="${qtdMatBas}" />
 								</div>
 							</div>
 							<div class="control-group">
 								<div class="controls">
-									<input type="button"
-										onclick="gerarMaterial('materialBasico', $('#qtdMatBas').val(), 'matBasico');"
-										value="gerar" />
+									<input type="button" value="gerar" />
 								</div>
 							</div>
-							<div id="materialBasico"> </div>
 						</div>
 						<div class="tab-pane" id="basicqst">
 							<div class="control-group">
