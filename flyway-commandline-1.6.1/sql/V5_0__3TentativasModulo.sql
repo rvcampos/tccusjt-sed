@@ -1,0 +1,1 @@
+ALTER TABLE matricula ADD COLUMN qtde_falha integer NOT NULL DEFAULT 0;
