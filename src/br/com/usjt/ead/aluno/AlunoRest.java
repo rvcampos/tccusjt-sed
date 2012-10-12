@@ -817,6 +817,10 @@ public class AlunoRest implements ICrud
                 editor.bindPdf(ResourceUtils.getInputStreamForPath(ResourceUtils.CLASSPATH_PREFIX + "Template.pdf"));
                 editor.replaceText("[Nome do aluno]", aluno.getContato().getNome());
                 editor.replaceText("[Nome do Curso]", b.getNome_disciplina());
+                editor.replaceText("[Nome do Professor]", b.getProfessor().getContato().getNome());
+                //TODO adicionar as datas
+                editor.replaceText("[dtinicio]", "");
+                editor.replaceText("[dt_fim]", "");
                 editor.save(certificado.getCanonicalPath());
             }
             f = certificado;
