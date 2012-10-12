@@ -10,6 +10,7 @@
 <script charset="UTF-8" src="${app_context}js/bootstrap-tab.js"></script>
 <script charset="UTF-8" src="${app_context}js/bootstrap-button.js"></script>
 <script src="${app_context}js/bootstrap-datepicker.js"></script>
+<script src="https://apis.google.com/js/client.js?onload=OnLoadCallback"></script>
 <link rel="stylesheet" href="${app_context}css/datepicker.css" type="text/css" />
 <script charset="UTF-8" src="${app_context}js/bootstrap-modal.js"></script>
 <link rel="stylesheet" href="${app_context}css/jquery-ui.css" type="text/css" />
