@@ -2,6 +2,7 @@ package br.com.usjt.ead.material;
 
 import java.io.File;
 
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -11,9 +12,11 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.jboss.resteasy.annotations.providers.jaxb.Stylesheet;
 
 import br.com.usjt.ICrud;
+import br.com.usjt.ead.curso.DisciplinaRest;
 import br.com.usjt.jaxrs.JSPAttr;
 import br.com.usjt.jaxrs.MediaTypeMore;
 import br.com.usjt.jaxrs.security.SecurityPrivate;
@@ -58,11 +61,29 @@ public class MaterialRest implements ICrud
     @Override
     @Path("delete")
     @POST
-    @Stylesheet(href = "/read.jsp", type = MediaTypeMore.APP_JSP)
+    @Stylesheet(href = "curso/adicionarMateriais.jsp", type = MediaTypeMore.APP_JSP)
     @SecurityPrivate(role = { SecType.ADMIN, SecType.PROFESSOR })
     public void delete() {
-        // TODO Auto-generated method stub
-
+        JSPAttr j = new JSPAttr();
+        Session session = HS.getSession();
+        Transaction tx = session.beginTransaction();
+        Integer id = Integer.parseInt(j.getParameter("material"));
+        try {
+            MaterialDidaticoBean mat = (MaterialDidaticoBean) session.get(MaterialDidaticoBean.class, id);
+            File f = new File(mat.getEndereco_material());
+            session.delete(mat);
+            tx.commit();
+            f.delete();
+            j.sucessMsg("Material deletado com sucesso");
+        }
+        catch (Exception e) {
+            tx.rollback();
+        }
+        finally
+        {
+            session.close();
+            new DisciplinaRest().materiais(Integer.parseInt(j.getParameter("id_disciplina")));
+        }
     }
 
     @Override
