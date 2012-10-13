@@ -129,6 +129,8 @@ public final class Utils
         Validator validator = factory.getValidator();
         StringBuilder builder = new StringBuilder();
 
+        try
+        {
         Set<ConstraintViolation<T>> violations = validator.validate(bean);
         String sep = "";
         if (!violations.isEmpty()) {
@@ -138,6 +140,10 @@ public final class Utils
                 sep = "\n";
             }
             new JSPAttr("msgerro", builder.toString());
+        }
+        }catch (Exception e) {
+            LOG.error("Falha ao validar", e);
+            valid = false;
         }
 
         return valid;

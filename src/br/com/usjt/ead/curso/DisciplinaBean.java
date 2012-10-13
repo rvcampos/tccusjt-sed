@@ -18,6 +18,7 @@ import javax.persistence.Table;
 import javax.validation.Valid;
 
 import org.hibernate.annotations.OrderBy;
+import org.hibernate.validator.NotEmpty;
 
 import br.com.usjt.ead.professor.ProfessorBean;
 
@@ -41,6 +42,7 @@ public class DisciplinaBean
     @Column
     private String          descricao;
     @OneToMany(mappedBy = "disciplina", cascade=CascadeType.ALL)
+    @NotEmpty(message="Ocorreu um erro ao gravas as alterações")
     @Valid
     @OrderBy(clause="nivel_modulo asc")
     private Set<ModuloBean> modulos = new HashSet<ModuloBean>();
