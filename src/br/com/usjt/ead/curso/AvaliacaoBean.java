@@ -14,6 +14,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.Cascade;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -35,7 +36,7 @@ public class AvaliacaoBean
     @Valid
     private List<QuestaoBean> questoes = new ArrayList<QuestaoBean>();
     @Column
-    @NotEmpty(message = "A quantidade de questões deve ser preenchida")
+    @NotNull(message = "A quantidade de questões deve ser preenchida")
     private Integer qtde_questoes;
 
     @Override
