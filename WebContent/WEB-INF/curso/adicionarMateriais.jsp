@@ -22,12 +22,18 @@ www.w3.org/TR/html4/loose.dtd">
 </script>
 </head>
 
-<form id="download" action="${app_context}material/download" method="post">
+<form id="download" action="${app_context}material/download"
+	method="post">
 	<input type="hidden" name="material" id="frmMaterial" value="" />
 </form>
 
-<form class="form-horizontal" action="${app_context}curso/uploadFile"
-	enctype="multipart/form-data" accept-charset="UTF-8">
+<form id="remover" action="${app_context}material/delete" method="post">
+	<input type="hidden" name="material" id="deleteMat" value="" /> <input
+		type="hidden" name="id_disciplina" value="${disciplina.id_disciplina}" />
+</form>
+
+<form class="form-horizontal" action="${app_context}curso/upload"
+	enctype="multipart/form-data" accept-charset="UTF-8" method="post">
 	<div class="tabbable">
 		<ul class="nav nav-tabs">
 			<li class="active"><a href="#1" data-toggle="tab">Basico</a></li>
@@ -41,8 +47,8 @@ www.w3.org/TR/html4/loose.dtd">
 						Material</label>
 					<div class="controls">
 						<input type="text" name="qtdMatBas" id="qtdMatBas"
-							value="${qtdMatBas}" />
-						<input type="hidden" name="id_disciplina" value="${disciplina.id_disciplina}" />
+							value="${qtdMatBas}" /> <input type="hidden"
+							name="id_disciplina" value="${disciplina.id_disciplina}" />
 					</div>
 				</div>
 				<div class="control-group">
@@ -54,23 +60,21 @@ www.w3.org/TR/html4/loose.dtd">
 				</div>
 				<div id="materialBasico"></div>
 
-				<table>
+				<table class="table">
 					<tr>
 						<th>Nome</th>
 						<th>Download</th>
+						<th>Remover</th>
 					</tr>
 					<c:forEach var="basic" items="${basico}">
 						<tr>
 							<td>${basic.nome}</td>
-							<td>
-								<form action="${app_context}material/download"
-									id="formDownload${basic.id_material}">
-									<input type="hidden" name="material"
-										value="${basic.id_material}" /><a
-										href="javascript:$('#frmMaterial').val('${basic.id_material}');$('#download').submit();"><i
-										class="icon-print"></i></a>
-								</form>
-							</td>
+							<td><a
+								href="javascript:$('#frmMaterial').val('${basic.id_material}');$('#download').submit();"><i
+									class="icon-print"></i></a></td>
+							<td><a
+								href="javascript:$('#deleteMat').val('${basic.id_material}');$('#remover').submit();"><i
+									class="icon-remove"></i></a></td>
 						</tr>
 					</c:forEach>
 				</table>
@@ -93,23 +97,21 @@ www.w3.org/TR/html4/loose.dtd">
 				</div>
 				<div id="materialIntermediario"></div>
 
-				<table>
+				<table class="table">
 					<tr>
 						<th>Nome</th>
 						<th>Download</th>
+						<th>Remover</th>
 					</tr>
 					<c:forEach var="basic" items="${intermediario}">
 						<tr>
 							<td>${basic.nome}</td>
-							<td>
-								<form action="${app_context}material/download"
-									id="formDownload${basic.id_material}">
-									<input type="hidden" name="material"
-										value="${basic.id_material}" /><a
-										href="javascript:$('#frmMaterial').val('${basic.id_material}');$('#download').submit();"><i
-										class="icon-print"></i></a>
-								</form>
-							</td>
+							<td><a
+								href="javascript:$('#frmMaterial').val('${basic.id_material}');$('#download').submit();"><i
+									class="icon-print"></i></a></td>
+							<td><a
+								href="javascript:$('#deleteMat').val('${basic.id_material}');$('#remover').submit();"><i
+									class="icon-remove"></i></a></td>
 						</tr>
 					</c:forEach>
 				</table>
@@ -132,27 +134,36 @@ www.w3.org/TR/html4/loose.dtd">
 				</div>
 				<div id="materialAvancado"></div>
 
-				<table>
+				<table class="table">
 					<tr>
 						<th>Nome</th>
 						<th>Download</th>
+						<th>Remover</th>
 					</tr>
 					<c:forEach var="basic" items="${avancado}">
 						<tr>
 							<td>${basic.nome}</td>
-							<td>
-								<form action="${app_context}material/download"
-									id="formDownload${basic.id_material}">
-									<input type="hidden" name="material"
-										value="${basic.id_material}" /><a
-										href="javascript:$('#frmMaterial').val('${basic.id_material}');$('#download').submit();"><i
-										class="icon-print"></i></a>
-								</form>
-							</td>
+							<td><a
+								href="javascript:$('#frmMaterial').val('${basic.id_material}');$('#download').submit();"><i
+									class="icon-print"></i></a></td>
+							<td><a
+								href="javascript:$('#deleteMat').val('${basic.id_material}');$('#remover').submit();"><i
+									class="icon-remove"></i></a></td>
 						</tr>
 					</c:forEach>
 				</table>
 			</div>
+		</div>
+		<div class="row-fluid">
+			<div class="span2">
+				<input class="btn btn-primary" value="Salvar" type="submit"
+					name="btnSalvar" />
+			</div>
+
+			<div class="span2">
+				<a href="${app_context}professor/meusCursos" class="btn">Cancelar</a>
+			</div>
+
 		</div>
 </form>
 <span></span>

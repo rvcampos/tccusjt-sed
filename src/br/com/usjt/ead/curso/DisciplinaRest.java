@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -43,6 +44,7 @@ import br.com.usjt.jaxrs.security.SecurityPrivate.SecType;
 import br.com.usjt.jaxrs.security.SecurityPublic;
 import br.com.usjt.shiro.Security;
 import br.com.usjt.shiro.SecurityShiro;
+import br.com.usjt.util.EntryWrapper;
 import br.com.usjt.util.HS;
 import br.com.usjt.util.Utils;
 
@@ -249,25 +251,27 @@ public class DisciplinaRest
     }
 
     private void adicionaMaterial(ModuloBean mod, List<InputPart> inputParts) {
-        for (InputPart inputPart : inputParts) {
-            try {
-                MultivaluedMap<String, String> header = inputPart.getHeaders();
-                String fileName = getFileName(header);
+        if (inputParts != null && !inputParts.isEmpty()) {
+            for (InputPart inputPart : inputParts) {
+                try {
+                    MultivaluedMap<String, String> header = inputPart.getHeaders();
+                    String fileName = getFileName(header);
 
-                // convert the uploaded file to inputstream
-                InputStream inputStream = inputPart.getBody(InputStream.class, null);
+                    // convert the uploaded file to inputstream
+                    InputStream inputStream = inputPart.getBody(InputStream.class, null);
 
-                byte[] bytes = IOUtils.readBytesFromStream(inputStream);
+                    byte[] bytes = IOUtils.readBytesFromStream(inputStream);
 
-                // constructs upload file path
-                fileName = UPLOADED_FILE_PATH + mod.getDisciplina().getNome_disciplina() + File.separator + fileName;
-                MaterialDidaticoBean mat = writeFile(bytes, fileName, UPLOADED_FILE_PATH
-                        + mod.getDisciplina().getNome_disciplina());
-                mat.setModulo(mod);
-                mod.getMaterial().add(mat);
-            }
-            catch (IOException e) {
-                LOG.error("Falha ao salvar arquivo", e);
+                    // constructs upload file path
+                    fileName = UPLOADED_FILE_PATH + mod.getDisciplina().getNome_disciplina() + File.separator + fileName;
+                    MaterialDidaticoBean mat = writeFile(bytes, fileName, UPLOADED_FILE_PATH
+                            + mod.getDisciplina().getNome_disciplina());
+                    mat.setModulo(mod);
+                    mod.getMaterial().add(mat);
+                }
+                catch (IOException e) {
+                    LOG.error("Falha ao salvar arquivo", e);
+                }
             }
         }
     }
@@ -340,29 +344,26 @@ public class DisciplinaRest
         return 0;
     }
 
-    private DisciplinaBean populaOsModulosCreate(JSPAttr j, DisciplinaBean objDisciplina)
-            throws Exception {
+    private DisciplinaBean populaOsModulosCreate(JSPAttr j, DisciplinaBean objDisciplina) throws Exception {
         Iterator<ModuloBean> it = objDisciplina.getModulos().iterator();
         ModuloBean basico = new ModuloBean();
         DefaultHttpClient httpclient = new DefaultHttpClient();
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-        if (it.hasNext()) {
-            basico = it.next();
-        }
-        else {
-            basico.setDisciplina(objDisciplina);
-            basico.setNivel_modulo(1);
-            basico.setData_inicio(objDisciplina.getData_inicio());
-            basico.setData_termino(objDisciplina.getData_termino());
-        }
-        if (((!Utils.isEmpty(j.getParameter("qtdquestoesBas")) && !Utils.isEmpty(j
-                .get("qtdaltBas"))))) {
+        Map<Integer, EntryWrapper<String, List<String>>> quest = new HashMap<Integer, EntryWrapper<String, List<String>>>();
+
+        // Popula o módulo basico
+        basico.setDisciplina(objDisciplina);
+        basico.setNivel_modulo(1);
+        basico.setData_inicio(objDisciplina.getData_inicio());
+        basico.setData_termino(objDisciplina.getData_termino());
+        if (((!Utils.isEmpty(j.getParameter("qtdquestoesBas")) && !Utils.isEmpty(j.getParameter("qtdaltBas"))))) {
             AvaliacaoBean b = new AvaliacaoBean();
             b.setModulo(basico);
             for (int i = 1; i <= Integer.parseInt(j.getParameter("qtdquestoesBas")); i++) {
+                String questaoCont = j.getParameter("txtquestoesBasicoquest" + i);
                 QuestaoBean questao = new QuestaoBean();
                 questao.setAvaliacao(b);
-                questao.setConteudo(j.getParameter("txtquestoesBasicoquest" + i));
+                questao.setConteudo(questaoCont);
                 int certa = Integer.parseInt(j.getParameter("optquestoesBasico" + i));
                 for (int k = 1; k <= Integer.parseInt(j.getParameter("qtdaltBas")); k++) {
                     AlternativaBean alternativa = new AlternativaBean();
@@ -375,7 +376,7 @@ public class DisciplinaRest
                 }
                 b.getQuestoes().add(questao);
             }
-//            adicionaMaterial(basico, j.getParameter("matBasico"));
+            // adicionaMaterial(basico, j.getParameter("matBasico"));
 
             // Setando a quantidade de questoes que serão exibidas na avaliação
             b.setQtde_questoes(Integer.parseInt(j.getParameter("txtQtdQuestoesExibidas")));
@@ -394,8 +395,7 @@ public class DisciplinaRest
             intermediario.setData_inicio(objDisciplina.getData_inicio());
             intermediario.setData_termino(objDisciplina.getData_termino());
         }
-        if (((!Utils.isEmpty(j.getParameter("qtdquestoesInt")) && !Utils.isEmpty(j
-                .get("qtdaltInt"))))) {
+        if (((!Utils.isEmpty(j.getParameter("qtdquestoesInt")) && !Utils.isEmpty(j.getParameter("qtdaltInt"))))) {
             AvaliacaoBean inte = new AvaliacaoBean();
             inte.setModulo(intermediario);
             for (int i = 1; i <= Integer.parseInt(j.getParameter("qtdquestoesInt")); i++) {
@@ -414,7 +414,8 @@ public class DisciplinaRest
                 }
                 inte.getQuestoes().add(questao);
             }
-//            adicionaMaterial(intermediario, j.getParameter("matIntermediario"));
+            // adicionaMaterial(intermediario,
+            // j.getParameter("matIntermediario"));
             intermediario = criaChat(intermediario, httpclient, "Intermediário");
 
             // Setando a quantidade de questoes que serão exibidas na avaliação
@@ -432,8 +433,7 @@ public class DisciplinaRest
             avancado.setData_inicio(objDisciplina.getData_inicio());
             avancado.setData_termino(objDisciplina.getData_termino());
         }
-        if (((!Utils.isEmpty(j.getParameter("qtdquestoesAdv")) && !Utils.isEmpty(j
-                .get("qtdaltAdv"))))) {
+        if (((!Utils.isEmpty(j.getParameter("qtdquestoesAdv")) && !Utils.isEmpty(j.getParameter("qtdaltAdv"))))) {
             AvaliacaoBean adv = new AvaliacaoBean();
             adv.setModulo(avancado);
             for (int i = 1; i <= Integer.parseInt(j.getParameter("qtdquestoesAdv")); i++) {
@@ -452,7 +452,7 @@ public class DisciplinaRest
                 }
                 adv.getQuestoes().add(questao);
             }
-//            adicionaMaterial(avancado, j.getParameter("matAvancado"));
+            // adicionaMaterial(avancado, j.getParameter("matAvancado"));
             avancado = criaChat(avancado, httpclient, "Avançado");
 
             // Setando a quantidade de questoes que serão exibidas na avaliação
@@ -614,22 +614,22 @@ public class DisciplinaRest
         Session session = HS.getSession();
         try {
             MatriculaBean m = (MatriculaBean) session.get(MatriculaBean.class, Integer.parseInt(j.getParameter("matricula")));
-            
+
             List<QuestaoBean> listQuestoes = m.getModulo().getAvaliacao().getQuestoes();
             Collections.shuffle(listQuestoes);
-            
+
             List<QuestaoBean> listQuestoesRandomizadas = new ArrayList<QuestaoBean>();
 
-            for (int questoesAdicionadas = 0; questoesAdicionadas < m.getModulo().getAvaliacao().getQtde_questoes(); questoesAdicionadas++)
-            {
+            for (int questoesAdicionadas = 0; questoesAdicionadas < m.getModulo().getAvaliacao().getQtde_questoes(); questoesAdicionadas++) {
                 listQuestoesRandomizadas.add(listQuestoes.get(questoesAdicionadas));
             }
-            
+
             j.set("questoes", listQuestoesRandomizadas);
             j.set("modulo", m.getModulo());
             j.set("matricula", m);
-            
-            //Salvo na sessão para quando for corrigir a prova utilizar a mesma lista
+
+            // Salvo na sessão para quando for corrigir a prova utilizar a mesma
+            // lista
             j.setInSession("questoes", listQuestoesRandomizadas);
         }
         catch (Exception e) {
@@ -686,9 +686,9 @@ public class DisciplinaRest
         try {
             List<QuestaoBean> listQuestoes = new ArrayList<QuestaoBean>();
             listQuestoes = (List<QuestaoBean>) j.getFromSession("questoes");
-            
+
             MatriculaBean m = (MatriculaBean) session.get(MatriculaBean.class, Integer.parseInt(j.getParameter("matricula")));
-            
+
             if (m.getDt_avaliacao().before(new Date())) {
                 int acertos = 0;
                 int qtdAlt = listQuestoes.size();
@@ -709,7 +709,7 @@ public class DisciplinaRest
                     last = true;
                     break;
                 }
-                                   
+
                 for (QuestaoBean questao : listQuestoes) {
                     String selecionada = j.getParameter("questao" + questao.getId_questao());
                     if (!Utils.isEmpty(selecionada)) {
@@ -816,8 +816,10 @@ public class DisciplinaRest
         Session session = HS.getSession();
         Map<String, List<InputPart>> uploadForm = input.getFormDataMap();
         Transaction tx = session.beginTransaction();
+        Integer id = null;
         try {
-            DisciplinaBean b = new DisciplinaBean();
+            id = Integer.parseInt(uploadForm.get("id_disciplina").get(0).getBodyAsString());
+            DisciplinaBean b = (DisciplinaBean) session.get(DisciplinaBean.class, id);
             for (ModuloBean mod : b.getModulos()) {
                 switch (mod.getNivel_modulo())
                 {
@@ -836,14 +838,16 @@ public class DisciplinaRest
             }
             session.update(b);
             tx.commit();
+            new JSPAttr().sucessMsg("Materiais adicionados com sucesso");
         }
         catch (Exception e) {
             tx.rollback();
             LOG.error("Falha na operação", e);
         }
         finally {
+            materiais(id);
             session.close();
-            
+
         }
     }
 }
