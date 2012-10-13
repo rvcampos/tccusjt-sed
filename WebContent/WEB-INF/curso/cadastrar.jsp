@@ -194,26 +194,22 @@ www.w3.org/TR/html4/loose.dtd">
 			<div class="tab-pane" id="3">
 				<div class="tabbable">
 					<ul class="nav nav-pills">
-						<li><a href="#intmat" data-toggle="tab">Material</a></li>
+						<li><a href="#intChat" data-toggle="tab">Chat</a></li>
 						<li><a href="#intqst" data-toggle="tab">Questões</a></li>
 					</ul>
 					<div class="tab-content">
-						<div class="tab-pane" id="intmat">
+						<div class="tab-pane" id="intChat">
 							<div class="control-group">
-								<label class="control-label" for="qtdMatInt">Quantidade
-									Material</label>
+								<label class="control-label" for="qtdMatBas">Dias da Semana</label>
 								<div class="controls">
-									<input type="text" name="qtdMatInt" id="qtdMatInt" value="${qtdMatInt}" />
+									<input type="text" name="qtdMatBas" id="qtdMatBas" value="${qtdMatBas}" />
 								</div>
 							</div>
 							<div class="control-group">
 								<div class="controls">
-									<input type="button"
-										onclick="gerarMaterial('materialIntermediario', $('#qtdMatInt').val(), 'matIntermediario');"
-										value="gerar" />
+									<input type="button" value="gerar" />
 								</div>
 							</div>
-							<div id="materialIntermediario"> </div>
 						</div>
 						<div class="tab-pane" id="intqst">
 							<div class="control-group">
@@ -283,26 +279,22 @@ www.w3.org/TR/html4/loose.dtd">
 			<div class="tab-pane" id="4">
 				<div class="tabbable">
 					<ul class="nav nav-pills">
-						<li><a href="#advmat" data-toggle="tab">Material</a></li>
+						<li><a href="#advChat" data-toggle="tab">Chat</a></li>
 						<li><a href="#advqst" data-toggle="tab">Questões</a></li>
 					</ul>
 					<div class="tab-content">
-						<div class="tab-pane" id="advmat">
+						<div class="tab-pane" id="advChat">
 							<div class="control-group">
-								<label class="control-label" for="qtdMatAdv">Quantidade
-									Material</label>
+								<label class="control-label" for="qtdMatBas">Dias da Semana</label>
 								<div class="controls">
-									<input type="text" name="qtdMatAdv" id="qtdMatAdv" value="${qtdMatAdv}" />
+									<input type="text" name="qtdMatBas" id="qtdMatBas" value="${qtdMatBas}" />
 								</div>
 							</div>
 							<div class="control-group">
 								<div class="controls">
-									<input type="button"
-										onclick="gerarMaterial('materialAvancado', $('#qtdMatAdv').val(), 'matAvancado');"
-										value="gerar" />
+									<input type="button" value="gerar" />
 								</div>
 							</div>
-							<div id="materialAvancado"> </div>
 						</div>
 						<div class="tab-pane" id="advqst">
 							<div class="control-group">
