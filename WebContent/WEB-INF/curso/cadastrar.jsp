@@ -122,7 +122,7 @@ www.w3.org/TR/html4/loose.dtd">
 							</div>
 							<div class="control-group">
 								<div class="controls">
-									<input type="button" value="gerar" />
+									<input class="btn btn-info" type="button" value="gerar" />
 								</div>
 							</div>
 						</div>
@@ -151,7 +151,7 @@ www.w3.org/TR/html4/loose.dtd">
 							</div>
 							<div class="control-group">
 								<div class="controls">
-									<input type="button"
+									<input type="button" class="btn btn-info"
 										onclick="gerar('questoesBasico', $('#qtdquestbasico').val(), $('#qtdaltbasico').val(), $('#txtQtdQuestoesExibidas').val());"
 										value="gerar" />
 								</div>
@@ -207,7 +207,7 @@ www.w3.org/TR/html4/loose.dtd">
 							</div>
 							<div class="control-group">
 								<div class="controls">
-									<input type="button" value="gerar" />
+									<input type="button" class="btn btn-info" value="gerar" />
 								</div>
 							</div>
 						</div>
@@ -236,7 +236,7 @@ www.w3.org/TR/html4/loose.dtd">
 							</div>
 							<div class="control-group">
 								<div class="controls">
-									<input type="button"
+									<input type="button" class="btn btn-info"
 										onclick="gerar('questoesIntermediario', $('#qtdquestintermediario').val(), $('#qtdaltintermediario').val(), $('#txtQtdQuestoesExibidas').val());"
 										value="gerar" />
 								</div>
@@ -292,7 +292,7 @@ www.w3.org/TR/html4/loose.dtd">
 							</div>
 							<div class="control-group">
 								<div class="controls">
-									<input type="button" value="gerar" />
+									<input type="button" class="btn btn-info" value="gerar" />
 								</div>
 							</div>
 						</div>
@@ -321,7 +321,7 @@ www.w3.org/TR/html4/loose.dtd">
 							</div>
 							<div class="control-group">
 								<div class="controls">
-									<input type="button"
+									<input type="button" class="btn btn-info"
 										onclick="gerar('questoesAvancado', $('#qtdquestavancado').val(), $('#qtdaltavancado').val(), $('#txtQtdQuestoesExibidas').val());"
 										value="gerar" />
 								</div>
