@@ -230,7 +230,7 @@ www.w3.org/TR/html4/loose.dtd">
 		</div>
 
 		<div class="span2">
-			<a href="./read" class="btn">Cancelar</a>
+			<a href="${app_context}" class="btn">Cancelar</a>
 		</div>
 
 	</div>
