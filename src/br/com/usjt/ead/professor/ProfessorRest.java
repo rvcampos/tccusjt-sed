@@ -359,7 +359,7 @@ public class ProfessorRest implements ICrud
     @GET
     @POST
     @Stylesheet(href = "professor/meusCursos.jsp", type = MediaTypeMore.APP_JSP)
-    @SecurityPrivate(role = SecType.PROFESSOR)
+    @SecurityPrivate(role = {SecType.PROFESSOR, SecType.ADMIN})
     public void meusCursos() {
         JSPAttr j = new JSPAttr();
         Security sh = SecurityShiro.init();
