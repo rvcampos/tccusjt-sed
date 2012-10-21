@@ -20,19 +20,21 @@ function validaEmailForm()
 }
 
 </script>
-		<form action="${app_context}aluno/esqueciminhasenha" method="post" id="formAluno">
-			<legend>
+		<form class="form-horizontal" action="${app_context}aluno/esqueciminhasenha" method="post" id="formAluno">
+		<legend>
 				<b>Reenvio de senha </b>
 			</legend>
-		<table>
-		<tr>
-		<td>
-			<table class="table">
-				<tr>
-					<td><label>E-mail cadastrado </label></td>
-					<td><input type="text" id="txtEmail" name="txtEmail" value="${txtEmail}" maxlength="50"></td>
-				</tr>
-		</table>
+		<div class="tabbable">
+			<div class="tab-content">
+			<div class="control-group">
+					<label class="control-label">E-mail cadastrado </label>
+								<div class="controls">
+						<input type="text" id="txtEmail" name="txtEmail" value="${txtEmail}" maxlength="50">
+			</div>
+			</div>
+
+			</div>
+		</div>
 		<div class="row-fluid">
 
 				<div class="span2">
@@ -40,7 +42,7 @@ function validaEmailForm()
 				</div>
 
 				<div class="span2">
-					<a href="./read" class="btn">Cancelar</a>
+					<a href="${app_context}" class="btn">Cancelar</a>
 				</div>
 
 			</div>
