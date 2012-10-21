@@ -88,7 +88,7 @@ www.w3.org/TR/html4/loose.dtd">
 					<label class="control-label" for="txtEmail">Email</label>
 					<div class="controls">
 						<input type="text" id="txtEmail" name="txtEmail"
-							value="${txtEmail}" maxlength="50" onchange="validaEmail();"><span
+							value="${txtEmail}" autocomplete="off" maxlength="50" onchange="validaEmail();"><span
 							id="infoEmail"><input type="hidden" id="canPost"
 							value="false" /></span>
 					</div>

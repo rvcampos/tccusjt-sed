@@ -3,6 +3,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://
 www.w3.org/TR/html4/loose.dtd">
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="f" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Cursos Ministrados</title>
@@ -32,8 +33,8 @@ www.w3.org/TR/html4/loose.dtd">
 					<a onclick="$('#formMeusCursosMateriais${curso.id_disciplina}').submit();"><i class="icon-upload"></i></a>
 				</form></td>
 			<td>${curso.nome_disciplina}</td>
-			<td>${curso.data_inicio}</td>
-			<td>${curso.data_termino}</td>
+			<td><f:formatDate value="${curso.data_inicio}" pattern="dd/MM/yyyy"/></td>
+			<td><f:formatDate value="${curso.data_termino}" pattern="dd/MM/yyyy"/></td>
 			<td>${curso.descricao}</td>
 		</tr>
 	</c:forEach>

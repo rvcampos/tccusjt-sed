@@ -3,6 +3,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://
 www.w3.org/TR/html4/loose.dtd">
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="f" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Meus Cursos</title>
@@ -24,8 +25,8 @@ www.w3.org/TR/html4/loose.dtd">
 		<tr>
 			<td>${curso.modulo.disciplina.nome_disciplina}</td>
 			<td>${curso.modulo.nivel_modulo}</td>
-			<td>${curso.modulo.data_inicio}</td>
-			<td>${curso.modulo.data_termino}</td>
+			<td><f:formatDate value="${curso.modulo.data_inicio}" pattern="dd/MM/yyyy"/></td>
+			<td><f:formatDate value="${curso.modulo.data_termino}" pattern="dd/MM/yyyy"/></td>
 			<td>${curso.modulo.disciplina.professor.contato.nome}</td>
 			<td><c:if test="${not curso.certificado}"><form action="${app_context}aluno/cursar" method="POST" id="frmCursar${curso.id_matricula}">
 			<input type="hidden" name="id_matricula" value="${curso.id_matricula }"/>
