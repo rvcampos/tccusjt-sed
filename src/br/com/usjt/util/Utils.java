@@ -1,5 +1,6 @@
 package br.com.usjt.util;
 
+import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
@@ -20,6 +21,8 @@ import org.hibernate.criterion.Projections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import br.com.usjt.ead.DateValidation;
+import br.com.usjt.ead.DateValidation.WHEN;
 import br.com.usjt.ead.PropertiesBean;
 import br.com.usjt.jaxrs.JSPAttr;
 
@@ -33,8 +36,8 @@ public final class Utils
     private static final String                MSG_ATIVACAO_CADASTRO = "Prezado(a) %s, <br><br>Seja bem-vindo(a) ao sistema de ensino à distância SYSCOM<br><br>"
                                                                              + "Acesse o link abaixo para ativar sua conta <br><br> <a href=\"http://localhost:8080/tccusjt-sed/aluno/ativar?key=%s\"> Ativação </a>";
 
-    private static final String                MSG_ESQUECI_SENHA = "Prezado(a) %s, <br><br>Foi solicitado o reenvio da senha de acesso ao sistema de ensino à distância SYSCOM<br><br>"
-            + "Acesse o sistema com a senha abaixo para utilizar o sistema: <br><br> %s";
+    private static final String                MSG_ESQUECI_SENHA     = "Prezado(a) %s, <br><br>Foi solicitado o reenvio da senha de acesso ao sistema de ensino à distância SYSCOM<br><br>"
+                                                                             + "Acesse o sistema com a senha abaixo para utilizar o sistema: <br><br> %s";
     private static final Logger                LOG                   = LoggerFactory.getLogger(Utils.class);
     private static final BigDecimal            registrosPagina       = BigDecimal.TEN;
 
@@ -129,21 +132,48 @@ public final class Utils
         Validator validator = factory.getValidator();
         StringBuilder builder = new StringBuilder();
 
-        try
-        {
-        Set<ConstraintViolation<T>> violations = validator.validate(bean);
-        String sep = "";
-        if (!violations.isEmpty()) {
-            valid = false;
-            for (ConstraintViolation<T> violation : violations) {
-                builder.append(sep + violation.getMessage());
-                sep = "\n";
+        try {
+            Set<ConstraintViolation<T>> violations = validator.validate(bean);
+            String sep = "";
+            for (Field f : bean.getClass().getDeclaredFields()) {
+                if (f.isAnnotationPresent(DateValidation.class)) {
+                    DateValidation d = f.getAnnotation(DateValidation.class);
+
+                    Date thisField = (Date) bean.getClass()
+                            .getMethod("get" + org.apache.cxf.common.util.StringUtils.capitalize(f.getName())).invoke(bean);
+                    Date thatField = (Date) bean.getClass()
+                            .getMethod("get" + org.apache.cxf.common.util.StringUtils.capitalize(d.properties())).invoke(bean);
+
+                    if (thisField != null && thatField != null) {
+                        if (d.period().equals(WHEN.AFTER)) {
+                            if (thisField.compareTo(thatField) <= 0) {
+                                builder.append(d.message() + "<br>");
+                            }
+                        }
+                        else {
+                            if (thisField.compareTo(thatField) >= 0) {
+                                builder.append(d.message() + "<br>");
+                            }
+                        }
+                    }
+
+                }
             }
-            new JSPAttr("msgerro", builder.toString());
+
+            if (!violations.isEmpty()) {
+                valid = false;
+                for (ConstraintViolation<T> violation : violations) {
+                    builder.append(sep + violation.getMessage());
+                    sep = "\n";
+                }
+            }
         }
-        }catch (Exception e) {
+        catch (Exception e) {
             LOG.error("Falha ao validar", e);
             valid = false;
+        }
+        if (builder.length() > 0) {
+            new JSPAttr("msgerro", builder.toString());
         }
 
         return valid;
@@ -174,7 +204,7 @@ public final class Utils
             LOG.error("Falha ao enviar e-mail de ativação", e);
         }
     }
-    
+
     public static void sendMailEsqueceuSenha(String to, String nome, String senha) {
         try {
             SendMail.enviarEmail("[EAD] Esqueci Minha Senha",

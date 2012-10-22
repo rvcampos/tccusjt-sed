@@ -16,10 +16,13 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.OrderBy;
 import org.hibernate.validator.NotEmpty;
 
+import br.com.usjt.ead.DateValidation;
+import br.com.usjt.ead.DateValidation.WHEN;
 import br.com.usjt.ead.professor.ProfessorBean;
 
 @Entity
@@ -29,25 +32,28 @@ public class DisciplinaBean
     @Id
     @SequenceGenerator(name = "gen", initialValue = 1, sequenceName = "seq_disciplina")
     @GeneratedValue(generator = "gen", strategy = GenerationType.AUTO)
-    private Integer         id_disciplina;                      // integer,
+    private Integer           id_disciplina;                         // integer,
     @Column
-    private String          nome_disciplina;                    // varchar(100),
+    private String            nome_disciplina;                       // varchar(100),
     @ManyToOne
     @JoinColumn(name = "id_professor")
-    private ProfessorBean   professor;                          // integer
+    private ProfessorBean     professor;                             // integer
     @Column
-    private Date            data_inicio;                        // date,
+    @NotNull(message="Data de início deve ser preenchida")
+    @DateValidation(period = WHEN.BEFORE, properties = "data_termino", message = "Data de inicio deve ser menor que data de Término")
+    private Date              data_inicio;                           // date,
     @Column
-    private Date            data_termino;                       // date,
+    @NotNull(message="Data de término deve ser preenchida")
+    private Date              data_termino;                          // date,
     @Column
-    private String          descricao;
-    @OneToMany(mappedBy = "disciplina", cascade=CascadeType.ALL)
-    @NotEmpty(message="Ocorreu um erro ao gravas as alterações")
+    private String            descricao;
+    @OneToMany(mappedBy = "disciplina", cascade = CascadeType.ALL)
+    @NotEmpty(message = "Ocorreu um erro ao gravas as alterações")
     @Valid
-    @OrderBy(clause="nivel_modulo asc")
-    private Set<ModuloBean> modulos = new HashSet<ModuloBean>();
-   
-    @OneToMany(mappedBy="disciplina")
+    @OrderBy(clause = "nivel_modulo asc")
+    private Set<ModuloBean>   modulos  = new HashSet<ModuloBean>();
+
+    @OneToMany(mappedBy = "disciplina")
     private Set<BloqueioBean> bloqueio = new HashSet<BloqueioBean>();
 
     @Override
@@ -119,17 +125,14 @@ public class DisciplinaBean
     public void setModulos(Set<ModuloBean> modulos) {
         this.modulos = modulos;
     }
-    
-    public ModuloBean getModuloByLevel(Integer nivel)
-    {
-        for(ModuloBean b : getModulos())
-        {
-            if(b.getNivel_modulo().intValue() == nivel.intValue())
-            {
+
+    public ModuloBean getModuloByLevel(Integer nivel) {
+        for (ModuloBean b : getModulos()) {
+            if (b.getNivel_modulo().intValue() == nivel.intValue()) {
                 return b;
             }
         }
-        
+
         return null;
     }
 }
