@@ -9,7 +9,7 @@ www.w3.org/TR/html4/loose.dtd">
 <title>Cadastro de Disciplina</title>
 
 <script type="text/javascript" charset="UTF-8">
-	function gerar(id, qtdquest, qtdalt, qtdquestprova)
+function gerar(id, qtdquest, qtdalt, qtdquestprova)
 {
 	if(qtdquest == '' || qtdalt == '')
 	{
@@ -48,6 +48,36 @@ www.w3.org/TR/html4/loose.dtd">
 	}
 	$('#'+id).html(html);
 }
+
+function gerar(id, qtdquest, qtdalt,optName)
+{
+	var i,j;
+	var html = "";
+	var defcontrol = '<div class="control-group"><label class="control-label" for="{txtname}">{label}</label><div class="controls"><input name="{txtname}" class="input-xxlarge" id="{txtname}" type="text" maxlength="300" value="{valor}"/></div></div>';
+	var alter = '<div class="control-group"><label class="control-label" for="{txtname}"><span class="badge badge-info">{label}</span></label><div class="controls"> <input name="{txtname}" id="{txtname}" type="text" maxlength="300" value="{valor}"/>&nbsp&nbsp&nbsp<input type="radio" name="{radioname}" value="{chkval}" /></div></div>';
+	
+	for(i = 1; i <= qtdquest; i++)
+	{
+		var valq = $('#txt'+ id + 'quest' + i).val();
+		if(valq == null)
+		{
+			valq = '';
+		}
+		var namee='txt' + id + 'quest' + i;
+		html = html + defcontrol.format({ txtname: namee, label: 'Questão: ' + i, valor: '${'+namee+'}'});
+		for(j = 1; j <= qtdalt; j++)
+		{
+			var vala = $('#txt'+ id + 'quest' + i +'alt' + j).val();
+			if(vala == null)
+			{
+				vala = '';
+			}
+			html = html + alter.format({ txtname: 'txt' + id + 'quest' + i +'alt' + j, label: 'Alternativa ' + j, radioname: 'opt' + id + '' + i, chkval: '' + j, valor: vala});
+		}
+	}
+	$('#'+id).html(html);
+}
+
 	</script>
 </head>
 <form action="${metodo}" class="form-horizontal" method="post"
@@ -131,7 +161,7 @@ www.w3.org/TR/html4/loose.dtd">
 								<label class="control-label" for="lblQtdQuestoesExibidas">Quantidade de
 									Questões Exibidas</label>
 								<div class="controls">
-									<input type="text" name="txtQtdQuestoesExibidas" id="txtQtdQuestoesExibidas" />
+									<input type="text" name="txtQtdQuestoesExibidasBas" id="txtQtdQuestoesExibidasBas" value="${txtQtdQuestoesExibidasBas}"/>
 								</div>
 							</div>
 							<div class="control-group">
@@ -152,7 +182,7 @@ www.w3.org/TR/html4/loose.dtd">
 							<div class="control-group">
 								<div class="controls">
 									<input type="button"
-										onclick="gerar('questoesBasico', $('#qtdquestbasico').val(), $('#qtdaltbasico').val(), $('#txtQtdQuestoesExibidas').val());"
+										onclick="gerar('questoesBasico', $('#qtdquestbasico').val(), $('#qtdaltbasico').val(), $('#txtQtdQuestoesExibidasbas').val());"
 										value="gerar" />
 								</div>
 							</div>
@@ -216,7 +246,7 @@ www.w3.org/TR/html4/loose.dtd">
 								<label class="control-label" for="lblQtdQuestoesExibidas">Quantidade de
 									Questões Exibidas</label>
 								<div class="controls">
-									<input type="text" name="txtQtdQuestoesExibidas" id="txtQtdQuestoesExibidas" />
+									<input type="text" name="txtQtdQuestoesExibidasInt" id="txtQtdQuestoesExibidasInt" value="${txtQtdQuestoesExibidasInt}"/>
 								</div>
 							</div>
 							<div class="control-group">
@@ -237,7 +267,7 @@ www.w3.org/TR/html4/loose.dtd">
 							<div class="control-group">
 								<div class="controls">
 									<input type="button"
-										onclick="gerar('questoesIntermediario', $('#qtdquestintermediario').val(), $('#qtdaltintermediario').val(), $('#txtQtdQuestoesExibidas').val());"
+										onclick="gerar('questoesIntermediario', $('#qtdquestintermediario').val(), $('#qtdaltintermediario').val(), $('#txtQtdQuestoesExibidasInt').val());"
 										value="gerar" />
 								</div>
 							</div>
@@ -301,7 +331,7 @@ www.w3.org/TR/html4/loose.dtd">
 								<label class="control-label" for="lblQtdQuestoesExibidas">Quantidade de
 									Questões Exibidas</label>
 								<div class="controls">
-									<input type="text" name="txtQtdQuestoesExibidas" id="txtQtdQuestoesExibidas" />
+									<input type="text" name="txtQtdQuestoesExibidasAdv" id="txtQtdQuestoesExibidasAdv" value="${txtQtdQuestoesExibidasAdv}"/>
 								</div>
 							</div>
 							<div class="control-group">
@@ -322,7 +352,7 @@ www.w3.org/TR/html4/loose.dtd">
 							<div class="control-group">
 								<div class="controls">
 									<input type="button"
-										onclick="gerar('questoesAvancado', $('#qtdquestavancado').val(), $('#qtdaltavancado').val(), $('#txtQtdQuestoesExibidas').val());"
+										onclick="gerar('questoesAvancado', $('#qtdquestavancado').val(), $('#qtdaltavancado').val(), $('#txtQtdQuestoesExibidasAdv').val());"
 										value="gerar" />
 								</div>
 							</div>

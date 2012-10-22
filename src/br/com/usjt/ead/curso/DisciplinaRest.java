@@ -344,30 +344,51 @@ public class DisciplinaRest
         return 0;
     }
 
-    private DisciplinaBean populaOsModulosCreate(JSPAttr j, DisciplinaBean objDisciplina) throws Exception {
-        Iterator<ModuloBean> it = objDisciplina.getModulos().iterator();
-        ModuloBean basico = new ModuloBean();
-        DefaultHttpClient httpclient = new DefaultHttpClient();
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-        Map<Integer, EntryWrapper<String, List<String>>> quest = new HashMap<Integer, EntryWrapper<String, List<String>>>();
+    private void criaModulo(DisciplinaBean d, Integer nivel, JSPAttr j, HttpClient httpclient) throws Exception {
+        String quest = "txtquestoesBasicoquest";
+        String qtdQuest = "qtdquestoesBas";
+        String qtdAlt = "qtdaltBas";
+        String opt = "optquestoesBasico";
+        String nivelstr = "basico";
+        String qtdMostra = "txtQtdQuestoesExibidasBas";
+        switch (nivel)
+        {
+        case 2:
+            quest = "txtquestoesIntermediarioquest";
+            qtdQuest = "qtdquestoesInt";
+            qtdAlt = "qtdaltInt";
+            opt = "optquestoesIntermediario";
+            nivelstr = "intermediario";
+            qtdMostra = "txtQtdQuestoesExibidasInt";
+            break;
 
-        // Popula o módulo basico
-        basico.setDisciplina(objDisciplina);
-        basico.setNivel_modulo(1);
-        basico.setData_inicio(objDisciplina.getData_inicio());
-        basico.setData_termino(objDisciplina.getData_termino());
-        if (((!Utils.isEmpty(j.getParameter("qtdquestoesBas")) && !Utils.isEmpty(j.getParameter("qtdaltBas"))))) {
+        case 3:
+            quest = "txtquestoesAvancadoquest";
+            qtdQuest = "qtdquestoesAdv";
+            qtdAlt = "qtdaltAdv";
+            opt = "optquestoesAvancado";
+            nivelstr = "avançado";
+            qtdMostra = "txtQtdQuestoesExibidasAdv";
+            break;
+        }
+        ModuloBean mod = new ModuloBean();
+        mod.setDisciplina(d);
+        mod.setNivel_modulo(nivel);
+        mod.setData_inicio(d.getData_inicio());
+        mod.setData_termino(d.getData_termino());
+        if (((!Utils.isEmpty(j.getParameter(qtdQuest)) && !Utils.isEmpty(j.getParameter(qtdAlt))))) {
             AvaliacaoBean b = new AvaliacaoBean();
-            b.setModulo(basico);
-            for (int i = 1; i <= Integer.parseInt(j.getParameter("qtdquestoesBas")); i++) {
-                String questaoCont = j.getParameter("txtquestoesBasicoquest" + i);
+            b.setModulo(mod);
+            int qtdAlti = Integer.parseInt(j.getParameter(qtdAlt));
+            for (int i = 1; i <= Integer.parseInt(j.getParameter(qtdQuest)); i++) {
+                String questaoCont = j.getParameter(quest + i);
                 QuestaoBean questao = new QuestaoBean();
                 questao.setAvaliacao(b);
                 questao.setConteudo(questaoCont);
-                int certa = Integer.parseInt(j.getParameter("optquestoesBasico" + i));
-                for (int k = 1; k <= Integer.parseInt(j.getParameter("qtdaltBas")); k++) {
+                int certa = Integer.parseInt(j.getParameter(opt + i));
+                for (int k = 1; k <= qtdAlti; k++) {
                     AlternativaBean alternativa = new AlternativaBean();
-                    alternativa.setConteudo(j.getParameter("txtquestoesBasicoquest" + i + "alt" + k));
+                    alternativa.setConteudo(j.getParameter(quest + i + "alt" + k));
                     alternativa.setQuestao(questao);
                     if (k == certa) {
                         alternativa.setCorreta(true);
@@ -379,90 +400,25 @@ public class DisciplinaRest
             // adicionaMaterial(basico, j.getParameter("matBasico"));
 
             // Setando a quantidade de questoes que serão exibidas na avaliação
-            b.setQtde_questoes(Integer.parseInt(j.getParameter("txtQtdQuestoesExibidas")));
+            b.setQtde_questoes(Integer.parseInt(j.getParameter(qtdMostra)));
 
-            basico.setAvaliacao(b);
-            basico = criaChat(basico, httpclient, "basico");
+            mod.setAvaliacao(b);
+            mod = criaChat(mod, httpclient, nivelstr);
         }
+        d.getModulos().add(mod);
+    }
 
-        ModuloBean intermediario = new ModuloBean();
-        if (it.hasNext()) {
-            intermediario = it.next();
-        }
-        else {
-            intermediario.setDisciplina(objDisciplina);
-            intermediario.setNivel_modulo(2);
-            intermediario.setData_inicio(objDisciplina.getData_inicio());
-            intermediario.setData_termino(objDisciplina.getData_termino());
-        }
-        if (((!Utils.isEmpty(j.getParameter("qtdquestoesInt")) && !Utils.isEmpty(j.getParameter("qtdaltInt"))))) {
-            AvaliacaoBean inte = new AvaliacaoBean();
-            inte.setModulo(intermediario);
-            for (int i = 1; i <= Integer.parseInt(j.getParameter("qtdquestoesInt")); i++) {
-                QuestaoBean questao = new QuestaoBean();
-                questao.setAvaliacao(inte);
-                questao.setConteudo(j.getParameter("txtquestoesIntermediarioquest" + i));
-                int certa = Integer.parseInt(j.getParameter("optquestoesIntermediario" + i));
-                for (int k = 1; k <= Integer.parseInt(j.getParameter("qtdaltInt")); k++) {
-                    AlternativaBean alternativa = new AlternativaBean();
-                    alternativa.setConteudo(j.getParameter("txtquestoesIntermediarioquest" + i + "alt" + k));
-                    alternativa.setQuestao(questao);
-                    if (k == certa) {
-                        alternativa.setCorreta(true);
-                    }
-                    questao.getAlternativas().add(alternativa);
-                }
-                inte.getQuestoes().add(questao);
-            }
-            // adicionaMaterial(intermediario,
-            // j.getParameter("matIntermediario"));
-            intermediario = criaChat(intermediario, httpclient, "Intermediário");
-
-            // Setando a quantidade de questoes que serão exibidas na avaliação
-            inte.setQtde_questoes(Integer.parseInt(j.getParameter("txtQtdQuestoesExibidas")));
-
-            intermediario.setAvaliacao(inte);
-        }
-        ModuloBean avancado = new ModuloBean();
-        if (it.hasNext()) {
-            avancado = it.next();
-        }
-        else {
-            avancado.setDisciplina(objDisciplina);
-            avancado.setNivel_modulo(3);
-            avancado.setData_inicio(objDisciplina.getData_inicio());
-            avancado.setData_termino(objDisciplina.getData_termino());
-        }
-        if (((!Utils.isEmpty(j.getParameter("qtdquestoesAdv")) && !Utils.isEmpty(j.getParameter("qtdaltAdv"))))) {
-            AvaliacaoBean adv = new AvaliacaoBean();
-            adv.setModulo(avancado);
-            for (int i = 1; i <= Integer.parseInt(j.getParameter("qtdquestoesAdv")); i++) {
-                QuestaoBean questao = new QuestaoBean();
-                questao.setAvaliacao(adv);
-                questao.setConteudo(j.getParameter("txtquestoesAvancadoquest" + i));
-                int certa = Integer.parseInt(j.getParameter("optquestoesAvancado" + i));
-                for (int k = 1; k <= Integer.parseInt(j.getParameter("qtdaltInt")); k++) {
-                    AlternativaBean alternativa = new AlternativaBean();
-                    alternativa.setConteudo(j.getParameter("txtquestoesAvancadoquest" + i + "alt" + k));
-                    alternativa.setQuestao(questao);
-                    if (k == certa) {
-                        alternativa.setCorreta(true);
-                    }
-                    questao.getAlternativas().add(alternativa);
-                }
-                adv.getQuestoes().add(questao);
-            }
-            // adicionaMaterial(avancado, j.getParameter("matAvancado"));
-            avancado = criaChat(avancado, httpclient, "Avançado");
-
-            // Setando a quantidade de questoes que serão exibidas na avaliação
-            adv.setQtde_questoes(Integer.parseInt(j.getParameter("txtQtdQuestoesExibidas")));
-
-            avancado.setAvaliacao(adv);
-        }
-        objDisciplina.getModulos().add(basico);
-        objDisciplina.getModulos().add(intermediario);
-        objDisciplina.getModulos().add(avancado);
+    private DisciplinaBean populaOsModulosCreate(JSPAttr j, DisciplinaBean objDisciplina) throws Exception {
+        Iterator<ModuloBean> it = objDisciplina.getModulos().iterator();
+        ModuloBean basico = new ModuloBean();
+        DefaultHttpClient httpclient = new DefaultHttpClient();
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+        // Popula o módulo basico
+        criaModulo(objDisciplina, 1, j, httpclient);
+        // Popula o módulo Intermediário
+        criaModulo(objDisciplina, 2, j, httpclient);
+        // Popula o módulo Avançado
+        criaModulo(objDisciplina, 3, j, httpclient);
         return objDisciplina;
     }
 
