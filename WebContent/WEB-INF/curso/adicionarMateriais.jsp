@@ -53,7 +53,7 @@ www.w3.org/TR/html4/loose.dtd">
 				</div>
 				<div class="control-group">
 					<div class="controls">
-						<input type="button"
+						<input type="button" class="btn btn-info"
 							onclick="gerarMaterial('materialBasico', $('#qtdMatBas').val(), 'matBasico');"
 							value="gerar" />
 					</div>
@@ -90,7 +90,7 @@ www.w3.org/TR/html4/loose.dtd">
 				</div>
 				<div class="control-group">
 					<div class="controls">
-						<input type="button"
+						<input type="button" class="btn btn-info"
 							onclick="gerarMaterial('materialIntermediario', $('#qtdMatInt').val(), 'matIntermediario');"
 							value="gerar" />
 					</div>
@@ -127,7 +127,7 @@ www.w3.org/TR/html4/loose.dtd">
 				</div>
 				<div class="control-group">
 					<div class="controls">
-						<input type="button"
+						<input type="button" class="btn btn-info"
 							onclick="gerarMaterial('materialAvancado', $('#qtdMatAdv').val(), 'matAvancado');"
 							value="gerar" />
 					</div>
