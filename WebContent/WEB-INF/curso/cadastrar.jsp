@@ -49,7 +49,7 @@ function gerar(id, qtdquest, qtdalt, qtdquestprova)
 	$('#'+id).html(html);
 }
 
-function gerar(id, qtdquest, qtdalt,optName)
+function gerar2(id, qtdquest, qtdalt,optName)
 {
 	var i,j;
 	var html = "";
@@ -152,7 +152,7 @@ function gerar(id, qtdquest, qtdalt,optName)
 							</div>
 							<div class="control-group">
 								<div class="controls">
-									<input type="button" value="gerar" />
+									<input class="btn btn-info" type="button" value="gerar" />
 								</div>
 							</div>
 						</div>
@@ -181,7 +181,7 @@ function gerar(id, qtdquest, qtdalt,optName)
 							</div>
 							<div class="control-group">
 								<div class="controls">
-									<input type="button"
+									<input type="button" class="btn btn-info"
 										onclick="gerar('questoesBasico', $('#qtdquestbasico').val(), $('#qtdaltbasico').val(), $('#txtQtdQuestoesExibidasbas').val());"
 										value="gerar" />
 								</div>
@@ -237,7 +237,7 @@ function gerar(id, qtdquest, qtdalt,optName)
 							</div>
 							<div class="control-group">
 								<div class="controls">
-									<input type="button" value="gerar" />
+									<input type="button" class="btn btn-info" value="gerar" />
 								</div>
 							</div>
 						</div>
@@ -266,7 +266,7 @@ function gerar(id, qtdquest, qtdalt,optName)
 							</div>
 							<div class="control-group">
 								<div class="controls">
-									<input type="button"
+									<input type="button" class="btn btn-info"
 										onclick="gerar('questoesIntermediario', $('#qtdquestintermediario').val(), $('#qtdaltintermediario').val(), $('#txtQtdQuestoesExibidasInt').val());"
 										value="gerar" />
 								</div>
@@ -322,7 +322,7 @@ function gerar(id, qtdquest, qtdalt,optName)
 							</div>
 							<div class="control-group">
 								<div class="controls">
-									<input type="button" value="gerar" />
+									<input type="button" class="btn btn-info" value="gerar" />
 								</div>
 							</div>
 						</div>
@@ -351,7 +351,7 @@ function gerar(id, qtdquest, qtdalt,optName)
 							</div>
 							<div class="control-group">
 								<div class="controls">
-									<input type="button"
+									<input type="button" class="btn btn-info"
 										onclick="gerar('questoesAvancado', $('#qtdquestavancado').val(), $('#qtdaltavancado').val(), $('#txtQtdQuestoesExibidasAdv').val());"
 										value="gerar" />
 								</div>
