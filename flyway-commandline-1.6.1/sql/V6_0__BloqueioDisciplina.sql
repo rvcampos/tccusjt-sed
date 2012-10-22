@@ -15,12 +15,7 @@ CREATE TABLE bloqueio_disciplina
       REFERENCES disciplina (id_disciplina) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION,
   CONSTRAINT uk_bloqueio UNIQUE (id_aluno , id_disciplina )
-)
-WITH (
-  OIDS=FALSE
 );
-ALTER TABLE bloqueio_disciplina
-  OWNER TO postgres;
   
   
   
