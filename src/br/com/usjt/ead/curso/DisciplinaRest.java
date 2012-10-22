@@ -8,7 +8,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -44,7 +43,6 @@ import br.com.usjt.jaxrs.security.SecurityPrivate.SecType;
 import br.com.usjt.jaxrs.security.SecurityPublic;
 import br.com.usjt.shiro.Security;
 import br.com.usjt.shiro.SecurityShiro;
-import br.com.usjt.util.EntryWrapper;
 import br.com.usjt.util.HS;
 import br.com.usjt.util.Utils;
 
@@ -809,6 +807,36 @@ public class DisciplinaRest
             materiais(id);
             session.close();
 
+        }
+    }
+
+    @Path("aluno/listarEmails")
+    @POST
+    @GET
+    @Stylesheet(href = "curso/email/listarEmails.jsp", type = MediaTypeMore.APP_JSP)
+    @SecurityPrivate(role = { SecType.ALUNO, SecType.PROFESSOR })
+    public void listarEmails(@FormParam("id_curso") Long id_curso, @FormParam("id_matricula") Long id_matricula) {
+        Session session = HS.getSession();
+        JSPAttr j = new JSPAttr();
+        try {
+        }
+        catch (Exception e) {
+            LOG.error("Falha ao listar e-mails", e);
+        }
+    }
+
+    @Path("aluno/listarEmails")
+    @POST
+    @GET
+    @Stylesheet(href = "curso/email/listarEmails.jsp", type = MediaTypeMore.APP_JSP)
+    @SecurityPrivate(role = { SecType.ALUNO, SecType.PROFESSOR })
+    public void listarEmails(@FormParam("id_curso") Long id_curso) {
+        Session session = HS.getSession();
+        JSPAttr j = new JSPAttr();
+        try {
+        }
+        catch (Exception e) {
+            LOG.error("Falha ao listar e-mails", e);
         }
     }
 }
