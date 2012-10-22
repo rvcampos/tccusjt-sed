@@ -176,11 +176,16 @@ public class DisciplinaRest
         Security sh = SecurityShiro.init();
         try {
             objDisciplina.setNome_disciplina(j.getParameter("txtNomeDisciplina"));
-            objDisciplina.setData_inicio(dtFormat.parse(j.getParameter("txtDataInicio")));
-            objDisciplina.setData_termino(dtFormat.parse(j.getParameter("txtDataTermino")));
-            objDisciplina.setDescricao(j.getParameter("txtDesc"));
-            objDisciplina.setProfessor((ProfessorBean) session.load(ProfessorBean.class, sh.getUserId()));
-            objDisciplina = populaOsModulosCreate(j, objDisciplina);
+            try {
+                objDisciplina.setData_inicio(dtFormat.parse(j.getParameter("txtDataInicio")));
+                objDisciplina.setData_termino(dtFormat.parse(j.getParameter("txtDataTermino")));
+                objDisciplina.setDescricao(j.getParameter("txtDesc"));
+                objDisciplina.setProfessor((ProfessorBean) session.load(ProfessorBean.class, sh.getUserId()));
+                objDisciplina = populaOsModulosCreate(j, objDisciplina);
+            }
+            catch (Exception e) {
+                LOG.error("Erro ao criar o curso", e);
+            }
             if (Utils.isValid(objDisciplina)) {
                 // XXX Descomentar
                 // DefaultHttpClient httpclient = new DefaultHttpClient();
