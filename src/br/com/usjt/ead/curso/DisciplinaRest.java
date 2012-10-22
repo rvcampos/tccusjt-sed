@@ -177,10 +177,10 @@ public class DisciplinaRest
         try {
             objDisciplina.setNome_disciplina(j.getParameter("txtNomeDisciplina"));
             try {
+                objDisciplina.setProfessor((ProfessorBean) session.load(ProfessorBean.class, sh.getUserId()));
+                objDisciplina.setDescricao(j.getParameter("txtDesc"));
                 objDisciplina.setData_inicio(dtFormat.parse(j.getParameter("txtDataInicio")));
                 objDisciplina.setData_termino(dtFormat.parse(j.getParameter("txtDataTermino")));
-                objDisciplina.setDescricao(j.getParameter("txtDesc"));
-                objDisciplina.setProfessor((ProfessorBean) session.load(ProfessorBean.class, sh.getUserId()));
                 objDisciplina = populaOsModulosCreate(j, objDisciplina);
             }
             catch (Exception e) {
