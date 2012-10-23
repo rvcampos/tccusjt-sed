@@ -22,7 +22,7 @@ public class EmailDuvidasBean
     @SequenceGenerator(name = "gen", initialValue = 1, sequenceName = "seq_emails")
     @GeneratedValue(generator = "gen", strategy = GenerationType.AUTO)
     private Long             id_email;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_email_pai")
     private EmailDuvidasBean email_origem;
     @ManyToOne(cascade = CascadeType.ALL)
@@ -159,7 +159,8 @@ public class EmailDuvidasBean
     }
 
     /**
-     * @param top_mail the top_mail to set
+     * @param top_mail
+     *            the top_mail to set
      */
     public void setTop_mail(Boolean top_mail) {
         this.top_mail = top_mail;

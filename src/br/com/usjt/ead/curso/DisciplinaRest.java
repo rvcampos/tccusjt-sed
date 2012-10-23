@@ -24,6 +24,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.criterion.Restrictions;
 import org.jboss.resteasy.annotations.providers.jaxb.Stylesheet;
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
@@ -32,6 +33,7 @@ import org.slf4j.LoggerFactory;
 
 import br.com.usjt.ead.EntityDAO;
 import br.com.usjt.ead.aluno.AlunoRest;
+import br.com.usjt.ead.aluno.EmailDuvidasBean;
 import br.com.usjt.ead.aluno.MatriculaBean;
 import br.com.usjt.ead.material.MaterialDidaticoBean;
 import br.com.usjt.ead.professor.ProfessorBean;
@@ -810,18 +812,68 @@ public class DisciplinaRest
         }
     }
 
-    @Path("aluno/listarEmails")
+    @Path("email/criaEmail")
     @POST
     @GET
-    @Stylesheet(href = "curso/email/listarEmails.jsp", type = MediaTypeMore.APP_JSP)
+    @Stylesheet(href = "curso/email/enviaEmail.jsp", type = MediaTypeMore.APP_JSP)
     @SecurityPrivate(role = { SecType.ALUNO, SecType.PROFESSOR })
-    public void listarEmails(@FormParam("id_curso") Long id_curso, @FormParam("id_matricula") Long id_matricula) {
+    public void criarEmail(@FormParam("id_matricula") Integer id_matricula) {
         Session session = HS.getSession();
         JSPAttr j = new JSPAttr();
         try {
+            MatriculaBean b = (MatriculaBean) session.get(MatriculaBean.class, id_matricula);
+            j.set("professor", b.getModulo().getDisciplina().getProfessor().getContato().getNome());
+            j.set("aluno", b.getAluno().getContato().getNome());
+            j.set("id_matricula", id_matricula);
         }
         catch (Exception e) {
             LOG.error("Falha ao listar e-mails", e);
+        }
+        finally {
+            session.close();
+        }
+    }
+
+    @Path("email/sendMail")
+    @POST
+    @Stylesheet(href = "curso/email/listarEmails.jsp", type = MediaTypeMore.APP_JSP)
+    @SecurityPrivate(role = { SecType.ALUNO, SecType.PROFESSOR })
+    public void sendEmail(@FormParam("id_matricula") Integer id_matricula, @FormParam("txtAssunto") String assunto,
+            @FormParam("txtConteudo") String conteudo, @FormParam("id_email") String id_email) {
+        Session session = HS.getSession();
+        JSPAttr j = new JSPAttr();
+        Transaction tx = session.beginTransaction();
+        try {
+            EmailDuvidasBean email = new EmailDuvidasBean();
+            if (!Utils.isEmpty(id_email)) {
+                email.setEmail_origem((EmailDuvidasBean) session.load(EmailDuvidasBean.class, Long.parseLong(id_email)));
+                email.setTop_mail(false);
+            }
+            else {
+                email.setEmail_origem(email);
+                email.setTop_mail(true);
+            }
+            email.setTitulo(assunto);
+            email.setConteudo(conteudo);
+            email.setRespondido(false);
+            email.setMatricula((MatriculaBean) session.load(MatriculaBean.class, id_matricula));
+            email.setData(new Date());
+            if (Utils.isValid(email)) {
+                session.save(email);
+                tx.commit();
+            }
+            else {
+                j.repopular();
+                j.set("override", "curso/email/enviaEmail.jsp");
+            }
+        }
+        catch (Exception e) {
+            tx.rollback();
+            LOG.error("Falha ao listar e-mails", e);
+            j.repopular();
+        }
+        finally {
+            session.close();
         }
     }
 
@@ -830,7 +882,31 @@ public class DisciplinaRest
     @GET
     @Stylesheet(href = "curso/email/listarEmails.jsp", type = MediaTypeMore.APP_JSP)
     @SecurityPrivate(role = { SecType.ALUNO, SecType.PROFESSOR })
-    public void listarEmails(@FormParam("id_curso") Long id_curso) {
+    public void listarEmail(@FormParam("id_matricula") Integer id_matricula) {
+        Session session = HS.getSession();
+        JSPAttr j = new JSPAttr();
+        try {
+            List<EmailDuvidasBean> emails = session.createCriteria(EmailDuvidasBean.class)
+                    .add(Restrictions.eq("matricula.id_matricula", id_matricula.intValue()))
+                    .add(Restrictions.eq("top_mail", true)).list();
+
+            j.set("lista_emails", emails);
+            j.set("id_matricula", id_matricula);
+        }
+        catch (Exception e) {
+            LOG.error("Falha ao listar e-mails", e);
+        }
+        finally {
+            session.close();
+        }
+    }
+
+    @Path("professor/listarEmails")
+    @POST
+    @GET
+    @Stylesheet(href = "curso/email/listarEmails.jsp", type = MediaTypeMore.APP_JSP)
+    @SecurityPrivate(role = { SecType.ADMIN, SecType.PROFESSOR })
+    public void listarEmailsProf(@FormParam("id_curso") Long id_curso) {
         Session session = HS.getSession();
         JSPAttr j = new JSPAttr();
         try {

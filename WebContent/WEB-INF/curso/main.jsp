@@ -47,7 +47,11 @@
 						</c:if>
 						<li class="nav-header">Contato</li>
 						<li><a href="${urlChat}" target="_blank">Chat</a></li>
-						<li><a href="#">E-mail</a></li>
+						<li><form action="${app_context}curso/aluno/listarEmails"
+									id="frmMail" method="POST">
+									<input type="hidden" name="id_matricula" value="${id_matricula}" /><a
+										href="#" onclick="$('#frmMail').submit();">Email</a>
+								</form></li>
 					</ul>
 				</div>
 			</div>
