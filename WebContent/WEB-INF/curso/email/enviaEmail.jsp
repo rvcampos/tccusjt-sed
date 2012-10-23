@@ -14,14 +14,14 @@ www.w3.org/TR/html4/loose.dtd">
 		<label class="control-label" for="txtNome">De:</label>
 		<div class="controls">
 			<input class="span2" size="16" type="text" name="txtNome"
-				value="${txtNome}">
+				value="${aluno}" readonly="readonly">
 		</div>
 	</div>
 	<div class="control-group">
 		<label class="control-label" for="txtNome">Para:</label>
 		<div class="controls">
 			<input class="span2" size="16" type="text" name="txtProfessor"
-				value="${txtProfessor}">
+				value="${professor}" readonly="readonly">
 		</div>
 	</div>
 	<div class="control-group">
@@ -37,6 +37,8 @@ www.w3.org/TR/html4/loose.dtd">
 			<textarea rows="15" cols="30" name="txtConteudo">${txtConteudo}</textarea>
 		</div>
 	</div>
+	<input type="hidden" name="id_matricula" value="${id_matricula}">
+	<input type="hidden" name="id_email" value="${id_email}">
 	<div class="row-fluid">
 		<div class="span2">
 			<input class="btn btn-primary" value="Enviar" type="submit"
