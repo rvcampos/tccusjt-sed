@@ -15,7 +15,7 @@
 	function loadMaterial(id, name)
 	{
 		$('#materialPage').empty();
-		$('#materialPage').html('<table><tr><td><form method="post" action="${app_context}material/download"id="mat"><input type="hidden" name="material"value="'+id+'" /><a href="javascript:$(\'#mat\').submit();" target="_blank">Download</a></form></td><td><form method="post" action="${app_context}file/getFile" id="mat2"><input type="hidden" name="material"value="'+id+'" /><a href="javascript:$(\'#mat2\').submit();" target="_blank">Visualizar</a></form></td>');
+		$('#materialPage').html('<table><tr><td><form method="post" action="${app_context}material/download"id="mat"><input type="hidden" name="material"value="'+id+'" /><a href="javascript:$(\'#mat\').submit();" target="_blank" src="#">Download</a></form></td><td><form method="get" action="${app_context}material/visualizar" id="mat2"><input type="hidden" name="material" value="'+id+'" /><a href="javascript:$(\'#mat2\').submit();" target="_blank">Visualizar</a></form></td>');
 	}
 </script>
 </head>
@@ -69,6 +69,7 @@
 				<center>
 				<div id="materialPage"></div>
 				</center>
+				<br>
 			</div>
 		</div>
 	</div>
