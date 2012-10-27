@@ -5,7 +5,7 @@ www.w3.org/TR/html4/loose.dtd">
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Esquecinha Minha Senha - Aluno</title>
+<title>Esqueci Minha Senha - Admin</title>
 </head>
 <script>
 
