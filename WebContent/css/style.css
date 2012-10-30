@@ -24,3 +24,29 @@
 }
 
 .achievements-wrapper { height: 600px; overflow: auto; }
+
+#box, #input {   border-radius: 4px 4px 4px 4px;
+    box-shadow: 0 0 30px #EEEEEE inset;
+    margin: 10px;
+    padding: 10px;
+    text-shadow: -1px -1px 2px #CCCCCC;
+    width: 500px;
+    border-radius: 4px;
+    box-shadow: inset 0 0 30px #eee;
+}
+#box {
+    height: 100px;
+    overflow: scroll;
+    overflow-x: hidden;
+    border: 1px solid #888;
+    background: #f8f8f8 url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAZCAYAAADwkER/AAAAAXNSR0IArs4c6QAAAAlwSFlzAAALEwAACxMBAJqcGAAAADdJREFUCNdVzDEOwCAUw9DX/Nv2/kMLRXQD4cFylsAd9KAtvcFz1p5bLfjWwQhGIYUrmMEsiIMfNxwSOsvoNw4AAAAASUVORK5CYII=') repeat-x;}
+#input {
+font-size: 20px;
+line-height: 20px;
+background: none repeat scroll 0 0 #FEFEFE;
+border: 1px solid #E6E6E6;
+color: #464142;
+}
+.broadcast-enabled {
+color: #00AA00;
+}
