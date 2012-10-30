@@ -32,6 +32,38 @@ String.prototype.format = function (args) {
     }
     return newStr;
 }
+/* Compare the current date against another date.
+*
+* @param b  {Date} the other date
+* @returns   -1 : if this < b
+*             0 : if this === b
+*             1 : if this > b
+*            NaN : if a or b is an illegal date
+*/ 
+Date.prototype.compare = function(b) {
+ if (b.constructor !== Date) {
+   throw "invalid_date";
+ }
+
+return (isFinite(this.valueOf()) && isFinite(b.valueOf()) ? 
+         (this>b)-(this<b) : NaN 
+       );
+};
+
+/* Check if current date is between two dates
+*
+* @param a  {Date} the start date
+* @param b  {Date} the end   date
+* @returns    true : if this > a and this < b
+*             false: if this < a or this > b
+*            NaN : if a or b is an illegal date
+*/ 
+Date.prototype.between = function(a,b) {
+	 if (a.constructor !== Date || b.constructor !== Date) {
+	   throw "invalid_date";
+	 }
+	 return this.compare(a) == 1 && this.compare(b) == -1;
+	};
 $('.datepicker').datepicker();
 });
 </script>
