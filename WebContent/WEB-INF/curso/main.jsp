@@ -50,7 +50,7 @@
 						<li><form action="${app_context}curso/aluno/listarEmails"
 									id="frmMail" method="POST">
 									<input type="hidden" name="id_matricula" value="${id_matricula}" /><a
-										href="#" onclick="$('#frmMail').submit();">Email</a>
+										href="${app_context}chat.jsp" onclick="$('#frmMail').submit();">Email</a>
 								</form></li>
 					</ul>
 				</div>
