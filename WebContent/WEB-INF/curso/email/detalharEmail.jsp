@@ -7,46 +7,30 @@ www.w3.org/TR/html4/loose.dtd">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>${nomeCurso}</title>
-<form action="sendMail" class="form-horizontal" method="post"
-	id="formEmail">
-
-	<div class="control-group">
-		<label class="control-label" for="txtNome">De:</label>
-		<div class="controls">
-			<input class="span2" size="16" type="text" name="txtNome"
-				value="${txtNome}">
-		</div>
-	</div>
-	<div class="control-group">
-		<label class="control-label" for="txtNome">Para:</label>
-		<div class="controls">
-			<input class="span2" size="16" type="text" name="txtProfessor"
-				value="${txtProfessor}">
-		</div>
-	</div>
-	<div class="control-group">
-		<label class="control-label" for="txtAssunto">Assunto:</label>
-		<div class="controls">
-			<input class="span2" size="16" type="text" name="txtAssunto"
-				value="${txtAssunto}">
-		</div>
-	</div>
-	<div class="control-group">
-		<label class="control-label" for="txtConteudo">Conteudo</label>
-		<div class="controls">
-			<textarea rows="15" cols="30" name="txtConteudo">${txtConteudo}</textarea>
-		</div>
-	</div>
-	<div class="row-fluid">
-		<div class="span2">
-			<input class="btn btn-primary" value="Enviar" type="submit"
-				name="btnEnviar" />
-		</div>
-
-		<div class="span2">
-			<a href="${app_context}aluno/meusCursos" class="btn">Cancelar</a>
-		</div>
-
-	</div>
-</form>
 </head>
+
+<div class="tabbable tabs-left">
+	<ul class="nav nav-tabs">
+		<c:forEach var="cnt" begin="1" end="${numpages}">
+			<li class=""><a href="#${cnt}" data-toggle="tab">${cnt}</a></li>
+		</c:forEach>
+	</ul>
+	<div class="tab-content">
+		<c:set var="cnts" value="0" />
+		<c:set var="ini" value="1" />
+		<c:forEach var="cnt" begin="1" end="${numpages}">
+			<div class="tab-pane" id="${cnt}">
+				<span class="badge badge-info">
+					${lista_emails.get(cnts).conteudo} </span>
+				<c:set var="cnts" value="${cnts + 1}" />
+				<c:if test="${cnts < size}">
+					<p />
+					<p />
+					<span class="badge badge-success">
+						${lista_emails.get(cnts).conteudo} </span>
+					<c:set var="cnts" value="${cnts + 1}" />
+				</c:if>
+			</div>
+		</c:forEach>
+	</div>
+</div>

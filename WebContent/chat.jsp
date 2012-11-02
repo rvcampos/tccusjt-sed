@@ -8,7 +8,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Cadastro de Disciplina</title>
 <script
-	src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+	src="js/jquery.js"></script>
 <link rel="stylesheet" href="css/style.css" type="text/css" />
 <link rel="stylesheet" href="css/bootstrap.css" type="text/css" />
 </head>
@@ -19,11 +19,11 @@
 		<input id=input placeholder="Seu Texto" /><input type="button"
 			class="btn error" onclick="$('#box').empty();" value="Limpar" />
 		<input type="hidden" name="hr_init" id="hr_init" value="10/30/2012 11:00:50">
-		<input type="hidden" name="hr_end" id="hr_end" value="10/30/2012 15:40:50">
+		<input type="hidden" name="hr_end" id="hr_end" value="11/30/2012 15:40:50">
 	</div>
 	<div id=box></div>
 	<div id=pubnub pub-key=demo sub-key=demo></div>
-	<script src=http://cdn.pubnub.com/pubnub-3.1.min.js></script>
+	<script src=js/pubnub-3.3.js></script>
 	<script>
 	    function validaData()
 	    {

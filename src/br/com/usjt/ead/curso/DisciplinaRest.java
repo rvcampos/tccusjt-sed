@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,8 +23,11 @@ import javax.ws.rs.core.MultivaluedMap;
 import org.apache.cxf.helpers.IOUtils;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.jboss.resteasy.annotations.providers.jaxb.Stylesheet;
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
@@ -819,6 +823,7 @@ public class DisciplinaRest
     @SecurityPrivate(role = { SecType.ALUNO, SecType.PROFESSOR })
     public void criarEmail(@FormParam("id_matricula") Integer id_matricula) {
         Session session = HS.getSession();
+        Transaction tx = session.beginTransaction();
         JSPAttr j = new JSPAttr();
         try {
             MatriculaBean b = (MatriculaBean) session.get(MatriculaBean.class, id_matricula);
@@ -828,6 +833,7 @@ public class DisciplinaRest
         }
         catch (Exception e) {
             LOG.error("Falha ao listar e-mails", e);
+            tx.rollback();
         }
         finally {
             session.close();
@@ -846,7 +852,10 @@ public class DisciplinaRest
         try {
             EmailDuvidasBean email = new EmailDuvidasBean();
             if (!Utils.isEmpty(id_email)) {
-                email.setEmail_origem((EmailDuvidasBean) session.load(EmailDuvidasBean.class, Long.parseLong(id_email)));
+                EmailDuvidasBean principal = (EmailDuvidasBean) session.get(EmailDuvidasBean.class, Long.parseLong(id_email));
+                principal.setRespondido(Boolean.FALSE);
+                session.update(principal);
+                email.setEmail_origem(principal);
                 email.setTop_mail(false);
             }
             else {
@@ -865,6 +874,7 @@ public class DisciplinaRest
             else {
                 j.repopular();
                 j.set("override", "curso/email/enviaEmail.jsp");
+                tx.rollback();
             }
         }
         catch (Exception e) {
@@ -874,6 +884,7 @@ public class DisciplinaRest
         }
         finally {
             session.close();
+            listarEmail(id_matricula);
         }
     }
 
@@ -889,7 +900,6 @@ public class DisciplinaRest
             List<EmailDuvidasBean> emails = session.createCriteria(EmailDuvidasBean.class)
                     .add(Restrictions.eq("matricula.id_matricula", id_matricula.intValue()))
                     .add(Restrictions.eq("top_mail", true)).list();
-
             j.set("lista_emails", emails);
             j.set("id_matricula", id_matricula);
         }
@@ -910,9 +920,46 @@ public class DisciplinaRest
         Session session = HS.getSession();
         JSPAttr j = new JSPAttr();
         try {
+            EmailDuvidasBean e = new EmailDuvidasBean();
+            Criteria c = session.createCriteria(EmailDuvidasBean.class);
+            c.add(Restrictions.eq("matricula.modulo.disciplina.professor.id_professor", SecurityShiro.init().getUserId()));
+            c.add(Restrictions.eq("top_mail", true)).add(Restrictions.eq("respondido", Boolean.FALSE));
+            c.addOrder(Order.desc("data"));
         }
         catch (Exception e) {
             LOG.error("Falha ao listar e-mails", e);
+        }
+        finally {
+            session.close();
+        }
+    }
+    
+    @Path("email/detalharEmail")
+    @POST
+    @GET
+    @Stylesheet(href = "curso/email/detalharEmail.jsp", type = MediaTypeMore.APP_JSP)
+    @SecurityPrivate(role = { SecType.ADMIN, SecType.PROFESSOR, SecType.ALUNO })
+    public void detalharEmail(@FormParam("id_email") Long id_email) {
+        Session session = HS.getSession();
+        JSPAttr j = new JSPAttr();
+        try {
+            Criteria c = session.createCriteria(EmailDuvidasBean.class);
+            c.add(Restrictions.or(Restrictions.eq("id_email", id_email), Restrictions.eq("email_origem.id_email", id_email)));
+            c.setProjection(Projections.rowCount());
+            Long size = (Long) c.uniqueResult();
+            Integer d = new BigDecimal(size).divide(BigDecimal.valueOf(2),BigDecimal.ROUND_UP).intValue();
+            c.setProjection(null);
+            c.setResultTransformer(Criteria.ROOT_ENTITY);
+            c.addOrder(Order.asc("id_email"));
+            j.set("numpages", d);
+            j.set("lista_emails", c.list());
+            j.set("size", size);
+        }
+        catch (Exception e) {
+            LOG.error("Falha ao listar e-mails", e);
+        }
+        finally {
+            session.close();
         }
     }
 }

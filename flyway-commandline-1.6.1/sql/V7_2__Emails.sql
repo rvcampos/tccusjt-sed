@@ -9,7 +9,7 @@ CREATE TABLE email_duvidas
   id_matricula bigint NOT NULL references matricula (id_matricula),
   data date NOT NULL,
   titulo varchar(100) NOT NULL,
-  conteudo varchar(400) NOT NULL,
+  conteudo varchar(2000) NOT NULL,
   top_mail boolean default false,
   respondido boolean default false
 );
