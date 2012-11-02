@@ -30,4 +30,6 @@ public @interface DateValidation {
     WHEN period();
     
     String properties();
+    
+    boolean compareWithToday() default false;
 }

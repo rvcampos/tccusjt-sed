@@ -12,14 +12,17 @@ www.w3.org/TR/html4/loose.dtd">
 		<th>Assunto</th>
 		<th>Data</th>
 		<th>Respondido?</th>
+		<th>Detalhar</th>
 		<th>Responder</th>
 	</tr>
+	
 	<c:forEach var="email" items="${lista_emails}">
 		<tr>
 			<td>${email.titulo}</td>
-			<td>${email.data}</td>
-			<td>${email.respondido}</td>
-			<td></td>
+			<td width="300px">${email.data}</td>
+			<td width="100px"><c:choose><c:when test="${email.respondido}"><i class="icon-thumbs-up" title="Sim"></i></c:when><c:otherwise><i class="icon-thumbs-down"></i></c:otherwise></c:choose></td>
+			<td width="100px"><form action="${app_context}curso/email/detalharEmail" id="frm_det${email.id_email}" method="post"><input type="hidden" name="id_email" value="${email.id_email}" /><a onclick="$('#frm_det${email.id_email}').submit();"><i class="icon-search"></i></a></form></td>
+			<td width="100px"><i class="icon-inbox"></i></td>
 		</tr>
 	</c:forEach>
 </table>

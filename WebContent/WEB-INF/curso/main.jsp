@@ -48,10 +48,10 @@
 						<li class="nav-header">Contato</li>
 						<li><a href="${urlChat}" target="_blank">Chat</a></li>
 						<li><form action="${app_context}curso/aluno/listarEmails"
-									id="frmMail" method="POST">
-									<input type="hidden" name="id_matricula" value="${id_matricula}" /><a
-										href="${app_context}chat.jsp" onclick="$('#frmMail').submit();">Email</a>
-								</form></li>
+								id="frmMail" method="POST">
+								<input type="hidden" name="id_matricula" value="${id_matricula}" /><a
+									onclick="$('#frmMail').submit();">Email</a>
+							</form></li>
 					</ul>
 				</div>
 			</div>
