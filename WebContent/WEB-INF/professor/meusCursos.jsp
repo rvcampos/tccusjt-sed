@@ -12,6 +12,7 @@ www.w3.org/TR/html4/loose.dtd">
 	<tr>
 		<th></th>
 		<th></th>
+		<th>Dúvidas</th>
 		<th>Materiais</th>
 		<th>Nome</th>
 		<th>Data Inicio</th>
@@ -27,6 +28,10 @@ www.w3.org/TR/html4/loose.dtd">
 			<td><form action="${app_context}curso/delete" method="post" id="formMeusCursosDel${curso.id_disciplina}">
 					<input type="hidden" value="${curso.id_disciplina}" name="id_disciplina" />
 					<a onclick="if(confirm('Deseja deletar esse curso?')){$('#formMeusCursosDel${curso.id_disciplina}').submit();}"><i class="icon-remove"></i></a>
+				</form></td>
+			<td><form action="${app_context}curso/email/listarEmails" method="post" id="formEmails${curso.id_disciplina}">
+					<input type="hidden" value="${curso.id_disciplina}" name="id_curso" />
+					<a onclick="$('#formEmails${curso.id_disciplina}').submit();"><i class="icon-search"></i></a>
 				</form></td>
 				<td><form action="${app_context}curso/materiais" method="post" id="formMeusCursosMateriais${curso.id_disciplina}">
 					<input type="hidden" value="${curso.id_disciplina}" name="id_disciplina" />

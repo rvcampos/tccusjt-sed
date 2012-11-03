@@ -14,14 +14,14 @@ www.w3.org/TR/html4/loose.dtd">
 		<label class="control-label" for="txtNome">De:</label>
 		<div class="controls">
 			<input class="span2" size="16" type="text" name="txtNome"
-				value="${aluno}" readonly="readonly">
+				value="${de}" readonly="readonly">
 		</div>
 	</div>
 	<div class="control-group">
 		<label class="control-label" for="txtNome">Para:</label>
 		<div class="controls">
 			<input class="span2" size="16" type="text" name="txtProfessor"
-				value="${professor}" readonly="readonly">
+				value="${para}" readonly="readonly">
 		</div>
 	</div>
 	<div class="control-group">
@@ -37,8 +37,9 @@ www.w3.org/TR/html4/loose.dtd">
 			<textarea rows="15" cols="30" name="txtConteudo">${txtConteudo}</textarea>
 		</div>
 	</div>
-	<input type="hidden" name="id_matricula" value="${id_matricula}">
-	<input type="hidden" name="id_email" value="${id_email}">
+	<input type="hidden" name="id_matricula" value="${id_matricula}" /> 
+	<input type="hidden" name="id_curso" value="${id_curso}" /> 
+	<input type="hidden" name="id_email" value="${id_email}" />
 	<div class="row-fluid">
 		<div class="span2">
 			<input class="btn btn-primary" value="Enviar" type="submit"
@@ -46,7 +47,7 @@ www.w3.org/TR/html4/loose.dtd">
 		</div>
 
 		<div class="span2">
-			<a href="${app_context}aluno/meusCursos" class="btn">Cancelar</a>
+			<a href="javascript:history.go(-1)" class="btn">Cancelar</a>
 		</div>
 
 	</div>
