@@ -15,6 +15,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
@@ -31,32 +32,36 @@ public class ModuloBean
     @Id
     @SequenceGenerator(name = "gen", initialValue = 1, sequenceName = "seq_disciplina")
     @GeneratedValue(generator = "gen", strategy = GenerationType.AUTO)
-    private Integer        id_modulo;   // integer,
+    private Integer                   id_modulo;                                     // integer,
     @Column(length = 1)
     @NotNull
-    private Integer        nivel_modulo; // varchar(100),
+    private Integer                   nivel_modulo;                                  // varchar(100),
     @ManyToOne
     @Fetch(FetchMode.JOIN)
     @JoinColumn(name = "id_disciplina")
-    private DisciplinaBean disciplina;  // integer references
+    private DisciplinaBean            disciplina;                                    // integer
+                                                                                      // references
     @Column
-    private Date           data_inicio; // date,
+    private Date                      data_inicio;                                   // date,
     @Column
-    private Date           data_termino; // date,
+    private Date                      data_termino;                                  // date,
     @OneToOne(mappedBy = "modulo")
     @Cascade(value = org.hibernate.annotations.CascadeType.ALL)
     @NotNull(message = "Questões e alternativas devem ser preenchidas")
     @Valid
-    private AvaliacaoBean  avaliacao;
+    private AvaliacaoBean             avaliacao;
+
+    @Transient
+    private String                    nivel_string;
 
     @OneToOne(mappedBy = "modulo", orphanRemoval = true)
     @Cascade(value = org.hibernate.annotations.CascadeType.ALL)
-    private SalaChatBean   chat;
-    
-    @OneToMany(mappedBy="modulo", orphanRemoval=true)
+    private SalaChatBean              chat;
+
+    @OneToMany(mappedBy = "modulo", orphanRemoval = true)
     @Cascade(value = org.hibernate.annotations.CascadeType.ALL)
     private Set<MaterialDidaticoBean> material = new HashSet<MaterialDidaticoBean>();
-    
+
     @Override
     public String toString() {
         return "ModuloBean [id_modulo=" + id_modulo + ", nivel_modulo=" + nivel_modulo + ", disciplina="
@@ -126,6 +131,21 @@ public class ModuloBean
 
     public void setMaterial(Set<MaterialDidaticoBean> material) {
         this.material = material;
+    }
+
+    public String getNivel_string() {
+        switch (nivel_modulo)
+        {
+        case 1:
+            return "Básico";
+
+        case 2:
+            return "Intermediário";
+
+        case 3:
+            return "Avançado";
+        }
+        return "NDA";
     }
 
 }

@@ -821,15 +821,26 @@ public class DisciplinaRest
     @GET
     @Stylesheet(href = "curso/email/enviaEmail.jsp", type = MediaTypeMore.APP_JSP)
     @SecurityPrivate(role = { SecType.ALUNO, SecType.PROFESSOR })
-    public void criarEmail(@FormParam("id_matricula") Integer id_matricula) {
+    public void criarEmail(@FormParam("id_matricula") Integer id_matricula, @FormParam("id_email") String id_email) {
         Session session = HS.getSession();
         Transaction tx = session.beginTransaction();
         JSPAttr j = new JSPAttr();
+        Security sh = SecurityShiro.init();
         try {
-            MatriculaBean b = (MatriculaBean) session.get(MatriculaBean.class, id_matricula);
-            j.set("professor", b.getModulo().getDisciplina().getProfessor().getContato().getNome());
-            j.set("aluno", b.getAluno().getContato().getNome());
-            j.set("id_matricula", id_matricula);
+            if (sh.getTipo() == 2) {
+                MatriculaBean b = (MatriculaBean) session.get(MatriculaBean.class, id_matricula);
+                j.set("de", b.getAluno().getContato().getNome());
+                j.set("para", b.getModulo().getDisciplina().getProfessor().getContato().getNome());
+                j.set("id_matricula", id_matricula);
+                j.set("id_email", j.getParameter("id_email"));
+            }
+            else {
+                EmailDuvidasBean b = (EmailDuvidasBean) session.get(EmailDuvidasBean.class, Long.parseLong(id_email));
+                j.set("de", b.getMatricula().getModulo().getDisciplina().getProfessor().getContato().getNome());
+                j.set("para", b.getMatricula().getAluno().getContato().getNome());
+                j.set("id_curso", b.getMatricula().getModulo().getDisciplina().getId_disciplina());
+                j.set("id_email", b.getId_email());
+            }
         }
         catch (Exception e) {
             LOG.error("Falha ao listar e-mails", e);
@@ -844,17 +855,24 @@ public class DisciplinaRest
     @POST
     @Stylesheet(href = "curso/email/listarEmails.jsp", type = MediaTypeMore.APP_JSP)
     @SecurityPrivate(role = { SecType.ALUNO, SecType.PROFESSOR })
-    public void sendEmail(@FormParam("id_matricula") Integer id_matricula, @FormParam("txtAssunto") String assunto,
-            @FormParam("txtConteudo") String conteudo, @FormParam("id_email") String id_email) {
+    public void sendEmail(@FormParam("id_matricula") String id_matricula, @FormParam("id_curso") String id_curso,
+            @FormParam("txtAssunto") String assunto,
+            @FormParam("id_email") String id_email) {
         Session session = HS.getSession();
         JSPAttr j = new JSPAttr();
         Transaction tx = session.beginTransaction();
+        Security sh = SecurityShiro.init();
         try {
             EmailDuvidasBean email = new EmailDuvidasBean();
             if (!Utils.isEmpty(id_email)) {
                 EmailDuvidasBean principal = (EmailDuvidasBean) session.get(EmailDuvidasBean.class, Long.parseLong(id_email));
                 principal.setRespondido(Boolean.FALSE);
+                if (sh.getTipo() == 1) {
+                    principal.setRespondido(Boolean.TRUE);
+                }
+                principal.setData(new Date());
                 session.update(principal);
+                email.setMatricula(principal.getMatricula());
                 email.setEmail_origem(principal);
                 email.setTop_mail(false);
             }
@@ -863,9 +881,11 @@ public class DisciplinaRest
                 email.setTop_mail(true);
             }
             email.setTitulo(assunto);
-            email.setConteudo(conteudo);
+            email.setConteudo(j.getParameter("txtConteudo"));
             email.setRespondido(false);
-            email.setMatricula((MatriculaBean) session.load(MatriculaBean.class, id_matricula));
+            if (email.getMatricula() == null) {
+                email.setMatricula((MatriculaBean) session.load(MatriculaBean.class, Integer.parseInt(id_matricula)));
+            }
             email.setData(new Date());
             if (Utils.isValid(email)) {
                 session.save(email);
@@ -884,24 +904,37 @@ public class DisciplinaRest
         }
         finally {
             session.close();
-            listarEmail(id_matricula);
+            if (sh.getTipo() == 1) {
+                listarEmail(null, id_curso);
+            }
+            else {
+                listarEmail(id_matricula, null);
+            }
         }
     }
 
-    @Path("aluno/listarEmails")
+    @Path("email/listarEmails")
     @POST
     @GET
     @Stylesheet(href = "curso/email/listarEmails.jsp", type = MediaTypeMore.APP_JSP)
     @SecurityPrivate(role = { SecType.ALUNO, SecType.PROFESSOR })
-    public void listarEmail(@FormParam("id_matricula") Integer id_matricula) {
+    public void listarEmail(@FormParam("id_matricula") String id_matricula, @FormParam("id_curso") String id_curso) {
         Session session = HS.getSession();
         JSPAttr j = new JSPAttr();
+        List<EmailDuvidasBean> emails = new ArrayList<EmailDuvidasBean>();
         try {
-            List<EmailDuvidasBean> emails = session.createCriteria(EmailDuvidasBean.class)
-                    .add(Restrictions.eq("matricula.id_matricula", id_matricula.intValue()))
-                    .add(Restrictions.eq("top_mail", true)).list();
+            Criteria c = session.createCriteria(EmailDuvidasBean.class);
+            if (!Utils.isEmpty(id_matricula)) {
+                c.add(Restrictions.eq("matricula.id_matricula", Integer.parseInt(id_matricula)));
+            }
+            else {
+                c.createCriteria("matricula", "mat").createCriteria("mat.modulo", "mod")
+                        .add(Restrictions.eq("mod.disciplina.id_disciplina", Integer.parseInt(id_curso)));
+            }
+            emails = c.add(Restrictions.eq("top_mail", Boolean.TRUE)).list();
             j.set("lista_emails", emails);
             j.set("id_matricula", id_matricula);
+            j.set("id_curso", id_curso);
         }
         catch (Exception e) {
             LOG.error("Falha ao listar e-mails", e);
@@ -933,7 +966,7 @@ public class DisciplinaRest
             session.close();
         }
     }
-    
+
     @Path("email/detalharEmail")
     @POST
     @GET
@@ -947,7 +980,7 @@ public class DisciplinaRest
             c.add(Restrictions.or(Restrictions.eq("id_email", id_email), Restrictions.eq("email_origem.id_email", id_email)));
             c.setProjection(Projections.rowCount());
             Long size = (Long) c.uniqueResult();
-            Integer d = new BigDecimal(size).divide(BigDecimal.valueOf(2),BigDecimal.ROUND_UP).intValue();
+            Integer d = new BigDecimal(size).divide(BigDecimal.valueOf(2), BigDecimal.ROUND_UP).intValue();
             c.setProjection(null);
             c.setResultTransformer(Criteria.ROOT_ENTITY);
             c.addOrder(Order.asc("id_email"));
