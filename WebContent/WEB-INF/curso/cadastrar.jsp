@@ -49,33 +49,22 @@ function gerar(id, qtdquest, qtdalt, qtdquestprova)
 	$('#'+id).html(html);
 }
 
-function gerar2(id, qtdquest, qtdalt,optName)
+function enableTime(check,idI,idT)
 {
-	var i,j;
-	var html = "";
-	var defcontrol = '<div class="control-group"><label class="control-label" for="{txtname}">{label}</label><div class="controls"><input name="{txtname}" class="input-xxlarge" id="{txtname}" type="text" maxlength="300" value="{valor}"/></div></div>';
-	var alter = '<div class="control-group"><label class="control-label" for="{txtname}"><span class="badge badge-info">{label}</span></label><div class="controls"> <input name="{txtname}" id="{txtname}" type="text" maxlength="300" value="{valor}"/>&nbsp&nbsp&nbsp<input type="radio" name="{radioname}" value="{chkval}" /></div></div>';
-	
-	for(i = 1; i <= qtdquest; i++)
+	if(!check.checked)
 	{
-		var valq = $('#txt'+ id + 'quest' + i).val();
-		if(valq == null)
-		{
-			valq = '';
-		}
-		var namee='txt' + id + 'quest' + i;
-		html = html + defcontrol.format({ txtname: namee, label: 'Questão: ' + i, valor: '${'+namee+'}'});
-		for(j = 1; j <= qtdalt; j++)
-		{
-			var vala = $('#txt'+ id + 'quest' + i +'alt' + j).val();
-			if(vala == null)
-			{
-				vala = '';
-			}
-			html = html + alter.format({ txtname: 'txt' + id + 'quest' + i +'alt' + j, label: 'Alternativa ' + j, radioname: 'opt' + id + '' + i, chkval: '' + j, valor: vala});
-		}
+		$('#'+idI).attr('disabled',true);
+		$('#'+idT).attr('disabled',true);
+		$('#'+idI).attr('required',false);
+		$('#'+idT).attr('required',false);
 	}
-	$('#'+id).html(html);
+	else
+	{
+		$('#'+idI).attr('disabled',false);
+		$('#'+idT).attr('disabled',false);
+		$('#'+idI).attr('required',true);
+		$('#'+idT).attr('required',true);
+	}
 }
 
 	</script>
@@ -144,132 +133,8 @@ function gerar2(id, qtdquest, qtdalt,optName)
 					</ul>
 					<div class="tab-content">
 						<div class="tab-pane" id="basicChat">
-							<div class="control-group">
-								<label class="control-label" for="qtdMatBas">Domingo</label>
-								<div class="controls">
-									<input type="checkbox" id="chkBasicDomingo" name="chkBasicDomingo">
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="qtdMatBas">Hora Inicio:</label>
-								<div class="controls">
-									<input type="text" id="txtBasicHoraInicioDomingo" name="txtBasicHoraInicioDomingo">
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="qtdMatBas">Hora Termino:</label>
-								<div class="controls">
-									<input type="text" id="txtBasicHoraTerminoDomingo" name="txtBasicHoraTerminoDomingo">
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="qtdMatBas">Segunda-Feira</label>
-								<div class="controls">
-									<input type="checkbox" id="chkBasicSegunda" name="chkBasicSegunda">
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="qtdMatBas">Hora Inicio:</label>
-								<div class="controls">
-									<input type="text" id="txtBasicHoraInicioSegunda" name="txtBasicHoraInicioSegunda">
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="qtdMatBas">Hora Termino:</label>
-								<div class="controls">
-									<input type="text" id="txtBasicHoraTerminoSegunda" name="txtBasicHoraTerminoSegunda">
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="qtdMatBas">Terça-Feira</label>
-								<div class="controls">
-									<input type="checkbox" id="chkBasicTerca" name="chkBasicTerca">
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="qtdMatBas">Hora Inicio:</label>
-								<div class="controls">
-									<input type="text" id="txtBasicHoraInicioTerca" name="txtBasicHoraInicioTerca">
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="qtdMatBas">Hora Termino:</label>
-								<div class="controls">
-									<input type="text" id="txtBasicHoraTerminoTerca" name="txtBasicHoraTerminoTerca">
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="qtdMatBas">Quarta-Feira</label>
-								<div class="controls">
-									<input type="checkbox" id="chkBasicQuarta" name="chkBasicQuarta">
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="qtdMatBas">Hora Inicio:</label>
-								<div class="controls">
-									<input type="text" id="txtBasicHoraInicioQuarta" name="txtBasicHoraInicioQuarta">
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="qtdMatBas">Hora Termino:</label>
-								<div class="controls">
-									<input type="text" id="txtBasicHoraTerminoQuarta" name="txtBasicHoraTerminoQuarta">
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="qtdMatBas">Quinta-Feira</label>
-								<div class="controls">
-									<input type="checkbox" id="chkBasicQuinta" name="chkBasicQuinta">
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="qtdMatBas">Hora Inicio:</label>
-								<div class="controls">
-									<input type="text" id="txtBasicHoraInicioQuinta" name="txtBasicHoraInicioQuinta">
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="qtdMatBas">Hora Termino:</label>
-								<div class="controls">
-									<input type="text" id="txtBasicHoraTerminoQuinta" name="txtBasicHoraTerminoQuinta">
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="qtdMatBas">Sexta-Feira</label>
-								<div class="controls">
-									<input type="checkbox" id="chkBasicSexta" name="chkBasicSexta">
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="qtdMatBas">Hora Inicio:</label>
-								<div class="controls">
-									<input type="text" id="txtBasicHoraInicioSexta" name="txtBasicHoraInicioSexta">
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="qtdMatBas">Hora Termino:</label>
-								<div class="controls">
-									<input type="text" id="txtBasicHoraTerminoSexta" name="txtBasicHoraTerminoSexta">
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="qtdMatBas">Sábado</label>
-								<div class="controls">
-									<input type="checkbox" id="chkBasicSabado" name="chkBasicSabado">
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="qtdMatBas">Hora Inicio:</label>
-								<div class="controls">
-									<input type="text" id="txtBasicHoraInicioSabado" name="txtBasicHoraInicioSabado">
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="qtdMatBas">Hora Termino:</label>
-								<div class="controls">
-									<input type="text" id="txtBasicHoraTerminoSabado" name="txtBasicHoraTerminoSabado">
-								</div>
-							</div>
+						<c:set var="nvl" value="basico" scope="request" />
+						<jsp:include page="cadChatHr.jsp" />
 						</div>
 						<div class="tab-pane" id="basicqst">
 							<div class="control-group">
@@ -344,132 +209,8 @@ function gerar2(id, qtdquest, qtdalt,optName)
 					</ul>
 					<div class="tab-content">
 						<div class="tab-pane" id="intChat">
-							<div class="control-group">
-								<label class="control-label" for="qtdMatBas">Domingo</label>
-								<div class="controls">
-									<input type="checkbox" id="chkIntDomingo" name="chkIntDomingo">
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="qtdMatBas">Hora Inicio:</label>
-								<div class="controls">
-									<input type="text" id="txtIntHoraInicioDomingo" name="txtIntHoraInicioDomingo">
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="qtdMatBas">Hora Termino:</label>
-								<div class="controls">
-									<input type="text" id="txtIntHoraTerminoDomingo" name="txtIntHoraTerminoDomingo">
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="qtdMatBas">Segunda-Feira</label>
-								<div class="controls">
-									<input type="checkbox" id="chkIntSegunda" name="chkIntSegunda">
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="qtdMatBas">Hora Inicio:</label>
-								<div class="controls">
-									<input type="text" id="txtIntHoraInicioSegunda" name="txtIntHoraInicioSegunda">
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="qtdMatBas">Hora Termino:</label>
-								<div class="controls">
-									<input type="text" id="txtIntHoraTerminoSegunda" name="txtIntHoraTerminoSegunda">
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="qtdMatBas">Terça-Feira</label>
-								<div class="controls">
-									<input type="checkbox" id="chkIntTerca" name="chkIntTerca">
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="qtdMatBas">Hora Inicio:</label>
-								<div class="controls">
-									<input type="text" id="txtIntHoraInicioTerca" name="txtIntHoraInicioTerca">
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="qtdMatBas">Hora Termino:</label>
-								<div class="controls">
-									<input type="text" id="txtIntHoraTerminoTerca" name="txtIntHoraTerminoTerca">
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="qtdMatBas">Quarta-Feira</label>
-								<div class="controls">
-									<input type="checkbox" id="chkIntQuarta" name="chkIntQuarta">
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="qtdMatBas">Hora Inicio:</label>
-								<div class="controls">
-									<input type="text" id="txtIntHoraInicioQuarta" name="txtIntHoraInicioQuarta">
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="qtdMatBas">Hora Termino:</label>
-								<div class="controls">
-									<input type="text" id="txtIntHoraTerminoQuarta" name="txtIntHoraTerminoQuarta">
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="qtdMatBas">Quinta-Feira</label>
-								<div class="controls">
-									<input type="checkbox" id="chkIntQuinta" name="chkIntQuinta">
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="qtdMatBas">Hora Inicio:</label>
-								<div class="controls">
-									<input type="text" id="txtIntHoraInicioQuinta" name="txtIntHoraInicioQuinta">
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="qtdMatBas">Hora Termino:</label>
-								<div class="controls">
-									<input type="text" id="txtIntHoraTerminoQuinta" name="txtIntHoraTerminoQuinta">
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="qtdMatBas">Sexta-Feira</label>
-								<div class="controls">
-									<input type="checkbox" id="chkIntSexta" name="chkIntSexta">
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="qtdMatBas">Hora Inicio:</label>
-								<div class="controls">
-									<input type="text" id="txtIntHoraInicioSexta" name="txtIntHoraInicioSexta">
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="qtdMatBas">Hora Termino:</label>
-								<div class="controls">
-									<input type="text" id="txtIntHoraTerminoSexta" name="txtIntHoraTerminoSexta">
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="qtdMatBas">Sábado</label>
-								<div class="controls">
-									<input type="checkbox" id="chkIntSabado" name="chkIntSabado">
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="qtdMatBas">Hora Inicio:</label>
-								<div class="controls">
-									<input type="text" id="txtIntHoraInicioSabado" name="txtIntHoraInicioSabado">
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="qtdMatBas">Hora Termino:</label>
-								<div class="controls">
-									<input type="text" id="txtIntHoraTerminoSabado" name="txtIntHoraTerminoSabado">
-								</div>
-							</div>
+						<c:set var="nvl" value="intermediario" scope="request" />
+						<jsp:include page="cadChatHr.jsp" />
 						</div>
 						<div class="tab-pane" id="intqst">
 							<div class="control-group">
@@ -544,134 +285,8 @@ function gerar2(id, qtdquest, qtdalt,optName)
 					</ul>
 					<div class="tab-content">
 						<div class="tab-pane" id="advChat">
-							<div class="tab-pane" id="intChat">
-							<div class="control-group">
-								<label class="control-label" for="qtdMatBas">Domingo</label>
-								<div class="controls">
-									<input type="checkbox" id="chkAdvDomingo" name="chkAdvDomingo">
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="qtdMatBas">Hora Inicio:</label>
-								<div class="controls">
-									<input type="text" id="txtAdvHoraInicioDomingo" name="txtAdvHoraInicioDomingo">
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="qtdMatBas">Hora Termino:</label>
-								<div class="controls">
-									<input type="text" id="txtAdvHoraTerminoDomingo" name="txtAdvHoraTerminoDomingo">
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="qtdMatBas">Segunda-Feira</label>
-								<div class="controls">
-									<input type="checkbox" id="chkAdvSegunda" name="chkAdvSegunda">
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="qtdMatBas">Hora Inicio:</label>
-								<div class="controls">
-									<input type="text" id="txtAdvHoraInicioSegunda" name="txtAdvHoraInicioSegunda">
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="qtdMatBas">Hora Termino:</label>
-								<div class="controls">
-									<input type="text" id="txtAdvHoraTerminoSegunda" name="txtAdvHoraTerminoSegunda">
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="qtdMatBas">Terça-Feira</label>
-								<div class="controls">
-									<input type="checkbox" id="chkAdvTerca" name="chkAdvTerca">
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="qtdMatBas">Hora Inicio:</label>
-								<div class="controls">
-									<input type="text" id="txtAdvHoraInicioTerca" name="txtAdvHoraInicioTerca">
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="qtdMatBas">Hora Termino:</label>
-								<div class="controls">
-									<input type="text" id="txtAdvHoraTerminoTerca" name="txtAdvHoraTerminoTerca">
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="qtdMatBas">Quarta-Feira</label>
-								<div class="controls">
-									<input type="checkbox" id="chkAdvQuarta" name="chkAdvQuarta">
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="qtdMatBas">Hora Inicio:</label>
-								<div class="controls">
-									<input type="text" id="txtAdvHoraInicioQuarta" name="txtAdvHoraInicioQuarta">
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="qtdMatBas">Hora Termino:</label>
-								<div class="controls">
-									<input type="text" id="txtAdvHoraTerminoQuarta" name="txtAdvHoraTerminoQuarta">
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="qtdMatBas">Quinta-Feira</label>
-								<div class="controls">
-									<input type="checkbox" id="chkAdvQuinta" name="chkAdvQuinta">
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="qtdMatBas">Hora Inicio:</label>
-								<div class="controls">
-									<input type="text" id="txtAdvHoraInicioQuinta" name="txtAdvHoraInicioQuinta">
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="qtdMatBas">Hora Termino:</label>
-								<div class="controls">
-									<input type="text" id="txtAdvHoraTerminoQuinta" name="txtAdvHoraTerminoQuinta">
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="qtdMatBas">Sexta-Feira</label>
-								<div class="controls">
-									<input type="checkbox" id="chkAdvSexta" name="chkIntSexta">
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="qtdMatBas">Hora Inicio:</label>
-								<div class="controls">
-									<input type="text" id="txtAdvHoraInicioSexta" name="txtAdvHoraInicioSexta">
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="qtdMatBas">Hora Termino:</label>
-								<div class="controls">
-									<input type="text" id="txtAdvHoraTerminoSexta" name="txtAdvHoraTerminoSexta">
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="qtdMatBas">Sábado</label>
-								<div class="controls">
-									<input type="checkbox" id="chkAdvSabado" name="chkAdvSabado">
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="qtdMatBas">Hora Inicio:</label>
-								<div class="controls">
-									<input type="text" id="txtAdvHoraInicioSabado" name="txtAdvHoraInicioSabado">
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="qtdMatBas">Hora Termino:</label>
-								<div class="controls">
-									<input type="text" id="txtAdvHoraTerminoSabado" name="txtAdvHoraTerminoSabado">
-								</div>
-							</div>
-						</div>
+							<c:set var="nvl" value="avancado" scope="request" />
+							<jsp:include page="cadChatHr.jsp" />
 						</div>
 						<div class="tab-pane" id="advqst">
 							<div class="control-group">
