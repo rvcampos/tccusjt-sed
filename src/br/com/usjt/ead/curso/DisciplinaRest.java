@@ -459,16 +459,17 @@ public class DisciplinaRest
             AvaliacaoBean b = mod.getAvaliacao();
             j.set(qtdAlt, mod.getAvaliacao().getQuestoes().get(0).getAlternativas().size());
             j.set(qtdQuest, b.getQuestoes().size());
-            for (int i = 1; i <= mod.getAvaliacao().getQuestoes().size(); i++) {
-                QuestaoBean questao = mod.getAvaliacao().getQuestoes().get(i-1);
+            int i = 1;
+            for (QuestaoBean questao : mod.getAvaliacao().getQuestoes()) {
                 j.set(quest + i, questao.getConteudo());
-                for (int k = 1; k <= questao.getAlternativas().size(); k++) {
-                    AlternativaBean alternativa = questao.getAlternativas().get(i-1);
+                int k = 1;
+                for (AlternativaBean alternativa : questao.getAlternativas()) {
                     j.set(quest + i + "alt" + k,alternativa.getConteudo());
                     if (alternativa.getCorreta()) {
                        j.set(opt + i, k);
                     }
                 }
+                i++;
             }
             // Setando a quantidade de questoes que serão exibidas na avaliação
             j.set(qtdMostra,b.getQtde_questoes());

@@ -26,8 +26,20 @@ function gerar(id, qtdquest, qtdalt, qtdquestprova)
 	var i,j;
 	var html = "";
 	var defcontrol = '<div class="control-group"><label class="control-label" for="{txtname}">{label}</label><div class="controls"><input name="{txtname}" class="input-xxlarge" id="{txtname}" type="text" maxlength="300" value="{valor}"/></div></div>';
-	var alter = '<div class="control-group"><label class="control-label" for="{txtname}"><span class="badge badge-info">{label}</span></label><div class="controls"> <input name="{txtname}" id="{txtname}" type="text" maxlength="300" value="{valor}"/>&nbsp&nbsp&nbsp<input type="radio" name="{radioname}" value="{chkval}" /></div></div>';
-	
+	var alter = '<div class="control-group"><label class="control-label" for="{txtname}"><span class="badge badge-info">{label}</span></label><div class="controls"> <input name="{txtname}" id="{txtname}" type="text" maxlength="300" value="{valor}"/>&nbsp&nbsp&nbsp<input type="radio" name="{radioname}" value="{chkval}" {checked}/></div></div>';
+	var optid = '';
+	if(id.indexOf('Basico') != -1)
+	{
+		optid='optquestoesBasico';
+	}
+	else if(id.indexOf('Intermediario') != -1)
+	{
+		optid='optquestoesIntermediario';
+	}
+	else
+	{
+		optid='optquestoesAvancado';
+	}
 	for(i = 1; i <= qtdquest; i++)
 	{
 		var valq = $('#txt'+ id + 'quest' + i).val();
@@ -43,7 +55,16 @@ function gerar(id, qtdquest, qtdalt, qtdquestprova)
 			{
 				vala = '';
 			}
-			html = html + alter.format({ txtname: 'txt' + id + 'quest' + i +'alt' + j, label: 'Alternativa ' + j, radioname: 'opt' + id + '' + i, chkval: '' + j, valor: vala});
+			var checked = $('input[name='+ optid + i +']:checked').val();
+			if(checked == null)
+			{
+				checked = '';
+			}
+			if(checked == j)
+			{
+				checked = 'checked="checked"';
+			}
+			html = html + alter.format({ txtname: 'txt' + id + 'quest' + i +'alt' + j, label: 'Alternativa ' + j, radioname: 'opt' + id + '' + i, chkval: '' + j, valor: vala, checked: checked});
 		}
 	}
 	$('#'+id).html(html);
