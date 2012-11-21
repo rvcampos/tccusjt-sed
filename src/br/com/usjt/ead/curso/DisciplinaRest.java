@@ -88,6 +88,9 @@ public class DisciplinaRest
         }
     }
 
+    /**
+     * Carrega a página para editar um curso
+     */
     @Path("editar")
     @POST
     @Stylesheet(href = "curso/cadastrar.jsp", type = MediaTypeMore.APP_JSP)
@@ -107,18 +110,19 @@ public class DisciplinaRest
             for (ModuloBean mod : disciplina.getModulos()) {
                 switch (mod.getNivel_modulo())
                 {
+                // Nível básico
                 case 1:
                     j.set("basico", mod);
                     populaEditUpdate(j, 1, mod);
                     populaChatEditUpdate(j, mod, "txtBasic");
                     break;
-
+                // Nível Intermediário
                 case 2:
                     j.set("intermediario", mod);
                     populaEditUpdate(j, 2, mod);
                     populaChatEditUpdate(j, mod, "txtInt");
                     break;
-
+                // Nível Avançado
                 case 3:
                     j.set("avancado", mod);
                     populaEditUpdate(j, 3, mod);
@@ -135,6 +139,12 @@ public class DisciplinaRest
         }
     }
 
+    /**
+     * Carrega os dados do chat na página para update
+     * @param j
+     * @param mod
+     * @param txtString
+     */
     private void populaChatEditUpdate(JSPAttr j, ModuloBean mod, String txtString) {
         SalaChatBean sala = mod.getChat();
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
@@ -168,6 +178,9 @@ public class DisciplinaRest
         }
     }
 
+    /**
+     * Abre a página para inserir um curso
+     */
     @Path("cadastrar")
     @GET
     @Stylesheet(href = "curso/cadastrar.jsp", type = MediaTypeMore.APP_JSP)
@@ -176,6 +189,9 @@ public class DisciplinaRest
         JSPAttr j = new JSPAttr("metodo", "create");
     }
 
+    /**
+     * Deleta um curso
+     */
     @Path("delete")
     @POST
     @Stylesheet(href = "professor/meusCursos.jsp", type = MediaTypeMore.APP_JSP)
@@ -202,6 +218,9 @@ public class DisciplinaRest
         }
     }
 
+    /**
+     * Ponto de entrada para inserir curso
+     */
     @Path("create")
     @POST
     @Stylesheet(href = "curso/cadastrar.jsp", type = MediaTypeMore.APP_JSP)
@@ -232,6 +251,7 @@ public class DisciplinaRest
                 // HttpGet("http://127.0.0.1:443/?api.SaveConfiguration");
                 // HttpResponse resp = httpclient.execute(get);
                 // HttpEntity entity = resp.getEntity();
+                // Session.save = persistir objeto na base de dados
                 session.save(objDisciplina);
                 tx.commit();
                 j.sucessMsg("Disciplina criada com sucesso");
@@ -276,7 +296,7 @@ public class DisciplinaRest
             throws Exception {
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
         SalaChatBean sala = new SalaChatBean();
-     // HttpGet get = new HttpGet("http://127.0.0.1:443/?api.AddRoom="
+        // HttpGet get = new HttpGet("http://127.0.0.1:443/?api.AddRoom="
         // + mod.getDisciplina().getNome_disciplina().replaceAll(" ", "%20") +
         // "," + nivel + ",,true");
         // HttpResponse resp = httpClient.execute(get);
@@ -289,10 +309,10 @@ public class DisciplinaRest
         // sala.setId_chat(roomId);
         // sala.setUri(uri);
 
-        if(mod.getChat() != null)
-        {
+        if (mod.getChat() != null) {
             sala = mod.getChat();
         }
+        // Cada IF desses abaixo, valida se o CHECKBOX do determinado dia está ativo. Caso esteja, tenta adicionar o horário
         if (!Utils.isEmpty(j.getParameter(chkString + "Domingo"))) {
             sala.setInicio_domingo(new Time(sdf.parse(j.getParameter(txtString + "HoraInicioDomingo")).getTime()));
             sala.setTermino_domingo(new Time(sdf.parse(j.getParameter(txtString + "HoraTerminoDomingo")).getTime()));
@@ -337,7 +357,7 @@ public class DisciplinaRest
                     MultivaluedMap<String, String> header = inputPart.getHeaders();
                     String fileName = getFileName(header);
 
-                    // convert the uploaded file to inputstream
+                    // converte o arquivo para um InputStream
                     InputStream inputStream = inputPart.getBody(InputStream.class, null);
 
                     byte[] bytes = IOUtils.readBytesFromStream(inputStream);
@@ -423,9 +443,8 @@ public class DisciplinaRest
         }
         return 0;
     }
-    
-    private void populaEditUpdate(JSPAttr j, Integer nivel, ModuloBean mod)
-    {
+
+    private void populaEditUpdate(JSPAttr j, Integer nivel, ModuloBean mod) {
         String quest = "txtquestoesBasicoquest";
         String qtdQuest = "qtdquestoesBas";
         String qtdAlt = "qtdaltBas";
@@ -464,15 +483,15 @@ public class DisciplinaRest
                 j.set(quest + i, questao.getConteudo());
                 int k = 1;
                 for (AlternativaBean alternativa : questao.getAlternativas()) {
-                    j.set(quest + i + "alt" + k,alternativa.getConteudo());
+                    j.set(quest + i + "alt" + k, alternativa.getConteudo());
                     if (alternativa.getCorreta()) {
-                       j.set(opt + i, k);
+                        j.set(opt + i, k);
                     }
                 }
                 i++;
             }
             // Setando a quantidade de questoes que serão exibidas na avaliação
-            j.set(qtdMostra,b.getQtde_questoes());
+            j.set(qtdMostra, b.getQtde_questoes());
         }
     }
 

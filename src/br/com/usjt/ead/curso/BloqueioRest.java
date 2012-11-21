@@ -24,6 +24,9 @@ public class BloqueioRest implements ICrud
 {
     private static final Logger LOG = LoggerFactory.getLogger(BloqueioRest.class);
 
+    /**
+     * Ponto de entrada de leitura para listagem de bloqueios
+     */
     @Override
     @Path("listarBloqueios")
     @POST
@@ -51,6 +54,12 @@ public class BloqueioRest implements ICrud
         }
     }
 
+    /**
+     * Filtro
+     * @param c
+     * @param j
+     * @return
+     */
     private Criteria filtrar(Criteria c, JSPAttr j) {
         // Quando o parametro de filtro for de outro bean, no caso um
         // relacionamento, utilizar 'createCriteria(nomeBean,alias)'
@@ -69,6 +78,9 @@ public class BloqueioRest implements ICrud
         return c;
     }
 
+    /**
+     * Deleta um bloqueio
+     */
     @Override
     @Path("delete")
     @POST
