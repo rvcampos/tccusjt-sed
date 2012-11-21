@@ -14,10 +14,13 @@ import javax.mail.internet.MimeMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import br.com.usjt.ead.aluno.EmailDuvidasBean;
+
 /**
  * Envio de Email
  */
-public class SendMail {
+public class SendMail
+{
 
     private static final Logger LOG = LoggerFactory.getLogger(SendMail.class);
 

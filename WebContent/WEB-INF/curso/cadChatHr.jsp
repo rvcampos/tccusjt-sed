@@ -72,31 +72,31 @@ www.w3.org/TR/html4/loose.dtd">
 <c:set var="sabadoD" value="disabled=\"disabled\""/>
 <c:if test="${not empty domingoI or not empty domingoT}">
 	<c:set var="domingo" value="checked=\"checked\""/>
-	<c:remove var="domingoD" />
+	<c:set var="domingoD" value="required=\"required\""/>
 </c:if>
 <c:if test="${not empty segundaI or not empty segundaT}">
 	<c:set var="segunda" value="checked=\"checked\""/>
-	<c:remove var="segundaD" />
+	<c:set var="segundaD" value="required=\"required\""/>
 </c:if>
 <c:if test="${not empty tercaI or not empty tercaT}">
 	<c:set var="terca" value="checked=\"checked\""/>
-	<c:remove var="tercaD" />
+	<c:set var="tercaD" value="required=\"required\""/>
 </c:if>
 <c:if test="${not empty quartaI or not empty quartaT}">
 	<c:set var="quarta" value="checked=\"checked\""/>
-	<c:remove var="quartaD" />
+	<c:set var="quartaD" value="required=\"required\""/>
 </c:if>
 <c:if test="${not empty quintaI or not empty quintaT}">
 	<c:set var="quinta" value="checked=\"checked\""/>
-	<c:remove var="quintaD" />
+	<c:set var="quintaD" value="required=\"required\""/>
 </c:if>
 <c:if test="${not empty sextaI or not empty sextaT}">
 	<c:set var="sexta" value="checked=\"checked\""/>
-	<c:remove var="sextaD" />
+	<c:set var="sextaD" value="required=\"required\""/>
 </c:if>
 <c:if test="${not empty sabadoI or not empty sabadoT}">
 	<c:set var="sabado" value="checked=\"checked\""/>
-	<c:remove var="sabadoD" />
+	<c:set var="sabadoD" value="required=\"required\""/>
 </c:if>
 <div class="control-group">
 	<label class="control-label" for="${nvName}Domingo">Domingo</label>

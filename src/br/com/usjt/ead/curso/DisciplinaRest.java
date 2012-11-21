@@ -980,6 +980,7 @@ public class DisciplinaRest
             }
             email.setData(new Date());
             if (Utils.isValid(email)) {
+                Utils.sendMail(email);
                 session.save(email);
                 tx.commit();
             }
