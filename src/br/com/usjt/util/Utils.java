@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import br.com.usjt.ead.DateValidation;
 import br.com.usjt.ead.DateValidation.WHEN;
 import br.com.usjt.ead.PropertiesBean;
+import br.com.usjt.ead.aluno.EmailDuvidasBean;
 import br.com.usjt.jaxrs.JSPAttr;
 
 /**
@@ -40,6 +41,9 @@ public final class Utils
                                                                              + "Acesse o sistema com a senha abaixo para utilizar o sistema: <br><br> %s";
     private static final Logger                LOG                   = LoggerFactory.getLogger(Utils.class);
     private static final BigDecimal            registrosPagina       = BigDecimal.TEN;
+
+    private static final String                DUVIDA_ALUNO          = "Prezado(a) professor(a) o aluno %s enviou uma nova dúvida para você. Acesse o sistema para respondê-la <br><br> <b>%s</b> ";
+    private static final String                RESPOSTA_PROFESSOR    = "Prezado(a) aluno(a) o professor %s respondeu à sua dúvida. Caso necessite, entre utilize nosso sistema para enviar uma nova dúvida. <br><br> <b>%s</b> ";
 
     private Utils()
     {
@@ -199,6 +203,29 @@ public final class Utils
         try {
             SendMail.enviarEmail("[EAD] Ativação de Cadastro",
                     String.format(MSG_ATIVACAO_CADASTRO, nome, CryptoXFacade.crypt(to)), to);
+        }
+        catch (MessagingException e) {
+            LOG.error("Falha ao enviar e-mail de ativação", e);
+        }
+    }
+
+    public static void sendMail(EmailDuvidasBean duvida) {
+        try {
+            String to = "";
+            String content = "";
+            if (duvida.getEmail_origem().getRespondido()) {
+                to = duvida.getMatricula().getAluno().getEmail();
+                content = String.format(RESPOSTA_PROFESSOR, duvida.getMatricula().getModulo().getDisciplina().getProfessor()
+                        .getContato().getNome(), duvida.getConteudo());
+            }
+            else {
+                to = duvida.getMatricula().getModulo().getDisciplina().getProfessor().getEmail();
+                content = String.format(DUVIDA_ALUNO, duvida.getMatricula().getAluno().getContato().getNome(),
+                        duvida.getConteudo());
+            }
+            String title = "[EAD] [" + duvida.getMatricula().getModulo().getDisciplina().getNome_disciplina() + " - "
+                    + duvida.getMatricula().getModulo().getNivel_string() + "] " + duvida.getTitulo();
+            SendMail.enviarEmail(title, content, to);
         }
         catch (MessagingException e) {
             LOG.error("Falha ao enviar e-mail de ativação", e);
