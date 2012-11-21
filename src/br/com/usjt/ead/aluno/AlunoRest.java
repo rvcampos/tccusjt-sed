@@ -727,32 +727,47 @@ public class AlunoRest implements ICrud
         Time t = new Time(d.getTime());
         Calendar now = GregorianCalendar.getInstance();
         int day = now.get(Calendar.DAY_OF_WEEK);
-        String dias = sala.getDias();
-
+        Time iniTime = null;
+        Time endTime = null;
+        
         boolean ok = true;
 
         switch (day)
         {
-        case 0:
-            ok = dias.contains("dom");
-            break;
         case 1:
-            ok = dias.contains("seg");
+            ok = sala.getInicio_domingo() != null;
+            iniTime=sala.getInicio_domingo();
+            endTime=sala.getTermino_domingo();
             break;
         case 2:
-            ok = dias.contains("ter");
+            ok = sala.getInicio_segunda() != null;
+            iniTime=sala.getInicio_segunda();
+            endTime=sala.getTermino_segunda();
             break;
         case 3:
-            ok = dias.contains("qua");
+            ok = sala.getInicio_terca() != null;
+            iniTime=sala.getInicio_terca();
+            endTime=sala.getTermino_terca();
             break;
         case 4:
-            ok = dias.contains("qui");
+            ok = sala.getInicio_quarta() != null;
+            iniTime=sala.getInicio_quarta();
+            endTime=sala.getTermino_quarta();
             break;
         case 5:
-            ok = dias.contains("sex");
+            ok = sala.getInicio_quinta() != null;
+            iniTime=sala.getInicio_quinta();
+            endTime=sala.getTermino_quinta();
             break;
         case 6:
-            ok = dias.contains("sab");
+            ok = sala.getInicio_sexta() != null;
+            iniTime=sala.getInicio_sexta();
+            endTime=sala.getTermino_sexta();
+            break;
+        case 7:
+            ok = sala.getInicio_sabado() != null;
+            iniTime=sala.getInicio_sabado();
+            endTime=sala.getTermino_sabado();
             break;
         }
 
@@ -764,8 +779,8 @@ public class AlunoRest implements ICrud
         Time ini = new Time(System.currentTimeMillis());
         Time end = new Time(System.currentTimeMillis());
         try {
-            ini = new Time(sdf.parse(sdf.format(sala.getHorario())).getTime());
-            end = new Time(sdf.parse(sdf.format(sala.getHorario_termino())).getTime());
+            ini = new Time(sdf.parse(sdf.format(iniTime)).getTime());
+            end = new Time(sdf.parse(sdf.format(endTime)).getTime());
         }
         catch (ParseException e) {
             e.printStackTrace();
