@@ -5,6 +5,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.security.MessageDigest;
+import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -107,20 +109,20 @@ public class DisciplinaRest
                 {
                 case 1:
                     j.set("basico", mod);
-                    j.set("qtdquestoesBas", mod.getAvaliacao().getQuestoes().size());
-                    j.set("qtdaltBas", mod.getAvaliacao().getQuestoes().get(0).getAlternativas().size());
+                    populaEditUpdate(j, 1, mod);
+                    populaChatEditUpdate(j, mod, "txtBasic");
                     break;
 
                 case 2:
                     j.set("intermediario", mod);
-                    j.set("qtdquestoesInt", mod.getAvaliacao().getQuestoes().size());
-                    j.set("qtdaltInt", mod.getAvaliacao().getQuestoes().get(0).getAlternativas().size());
+                    populaEditUpdate(j, 2, mod);
+                    populaChatEditUpdate(j, mod, "txtInt");
                     break;
 
                 case 3:
                     j.set("avancado", mod);
-                    j.set("qtdquestoesAdv", mod.getAvaliacao().getQuestoes().size());
-                    j.set("qtdaltAdv", mod.getAvaliacao().getQuestoes().get(0).getAlternativas().size());
+                    populaEditUpdate(j, 3, mod);
+                    populaChatEditUpdate(j, mod, "txtAdv");
                     break;
                 }
             }
@@ -130,6 +132,39 @@ public class DisciplinaRest
         }
         finally {
             session.close();
+        }
+    }
+
+    private void populaChatEditUpdate(JSPAttr j, ModuloBean mod, String txtString) {
+        SalaChatBean sala = mod.getChat();
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+        if (sala.getInicio_domingo() != null) {
+            j.set(txtString + "HoraInicioDomingo", sdf.format(sala.getInicio_domingo()));
+            j.set(txtString + "HoraTerminoDomingo", sdf.format(sala.getTermino_domingo()));
+        }
+        if (sala.getInicio_segunda() != null) {
+            j.set(txtString + "HoraInicioSegunda", sdf.format(sala.getInicio_segunda()));
+            j.set(txtString + "HoraTerminoSegunda", sdf.format(sala.getTermino_segunda()));
+        }
+        if (sala.getInicio_terca() != null) {
+            j.set(txtString + "HoraInicioTerca", sdf.format(sala.getInicio_terca()));
+            j.set(txtString + "HoraTerminoTerca", sdf.format(sala.getTermino_terca()));
+        }
+        if (sala.getInicio_quarta() != null) {
+            j.set(txtString + "HoraInicioQuarta", sdf.format(sala.getInicio_quarta()));
+            j.set(txtString + "HoraTerminoQuarta", sdf.format(sala.getTermino_quarta()));
+        }
+        if (sala.getInicio_quinta() != null) {
+            j.set(txtString + "HoraInicioQuinta", sdf.format(sala.getInicio_quinta()));
+            j.set(txtString + "HoraTerminoQuinta", sdf.format(sala.getTermino_quinta()));
+        }
+        if (sala.getInicio_sexta() != null) {
+            j.set(txtString + "HoraInicioSexta", sdf.format(sala.getInicio_sexta()));
+            j.set(txtString + "HoraTerminoSexta", sdf.format(sala.getTermino_sexta()));
+        }
+        if (sala.getInicio_sabado() != null) {
+            j.set(txtString + "HoraInicioSabado", sdf.format(sala.getInicio_sabado()));
+            j.set(txtString + "HoraTerminoSabado", sdf.format(sala.getTermino_sabado()));
         }
     }
 
@@ -237,9 +272,11 @@ public class DisciplinaRest
         }
     }
 
-    private ModuloBean criaChat(ModuloBean mod, HttpClient httpClient, String nivel) throws Exception {
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-        // HttpGet get = new HttpGet("http://127.0.0.1:443/?api.AddRoom="
+    private ModuloBean criaChat(ModuloBean mod, HttpClient httpClient, String chkString, String txtString, JSPAttr j)
+            throws Exception {
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+        SalaChatBean sala = new SalaChatBean();
+     // HttpGet get = new HttpGet("http://127.0.0.1:443/?api.AddRoom="
         // + mod.getDisciplina().getNome_disciplina().replaceAll(" ", "%20") +
         // "," + nivel + ",,true");
         // HttpResponse resp = httpClient.execute(get);
@@ -251,11 +288,45 @@ public class DisciplinaRest
         // sala.setModulo(mod);
         // sala.setId_chat(roomId);
         // sala.setUri(uri);
-        // sala.setDias("seg, ter, qua, qui, sex, sab, dom");
-        // sala.setHorario(new Time(sdf.parse("19:00:00").getTime()));
-        // sala.setHorario_termino(new Time(sdf.parse("23:59:00").getTime()));
-        // mod.setChat(sala);
 
+        if(mod.getChat() != null)
+        {
+            sala = mod.getChat();
+        }
+        if (!Utils.isEmpty(j.getParameter(chkString + "Domingo"))) {
+            sala.setInicio_domingo(new Time(sdf.parse(j.getParameter(txtString + "HoraInicioDomingo")).getTime()));
+            sala.setTermino_domingo(new Time(sdf.parse(j.getParameter(txtString + "HoraTerminoDomingo")).getTime()));
+        }
+        if (!Utils.isEmpty(j.getParameter(chkString + "Segunda"))) {
+            sala.setInicio_segunda(new Time(sdf.parse(j.getParameter(txtString + "HoraInicioSegunda")).getTime()));
+            sala.setTermino_segunda(new Time(sdf.parse(j.getParameter(txtString + "HoraTerminoSegunda")).getTime()));
+        }
+        if (!Utils.isEmpty(j.getParameter(chkString + "Terca"))) {
+            sala.setInicio_terca(new Time(sdf.parse(j.getParameter(txtString + "HoraInicioTerca")).getTime()));
+            sala.setTermino_terca(new Time(sdf.parse(j.getParameter(txtString + "HoraTerminoTerca")).getTime()));
+        }
+        if (!Utils.isEmpty(j.getParameter(chkString + "Quarta"))) {
+            sala.setInicio_quarta(new Time(sdf.parse(j.getParameter(txtString + "HoraInicioQuarta")).getTime()));
+            sala.setTermino_quarta(new Time(sdf.parse(j.getParameter(txtString + "HoraTerminoQuarta")).getTime()));
+        }
+        if (!Utils.isEmpty(j.getParameter(chkString + "Quinta"))) {
+            sala.setInicio_quinta(new Time(sdf.parse(j.getParameter(txtString + "HoraInicioQuinta")).getTime()));
+            sala.setTermino_quinta(new Time(sdf.parse(j.getParameter(txtString + "HoraTerminoQuinta")).getTime()));
+        }
+        if (!Utils.isEmpty(j.getParameter(chkString + "Sexta"))) {
+            sala.setInicio_sexta(new Time(sdf.parse(j.getParameter(txtString + "HoraInicioSexta")).getTime()));
+            sala.setTermino_sexta(new Time(sdf.parse(j.getParameter(txtString + "HoraTerminoSexta")).getTime()));
+        }
+        if (!Utils.isEmpty(j.getParameter(chkString + "Sabado"))) {
+            sala.setInicio_sabado(new Time(sdf.parse(j.getParameter(txtString + "HoraInicioSabado")).getTime()));
+            sala.setTermino_sabado(new Time(sdf.parse(j.getParameter(txtString + "HoraTerminoSabado")).getTime()));
+        }
+        if (httpClient != null) {
+            sala.setUri("www.google.com.br");
+            sala.setId_chat("1234");
+            sala.setModulo(mod);
+        }
+        mod.setChat(sala);
         return mod;
     }
 
@@ -352,6 +423,57 @@ public class DisciplinaRest
         }
         return 0;
     }
+    
+    private void populaEditUpdate(JSPAttr j, Integer nivel, ModuloBean mod)
+    {
+        String quest = "txtquestoesBasicoquest";
+        String qtdQuest = "qtdquestoesBas";
+        String qtdAlt = "qtdaltBas";
+        String opt = "optquestoesBasico";
+        String qtdMostra = "txtQtdQuestoesExibidasBas";
+        String nmChkChat = "chkBasic";
+        String txtChat = "txtBasic";
+        switch (nivel)
+        {
+        case 2:
+            quest = "txtquestoesIntermediarioquest";
+            qtdQuest = "qtdquestoesInt";
+            qtdAlt = "qtdaltInt";
+            opt = "optquestoesIntermediario";
+            qtdMostra = "txtQtdQuestoesExibidasInt";
+            nmChkChat = "chkInt";
+            txtChat = "txtInt";
+            break;
+
+        case 3:
+            quest = "txtquestoesAvancadoquest";
+            qtdQuest = "qtdquestoesAdv";
+            qtdAlt = "qtdaltAdv";
+            opt = "optquestoesAvancado";
+            qtdMostra = "txtQtdQuestoesExibidasAdv";
+            nmChkChat = "chkAdv";
+            txtChat = "txtAdv";
+            break;
+        }
+        if (mod.getAvaliacao() != null) {
+            AvaliacaoBean b = mod.getAvaliacao();
+            j.set(qtdAlt, mod.getAvaliacao().getQuestoes().get(0).getAlternativas().size());
+            j.set(qtdQuest, b.getQuestoes().size());
+            for (int i = 1; i <= mod.getAvaliacao().getQuestoes().size(); i++) {
+                QuestaoBean questao = mod.getAvaliacao().getQuestoes().get(i-1);
+                j.set(quest + i, questao.getConteudo());
+                for (int k = 1; k <= questao.getAlternativas().size(); k++) {
+                    AlternativaBean alternativa = questao.getAlternativas().get(i-1);
+                    j.set(quest + i + "alt" + k,alternativa.getConteudo());
+                    if (alternativa.getCorreta()) {
+                       j.set(opt + i, k);
+                    }
+                }
+            }
+            // Setando a quantidade de questoes que serão exibidas na avaliação
+            j.set(qtdMostra,b.getQtde_questoes());
+        }
+    }
 
     private void criaModulo(DisciplinaBean d, Integer nivel, JSPAttr j, HttpClient httpclient) throws Exception {
         String quest = "txtquestoesBasicoquest";
@@ -360,6 +482,8 @@ public class DisciplinaRest
         String opt = "optquestoesBasico";
         String nivelstr = "basico";
         String qtdMostra = "txtQtdQuestoesExibidasBas";
+        String nmChkChat = "chkBasic";
+        String txtChat = "txtBasic";
         switch (nivel)
         {
         case 2:
@@ -369,6 +493,8 @@ public class DisciplinaRest
             opt = "optquestoesIntermediario";
             nivelstr = "intermediario";
             qtdMostra = "txtQtdQuestoesExibidasInt";
+            nmChkChat = "chkInt";
+            txtChat = "txtInt";
             break;
 
         case 3:
@@ -378,6 +504,8 @@ public class DisciplinaRest
             opt = "optquestoesAvancado";
             nivelstr = "avançado";
             qtdMostra = "txtQtdQuestoesExibidasAdv";
+            nmChkChat = "chkAdv";
+            txtChat = "txtAdv";
             break;
         }
         ModuloBean mod = new ModuloBean();
@@ -412,7 +540,71 @@ public class DisciplinaRest
             b.setQtde_questoes(Integer.parseInt(j.getParameter(qtdMostra)));
 
             mod.setAvaliacao(b);
-            mod = criaChat(mod, httpclient, nivelstr);
+            mod = criaChat(mod, httpclient, nmChkChat, txtChat, j);
+        }
+        d.getModulos().add(mod);
+    }
+
+    private void updModulo(DisciplinaBean d, Integer nivel, JSPAttr j) throws Exception {
+        String quest = "txtquestoesBasicoquest";
+        String qtdQuest = "qtdquestoesBas";
+        String qtdAlt = "qtdaltBas";
+        String opt = "optquestoesBasico";
+        String qtdMostra = "txtQtdQuestoesExibidasBas";
+        String nmChkChat = "chkBasic";
+        String txtChat = "txtBasic";
+        switch (nivel)
+        {
+        case 2:
+            quest = "txtquestoesIntermediarioquest";
+            qtdQuest = "qtdquestoesInt";
+            qtdAlt = "qtdaltInt";
+            opt = "optquestoesIntermediario";
+            qtdMostra = "txtQtdQuestoesExibidasInt";
+            nmChkChat = "chkInt";
+            txtChat = "txtInt";
+            break;
+
+        case 3:
+            quest = "txtquestoesAvancadoquest";
+            qtdQuest = "qtdquestoesAdv";
+            qtdAlt = "qtdaltAdv";
+            opt = "optquestoesAvancado";
+            qtdMostra = "txtQtdQuestoesExibidasAdv";
+            nmChkChat = "chkAdv";
+            txtChat = "txtAdv";
+            break;
+        }
+        ModuloBean mod = d.getModuloByLevel(nivel);
+        mod.setData_inicio(d.getData_inicio());
+        mod.setData_termino(d.getData_termino());
+        if (((!Utils.isEmpty(j.getParameter(qtdQuest)) && !Utils.isEmpty(j.getParameter(qtdAlt))))) {
+            AvaliacaoBean b = mod.getAvaliacao();
+            b.getQuestoes().clear();
+            int qtdAlti = Integer.parseInt(j.getParameter(qtdAlt));
+            for (int i = 1; i <= Integer.parseInt(j.getParameter(qtdQuest)); i++) {
+                String questaoCont = j.getParameter(quest + i);
+                QuestaoBean questao = new QuestaoBean();
+                questao.setAvaliacao(b);
+                questao.setConteudo(questaoCont);
+                int certa = Integer.parseInt(j.getParameter(opt + i));
+                for (int k = 1; k <= qtdAlti; k++) {
+                    AlternativaBean alternativa = new AlternativaBean();
+                    alternativa.setConteudo(j.getParameter(quest + i + "alt" + k));
+                    alternativa.setQuestao(questao);
+                    if (k == certa) {
+                        alternativa.setCorreta(true);
+                    }
+                    questao.getAlternativas().add(alternativa);
+                }
+                b.getQuestoes().add(questao);
+            }
+            // adicionaMaterial(basico, j.getParameter("matBasico"));
+
+            // Setando a quantidade de questoes que serão exibidas na avaliação
+            b.setQtde_questoes(Integer.parseInt(j.getParameter(qtdMostra)));
+            mod.setAvaliacao(b);
+            mod = criaChat(mod, null, nmChkChat, txtChat, j);
         }
         d.getModulos().add(mod);
     }
@@ -431,110 +623,10 @@ public class DisciplinaRest
         return objDisciplina;
     }
 
-    private DisciplinaBean populaOsModulosUpdate(JSPAttr j, DisciplinaBean objDisciplina, Session session) {
-        ModuloBean basico = objDisciplina.getModuloByLevel(1);
-        if (basico == null) {
-            basico = new ModuloBean();
-            basico.setDisciplina(objDisciplina);
-            basico.setNivel_modulo(1);
-            basico.setData_inicio(objDisciplina.getData_inicio());
-            basico.setData_termino(objDisciplina.getData_termino());
-        }
-        if (((!Utils.isEmpty(j.getParameter("qtdquestoesBas")) && !Utils.isEmpty(j.getParameter("qtdaltBas"))))) {
-            AvaliacaoBean b = basico.getAvaliacao();
-            if (b == null) {
-                b = new AvaliacaoBean();
-                b.setModulo(basico);
-            }
-            b.getQuestoes().clear();
-            for (int i = 1; i <= Integer.parseInt(j.getParameter("qtdquestoesBas")); i++) {
-                QuestaoBean questao = new QuestaoBean();
-                questao.setAvaliacao(b);
-                questao.setConteudo(j.getParameter("txtquestoesBasicoquest" + i));
-                int certa = Integer.parseInt(j.getParameter("optquestoesBasico" + i));
-                for (int k = 1; k <= Integer.parseInt(j.getParameter("qtdaltBas")); k++) {
-                    AlternativaBean alternativa = new AlternativaBean();
-                    alternativa.setConteudo(j.getParameter("txtquestoesBasicoquest" + i + "alt" + k));
-                    alternativa.setQuestao(questao);
-                    if (k == certa) {
-                        alternativa.setCorreta(true);
-                    }
-                    questao.getAlternativas().add(alternativa);
-                }
-                b.getQuestoes().add(questao);
-            }
-
-            basico.setAvaliacao(b);
-        }
-
-        ModuloBean intermediario = objDisciplina.getModuloByLevel(2);
-        if (intermediario == null) {
-            intermediario = new ModuloBean();
-            intermediario.setDisciplina(objDisciplina);
-            intermediario.setNivel_modulo(2);
-            intermediario.setData_inicio(objDisciplina.getData_inicio());
-            intermediario.setData_termino(objDisciplina.getData_termino());
-        }
-        if (((!Utils.isEmpty(j.getParameter("qtdquestoesInt")) && !Utils.isEmpty(j.getParameter("qtdaltInt"))))) {
-            AvaliacaoBean inte = intermediario.getAvaliacao();
-            if (inte == null) {
-                inte = new AvaliacaoBean();
-                inte.setModulo(intermediario);
-            }
-            inte.getQuestoes().clear();
-            for (int i = 1; i <= Integer.parseInt(j.getParameter("qtdquestoesInt")); i++) {
-                QuestaoBean questao = new QuestaoBean();
-                questao.setAvaliacao(inte);
-                questao.setConteudo(j.getParameter("txtquestoesIntermediarioquest" + i));
-                int certa = Integer.parseInt(j.getParameter("optquestoesIntermediario" + i));
-                for (int k = 1; k <= Integer.parseInt(j.getParameter("qtdaltInt")); k++) {
-                    AlternativaBean alternativa = new AlternativaBean();
-                    alternativa.setConteudo(j.getParameter("txtquestoesIntermediarioquest" + i + "alt" + k));
-                    alternativa.setQuestao(questao);
-                    if (k == certa) {
-                        alternativa.setCorreta(true);
-                    }
-                    questao.getAlternativas().add(alternativa);
-                }
-                inte.getQuestoes().add(questao);
-            }
-
-            intermediario.setAvaliacao(inte);
-        }
-        ModuloBean avancado = objDisciplina.getModuloByLevel(3);
-        if (avancado == null) {
-            avancado = new ModuloBean();
-            avancado.setDisciplina(objDisciplina);
-            avancado.setNivel_modulo(3);
-            avancado.setData_inicio(objDisciplina.getData_inicio());
-            avancado.setData_termino(objDisciplina.getData_termino());
-        }
-        if (((!Utils.isEmpty(j.getParameter("qtdquestoesAdv")) && !Utils.isEmpty(j.getParameter("qtdaltAdv"))))) {
-            AvaliacaoBean adv = avancado.getAvaliacao();
-            if (adv == null) {
-                adv = new AvaliacaoBean();
-                adv.setModulo(avancado);
-            }
-            adv.getQuestoes().clear();
-            for (int i = 1; i <= Integer.parseInt(j.getParameter("qtdquestoesAdv")); i++) {
-                QuestaoBean questao = new QuestaoBean();
-                questao.setAvaliacao(adv);
-                questao.setConteudo(j.getParameter("txtquestoesAvancadoquest" + i));
-                int certa = Integer.parseInt(j.getParameter("optquestoesAvancado" + i));
-                for (int k = 1; k <= Integer.parseInt(j.getParameter("qtdaltAdv")); k++) {
-                    AlternativaBean alternativa = new AlternativaBean();
-                    alternativa.setConteudo(j.getParameter("txtquestoesAvancadoquest" + i + "alt" + k));
-                    alternativa.setQuestao(questao);
-                    if (k == certa) {
-                        alternativa.setCorreta(true);
-                    }
-                    questao.getAlternativas().add(alternativa);
-                }
-                adv.getQuestoes().add(questao);
-            }
-
-            avancado.setAvaliacao(adv);
-        }
+    private DisciplinaBean populaOsModulosUpdate(JSPAttr j, DisciplinaBean objDisciplina, Session session) throws Exception {
+        updModulo(objDisciplina, 1, j);
+        updModulo(objDisciplina, 2, j);
+        updModulo(objDisciplina, 3, j);
         return objDisciplina;
     }
 
@@ -856,8 +948,7 @@ public class DisciplinaRest
     @Stylesheet(href = "curso/email/listarEmails.jsp", type = MediaTypeMore.APP_JSP)
     @SecurityPrivate(role = { SecType.ALUNO, SecType.PROFESSOR })
     public void sendEmail(@FormParam("id_matricula") String id_matricula, @FormParam("id_curso") String id_curso,
-            @FormParam("txtAssunto") String assunto,
-            @FormParam("id_email") String id_email) {
+            @FormParam("txtAssunto") String assunto, @FormParam("id_email") String id_email) {
         Session session = HS.getSession();
         JSPAttr j = new JSPAttr();
         Transaction tx = session.beginTransaction();
