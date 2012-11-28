@@ -27,6 +27,23 @@ public class ShiroLogin
     /**
      * Exibi login
      */
+    @POST
+    @Path("layout")
+    @SecurityPublic
+    public void setLayout(@FormParam("layout") String layout)
+    {
+        if(!Utils.isEmpty(layout))
+        {
+            new JSPAttr().setInSession("layout", layout);
+        }
+        else{
+            new JSPAttr().removeFromSession("layout");
+        }
+    }
+    
+    /**
+     * Exibi login
+     */
     @GET
     @Stylesheet(href = "login/login.jsp", type = MediaTypeMore.APP_JSP)
     @Path("login")
