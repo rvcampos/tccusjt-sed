@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <c:set scope="request" var="app_context" value="/tccusjt-sed/" />
-<link id="bootcss" rel="stylesheet" href="${app_context}css/bootstrap${layout}.css?t=1" type="text/css"/>
+<link id="bootcss" rel="stylesheet" href="${app_context}css/bootstrap${layout}.css" type="text/css"/>
 <script charset="UTF-8" src="${app_context}js/jquery.js"></script>
 <script charset="UTF-8" src="${app_context}js/jquery-ui.js"></script>
 <script src="${app_context}js/script.js"></script>

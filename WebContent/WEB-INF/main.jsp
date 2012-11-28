@@ -11,9 +11,9 @@
 <jsp:include page="header.jsp" />
 
 </head>
-<body>
+<body style="">
 	<jsp:include page="menu.jsp" />
-	<div class="container" style="padding-top: 60px;">
+	<div class="container" style="padding-top: 60px; min-height: 600px; height: auto !important ;background-image: url('${app_context}img/logo.png'); background-repeat: no-repeat; background-position:center;">
 
 				<c:if test="${not empty msgok }">
 					<div class="alert alert-success">
