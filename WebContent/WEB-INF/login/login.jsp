@@ -11,7 +11,12 @@
 <title>SED</title>
 <jsp:include page="../header.jsp" />
 </head>
+<shiro:authenticated>
+<body>
+</shiro:authenticated>
+<shiro:notAuthenticated>
 <body onLoad="document.form_login.username.focus()">
+</shiro:notAuthenticated>
 	<jsp:include page="../menu.jsp" />
 	<div class="container" style="padding-top: 60px;">
 		<shiro:notAuthenticated>
